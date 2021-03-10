@@ -8,110 +8,110 @@
  * @format
  */
 
-import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import 'react-native-gesture-handler';
+import MapView, { Marker } from 'react-native-maps';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 
-declare const global: {HermesInternal: null | {}};
-
-const App = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Hello World
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
+import * as React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Button } from 'react-native-elements';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    height: 1000,
+    width: 400,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  map: {
+    ...StyleSheet.absoluteFillObject,
   },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
+ });
+
+function FirstScreen({ navigation }: any) {
+  return (
+    <View>
+      <Text>First Screen</Text>
+      <Button onPress={() => {navigation.replace("SecondScreen")}} title="Second Screen" />
+      <MapView
+            provider="google"
+            style={styles.map}
+            region={{
+            latitude: 42.0884,
+            longitude: 87.9806,
+            latitudeDelta: 0.015,
+            longitudeDelta: 0.0121,
+       }}
+          >
+
+      </MapView>
+    </View>
+  );
+}
+
+function SecondScreen({navigation}: any) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Second Screen</Text>
+      <Button onPress={() => {navigation.replace("FirstScreen")}} title="First Screen" />
+    </View>
+  )
+}
+
+function About1Screen({ navigation }: any) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>About 1</Text>
+      <Button onPress={() => {navigation.replace("About2Screen")}} title="About 1" />
+    </View>
+  );
+}
+
+function About2Screen({navigation}: any) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>About 2</Text>
+      <Button onPress={() => {navigation.replace("About1Screen")}} title="About 2" />
+    </View>
+  )
+}
+
+const HomeStack = createStackNavigator();
+
+function HomeStackScreen({navigation}: any) {
+  return (
+  <HomeStack.Navigator>
+    <HomeStack.Screen name="FirstScreen" component={FirstScreen}/>
+    <HomeStack.Screen name="SecondScreen" component={SecondScreen}/>
+  </HomeStack.Navigator>
+  )
+}
+
+const AboutStack = createStackNavigator();
+
+function AboutStackScreen({navigation}: any) {
+  return (
+    <AboutStack.Navigator>
+      <AboutStack.Screen name="About1Screen" component={About1Screen}/>
+      <AboutStack.Screen name="About2Screen" component={About2Screen}/>
+    </AboutStack.Navigator>
+  )
+}
+const BottomTab = createBottomTabNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <BottomTab.Navigator>
+        <BottomTab.Screen name="Home" component={HomeStackScreen} />
+        <BottomTab.Screen name="About" component={AboutStackScreen} />
+      </BottomTab.Navigator>
+    </NavigationContainer>
+  );
+}
 
 export default App;
