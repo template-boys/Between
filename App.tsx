@@ -10,9 +10,11 @@
 
 import 'react-native-gesture-handler';
 import MapView, { Marker } from 'react-native-maps';
+import { v4 as UUIDGenerate } from 'uuid';
+import {GOOGLE_API_KEY_1, GOOGLE_API_KEY_2} from '@env';
 
 
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -94,18 +96,27 @@ const BottomTab = createBottomTabNavigator();
 
 
 const GooglePlacesInput = () => {
+  const [sessionToken, setSessionToken] = useState(UUIDGenerate());
+  const [apiKey, setApiKey] = useState(Math.random() < 0.5 ? GOOGLE_API_KEY_1: GOOGLE_API_KEY_2);
+  console.log("sessionToken:", sessionToken);
   return (
     <GooglePlacesAutocomplete
       placeholder='Search'
       fetchDetails={true}
       onPress={(data, details = null) => {
-        // 'details' is provided when fetchDetails = true
-        console.log(JSON.stringify(details))
+        // console.log("data:", JSON.stringify(data));
+        // console.log("details:", JSON.stringify(details));
+        setSessionToken(UUIDGenerate());
       }}
       onFail={error => console.error(error)}
       query={{
-        key: 'AIzaSyBB9rRmMVjf3FTLsWDvRopW_3qqQuyWvXw',
+        sessiontoken: sessionToken,
+        key: apiKey,
         language: 'en',
+      }}
+      GooglePlacesDetailsQuery={{
+        sessiontoken: sessionToken,
+        key: apiKey,
       }}
     />
   );
