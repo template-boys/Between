@@ -18,6 +18,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Button } from 'react-native-elements';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -30,34 +32,21 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
- });
+});
 
 function FirstScreen({ navigation }: any) {
   return (
-    <View>
-      <Text>First Screen</Text>
-      <Button onPress={() => {navigation.replace("SecondScreen")}} title="Second Screen" />
-      <MapView
-            provider="google"
-            style={styles.map}
-            region={{
-            latitude: 42.0884,
-            longitude: 87.9806,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
-       }}
-          >
 
-      </MapView>
-    </View>
+    <View style={{ marginTop: 40, flex: 1 }}><GooglePlacesInput /></View>
+
   );
 }
 
-function SecondScreen({navigation}: any) {
+function SecondScreen({ navigation }: any) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Second Screen</Text>
-      <Button onPress={() => {navigation.replace("FirstScreen")}} title="First Screen" />
+      <Button onPress={() => { navigation.replace("FirstScreen") }} title="First Screen" />
     </View>
   )
 }
@@ -66,42 +55,61 @@ function About1Screen({ navigation }: any) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>About 1</Text>
-      <Button onPress={() => {navigation.replace("About2Screen")}} title="About 1" />
+      <Button onPress={() => { navigation.replace("About2Screen") }} title="About 1" />
     </View>
   );
 }
 
-function About2Screen({navigation}: any) {
+function About2Screen({ navigation }: any) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>About 2</Text>
-      <Button onPress={() => {navigation.replace("About1Screen")}} title="About 2" />
+      <Button onPress={() => { navigation.replace("About1Screen") }} title="About 2" />
     </View>
   )
 }
 
 const HomeStack = createStackNavigator();
 
-function HomeStackScreen({navigation}: any) {
+function HomeStackScreen({ navigation }: any) {
   return (
-  <HomeStack.Navigator>
-    <HomeStack.Screen name="FirstScreen" component={FirstScreen}/>
-    <HomeStack.Screen name="SecondScreen" component={SecondScreen}/>
-  </HomeStack.Navigator>
+    <HomeStack.Navigator>
+      <HomeStack.Screen name="FirstScreen" component={FirstScreen} />
+      <HomeStack.Screen name="SecondScreen" component={SecondScreen} />
+    </HomeStack.Navigator>
   )
 }
 
 const AboutStack = createStackNavigator();
 
-function AboutStackScreen({navigation}: any) {
+function AboutStackScreen({ navigation }: any) {
   return (
     <AboutStack.Navigator>
-      <AboutStack.Screen name="About1Screen" component={About1Screen}/>
-      <AboutStack.Screen name="About2Screen" component={About2Screen}/>
+      <AboutStack.Screen name="About1Screen" component={About1Screen} />
+      <AboutStack.Screen name="About2Screen" component={About2Screen} />
     </AboutStack.Navigator>
   )
 }
 const BottomTab = createBottomTabNavigator();
+
+
+const GooglePlacesInput = () => {
+  return (
+    <GooglePlacesAutocomplete
+      placeholder='Search'
+      fetchDetails={true}
+      onPress={(data, details = null) => {
+        // 'details' is provided when fetchDetails = true
+        console.log(JSON.stringify(details))
+      }}
+      onFail={error => console.error(error)}
+      query={{
+        key: 'AIzaSyBB9rRmMVjf3FTLsWDvRopW_3qqQuyWvXw',
+        language: 'en',
+      }}
+    />
+  );
+};
 
 function App() {
   return (
