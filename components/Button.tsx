@@ -1,17 +1,19 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { Button as RNEButton } from 'react-native-elements';
 
 interface Props {
     type: string,
     title: string,
-    buttonStyle?: object
+    buttonStyle?: object,
+    disabled: boolean,
+    onPress: () => void,
 }
 
 const Button = (props: Props) => {
     const backgroundColor = props.type === 'primary' ? '#3a86ff' : 'transparent'
     const borderColor = props.type === 'secondary' ? '#3a86ff' : ''
-    const borderWidth = props.type === 'secondary' ? 4 : 0
+    const borderWidth = props.type === 'secondary' ? 2 : 0
     const titleStyle = props.type === 'secondary' ? { color: 'black' } : {}
     const buttonStyle = [styles.buttonStyle, { backgroundColor, borderColor, borderWidth }, props.buttonStyle]
     return (
@@ -22,6 +24,8 @@ const Button = (props: Props) => {
             borderWith={1}
             minWidth={130}
             height={40}
+            disabled={props.disabled}
+            onPress={props.onPress}
         />
     )
 }

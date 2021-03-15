@@ -9,7 +9,8 @@ import { setSessionID } from '../testActions'
 
 interface Props {
     testReducer: any
-    setSessionID: () => string
+    setSessionID: () => string,
+    setLocation: (any) => void
 }
 interface State {
     apiKey: string
@@ -26,15 +27,15 @@ class AutoCompleteInputField extends Component<Props, State> {
     render() {
         const { apiKey } = this.state
         const { sessionID } = this.props.testReducer
-        // console.log(sessionID);
 
         return (
             <GooglePlacesAutocomplete
                 placeholder='Search'
-                minLength={2}
                 fetchDetails={true}
                 onPress={(data, details = null) => {
+                    // console.log(JSON.stringify(details));
                     this.props.setSessionID()
+                    this.props.setLocation(details)
                 }}
                 onFail={error => console.error(error)}
                 query={{
@@ -43,6 +44,7 @@ class AutoCompleteInputField extends Component<Props, State> {
                     language: 'en',
                 }}
                 GooglePlacesDetailsQuery={{
+                    fields: 'name,rating,formatted_phone_number,geometry/location,address_component,adr_address,business_status,formatted_address,geometry/viewport,place_id,plus_code,type,url',
                     sessiontoken: sessionID,
                     key: apiKey,
                 }}
