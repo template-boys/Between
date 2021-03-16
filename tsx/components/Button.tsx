@@ -6,7 +6,7 @@ interface Props {
     type: string,
     title: string,
     buttonStyle?: object,
-    disabled: boolean,
+    disabled?: boolean,
     onPress: () => void,
 }
 

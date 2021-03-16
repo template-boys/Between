@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { GOOGLE_API_KEY_1, GOOGLE_API_KEY_2 } from '@env';
 import { v4 as UUIDGenerate} from 'uuid';
+import { getGoogleApiKey } from '../utils/googleKeyUtil';
 
 interface Props {
     setLocation: (any) => void;
 }
 
 function AutoCompleteInputField(props: Props) {
-    const [apiKey, setApiKey] = useState(Math.random() < 0.5 ? GOOGLE_API_KEY_1 : GOOGLE_API_KEY_2);
+    const [apiKey, setApiKey] = useState(getGoogleApiKey());
     const [sessionID, setSessionID] = useState(UUIDGenerate());
 
     return (
