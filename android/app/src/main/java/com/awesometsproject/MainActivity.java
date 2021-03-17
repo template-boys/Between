@@ -1,4 +1,4 @@
-package com.awesometsproject;
+package com.inbetween;
 
 import com.facebook.react.ReactActivity;
 
