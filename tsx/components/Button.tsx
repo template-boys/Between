@@ -7,12 +7,12 @@ interface Props {
     title: string,
     buttonStyle?: object,
     disabled?: boolean,
-    onPress: () => void,
+    onPress?: () => void,
 }
 
 const Button = (props: Props) => {
-    const backgroundColor = props.type === 'primary' ? '#3a86ff' : 'transparent'
-    const borderColor = props.type === 'secondary' ? '#3a86ff' : ''
+    const backgroundColor = props.type === 'primary' ? '#413C58' : 'transparent'
+    const borderColor = props.type === 'secondary' ? '#413C58' : ''
     const borderWidth = props.type === 'secondary' ? 2 : 0
     const titleStyle = props.type === 'secondary' ? { color: 'black' } : {}
     const buttonStyle = [styles.buttonStyle, { backgroundColor, borderColor, borderWidth }, props.buttonStyle]

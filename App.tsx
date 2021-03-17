@@ -6,7 +6,6 @@ import testReducer from './testReducer';
 import BottomNavigator from './tsx/navigation/Navigator'
 
 function App() {
-
   const store = createStore(testReducer);
   return (
     <Provider store={store}>
