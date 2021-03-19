@@ -1,12 +1,8 @@
-import React, { ReactElement } from 'react'
-import { Text } from 'react-native'
+import React, { ReactElement } from "react";
+import { Text } from "react-native";
 
-interface Props {
+interface Props {}
 
-}
-
-export default function FavoritesScreen({ }: Props): ReactElement {
-    return (
-        <Text>This is the Favorites Landing Screen.</Text>
-    )
+export default function FavoritesScreen({}: Props): ReactElement {
+  return <Text>This is the Favorites Landing Screen.</Text>;
 }
