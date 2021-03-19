@@ -9,7 +9,7 @@ export const placeSearch = async (query, language = 'en', location?) => {
       key: getGoogleApiKey(),
       query,
       location: `${location.latitude},${location.longitude}`,
-      radius: '10000',
+      radius: '1000',
     })
   )
 }

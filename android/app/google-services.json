@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "501057678471",
+    "project_id": "inbetween-f2f6b",
+    "storage_bucket": "inbetween-f2f6b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501057678471:android:9c0b2f7854085187cddc22",
+        "android_client_info": {
+          "package_name": "com.inbetween"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "501057678471-7avl7nsmkrd0h4d2g1q477r0faoh2gu4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLuPYEgTGqPZt2KngDwvsS9IOvcN0_ptc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "501057678471-7avl7nsmkrd0h4d2g1q477r0faoh2gu4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "501057678471-fepl1kfbvkooruu4e1rbj34jmd7j2do8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.inBetween"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
