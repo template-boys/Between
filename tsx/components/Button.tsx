@@ -11,10 +11,10 @@ interface Props {
 }
 
 const Button = (props: Props) => {
-    const backgroundColor = props.type === 'primary' ? '#413C58' : 'transparent'
-    const borderColor = props.type === 'secondary' ? '#413C58' : ''
+    const backgroundColor = props.type === 'primary' ? '#628B48' : 'transparent'
+    const borderColor = props.type === 'secondary' ? '#628B48' : ''
     const borderWidth = props.type === 'secondary' ? 2 : 0
-    const titleStyle = props.type === 'secondary' ? { color: 'black' } : {}
+    const titleStyle = props.type === 'secondary' ? { color: '#444' } : {}
     const buttonStyle = [styles.buttonStyle, { backgroundColor, borderColor, borderWidth }, props.buttonStyle]
     return (
         <RNEButton

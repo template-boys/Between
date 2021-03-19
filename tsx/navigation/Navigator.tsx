@@ -22,7 +22,9 @@ function Auth(){
 
 function App(){
     return(
-        <BottomTab.Navigator>
+        <BottomTab.Navigator tabBarOptions={{
+            activeTintColor: '#413C58',
+          }}>
             <BottomTab.Screen name="Search" component={SearchNavigator} />
             <BottomTab.Screen name="Activity" component={ActivityNavigator} />
             <BottomTab.Screen name="Favorites" component={FavoritesNavigator} />
