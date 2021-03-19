@@ -3,6 +3,7 @@ import { v4 as UUIDGenerate } from 'uuid';
 
 const INITIAL_STATE = {
     sessionID: UUIDGenerate(),
+    loggedIn: false,
 };
 
 const testReducer = (state = INITIAL_STATE, action) => {
@@ -21,6 +22,11 @@ const testReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 locationTwo: action.payload,
+            }
+        case 'LOGIN_USER':
+            return {
+                ...state,
+                loggedIn: true,
             }
         default:
             return state

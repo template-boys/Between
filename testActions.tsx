@@ -17,3 +17,9 @@ export const setLocationTwo = (location) => (
         payload: location
     }
 );
+
+export const loginUser = () => (
+    {
+        type: 'LOGIN_USER'
+    }
+);
