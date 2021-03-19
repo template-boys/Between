@@ -11,3 +11,7 @@ export const setLocationTwo = (location) => ({
   type: "SET_LOCATION_TWO",
   payload: location,
 });
+
+export const loginUser = () => ({
+  type: "LOGIN_USER",
+});

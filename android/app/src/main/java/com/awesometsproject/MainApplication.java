@@ -1,4 +1,4 @@
-package com.awesometsproject;
+package com.inbetween;
 
 import android.app.Application;
 import android.content.Context;
