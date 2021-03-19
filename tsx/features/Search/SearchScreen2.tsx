@@ -8,6 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCenter } from "geolib";
 import { placeSearch } from "../../api/PlaceSearch";
 import { Input } from "react-native-elements";
+import theme from "../../themes/theme";
+import style from "../../themes/style";
+import MapView, { Marker } from "react-native-maps";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -46,31 +49,106 @@ export default function SearchScreen2({ navigation }: Props): ReactElement {
   return (
     <>
       <View style={{ flex: 1 }}>
-        <Text>Select Second Location</Text>
-        <Text>
-          Location One: {locationOne?.formatted_address ?? "Not yet selected"}
-        </Text>
-        <Text>
-          Location Two: {locationTwo?.formatted_address ?? "Not yet selected"}
-        </Text>
-        <Text>
-          {location?.latitude} {location?.longitude}
+        <Text
+          style={[
+            style.title1,
+            {
+              alignSelf: "center",
+              marginTop: 60,
+            },
+          ]}
+        >
+          Select Second Location
         </Text>
         <AutoCompleteInputField setLocation={setLocation} />
-        <Input onChangeText={(value) => setSearch(value)} />
-        <Button
-          type="secondary"
-          title="Search"
-          disabled={!location}
-          onPress={handleSearch}
+        <Input
+          placeholder="What are you looking for?"
+          label="Type of place"
+          labelStyle={{
+            color: theme.charcoalGrey,
+            marginBottom: 8,
+          }}
+          inputStyle={{
+            borderColor: theme.lightGrey,
+            padding: 10,
+            borderBottomWidth: 2,
+            color: theme.black,
+            paddingTop: 12,
+            paddingBottom: 12,
+          }}
+          placeholderTextColor={theme.lightGrey}
+          containerStyle={{ marginTop: 45, paddingLeft: 20, paddingRight: 20 }}
+          inputContainerStyle={{ borderBottomWidth: 0 }}
+          onChangeText={(value) => setSearch(value)}
         />
         <Button
           type="primary"
-          title="Continue"
-          disabled={!locationOne}
-          buttonStyle={{ marginBottom: 20 }}
-          onPress={() => {}}
+          title="Search"
+          disabled={!location || !search}
+          onPress={handleSearch}
         />
+        <Button
+          type="secondary"
+          title="Go Back"
+          onPress={navigation.goBack}
+          buttonStyle={{ marginTop: 30 }}
+        />
+      </View>
+      <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+        {locationOne && (
+          <MapView
+            style={{
+              height: 150,
+              marginTop: 40,
+              marginBottom: 10,
+              width: 150,
+              alignSelf: "center",
+              borderRadius: 150 / 2,
+              borderWidth: 2,
+              borderColor: theme.purple,
+            }}
+            region={{
+              latitude: locationOne.geometry.location.lat,
+              longitude: locationOne.geometry.location.lng,
+              latitudeDelta: 0.005,
+              longitudeDelta: 0.005,
+            }}
+          >
+            <Marker
+              coordinate={{
+                latitude: locationOne.geometry.location.lat,
+                longitude: locationOne.geometry.location.lng,
+              }}
+            />
+          </MapView>
+        )}
+        {locationTwo && (
+          <MapView
+            style={{
+              height: 150,
+              marginTop: 40,
+              marginBottom: 10,
+              width: 150,
+              alignSelf: "center",
+              borderRadius: 150 / 2,
+              borderWidth: 2,
+              borderColor: theme.purple,
+            }}
+            region={{
+              latitude: locationTwo.geometry.location.lat,
+              longitude: locationTwo.geometry.location.lng,
+              latitudeDelta: 0.005,
+              longitudeDelta: 0.005,
+            }}
+          >
+            <Marker
+              coordinate={{
+                latitude: locationTwo.geometry.location.lat,
+                longitude: locationTwo.geometry.location.lng,
+              }}
+            />
+          </MapView>
+        )}
       </View>
     </>
   );

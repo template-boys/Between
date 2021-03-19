@@ -5,6 +5,7 @@ import { Input } from "react-native-elements";
 import Button from "../../components/Button";
 import { loginUser } from "../../../testActions";
 import { useDispatch } from "react-redux";
+import theme from "../../themes/theme";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -23,7 +24,7 @@ export function LoginScreen() {
       <>
         <View
           style={{
-            backgroundColor: "#628B48",
+            backgroundColor: theme.darkPurple,
             position: "absolute",
             width: SCREEN_WIDTH,
             height: SCREEN_HEIGHT,
@@ -41,79 +42,78 @@ export function LoginScreen() {
           }}
         />
       </>
-
       <Text
         style={{
-          fontSize: 26,
-          fontWeight: "300",
-          marginTop: 60,
-          color: "#444",
+          fontSize: 32,
+          fontWeight: "600",
+          marginTop: 50,
+          color: theme.purple,
         }}
       >
-        Welcome Back
-      </Text>
-      <Text
-        style={{
-          fontSize: 26,
-          fontWeight: "200",
-          marginTop: 15,
-          color: "#444",
-        }}
-      >
-        to
+        {`}{`}
       </Text>
       <Text
         style={{
           fontSize: 32,
           fontWeight: "600",
-          marginTop: 15,
-          color: "#444",
+          color: theme.charcoalGrey,
         }}
       >
-        in|Between
+        inBetween
       </Text>
       <Input
         placeholder="yourname@example.com"
         label="Email"
-        labelStyle={{ color: "#444", marginBottom: 8, marginLeft: 12 }}
+        labelStyle={{
+          color: theme.charcoalGrey,
+          marginBottom: 8,
+        }}
         inputStyle={{
-          borderColor: "#e4e4e4",
+          borderColor: theme.lightGrey,
           padding: 10,
-          borderWidth: 2,
-          borderRadius: 26,
-          color: "black",
+          borderBottomWidth: 2,
+          color: theme.black,
           paddingTop: 12,
           paddingBottom: 12,
         }}
-        placeholderTextColor="#d4d4d4"
-        containerStyle={{ marginTop: 100 }}
+        placeholderTextColor={theme.lightGrey}
+        containerStyle={{ marginTop: 45, paddingLeft: 20, paddingRight: 20 }}
         inputContainerStyle={{ borderBottomWidth: 0 }}
       />
       <Input
         placeholder="yourpassword"
         secureTextEntry={true}
         label="Password"
-        labelStyle={{ color: "#444", marginBottom: 8, marginLeft: 12 }}
+        labelStyle={{
+          color: theme.charcoalGrey,
+          marginBottom: 8,
+        }}
         inputStyle={{
-          borderColor: "#e4e4e4",
+          borderColor: theme.lightGrey,
           padding: 10,
-          borderWidth: 2,
-          borderRadius: 26,
-          color: "black",
+          borderBottomWidth: 2,
+          color: theme.black,
           paddingTop: 12,
           paddingBottom: 12,
         }}
-        placeholderTextColor="#d4d4d4"
-        containerStyle={{ marginTop: 15 }}
+        placeholderTextColor={theme.lightGrey}
+        containerStyle={{
+          marginTop: 15,
+          paddingLeft: 20,
+          paddingRight: 20,
+        }}
         inputContainerStyle={{ borderBottomWidth: 0 }}
       />
+      <View style={{ marginLeft: "auto" }}>
+        <Text style={{ marginRight: 18 }}>Forgot Password?</Text>
+      </View>
       <Button
         type="primary"
-        title="Login"
+        title="Log In"
         onPress={() => {
           dispatch(loginUser());
         }}
-        buttonStyle={{ width: 180, marginTop: 30 }}
+        buttonStyle={{ width: 180, marginTop: 80 }}
       />
       <Button
         type="secondary"

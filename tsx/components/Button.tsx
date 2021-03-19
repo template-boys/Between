@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Button as RNEButton } from "react-native-elements";
+import theme from "../themes/theme";
 
 interface Props {
   type: string;
@@ -11,10 +12,12 @@ interface Props {
 }
 
 const Button = (props: Props) => {
-  const backgroundColor = props.type === "primary" ? "#628B48" : "transparent";
-  const borderColor = props.type === "secondary" ? "#628B48" : "";
+  const backgroundColor =
+    props.type === "primary" ? theme.purple : "transparent";
+  const borderColor = props.type === "secondary" ? theme.purple : "";
   const borderWidth = props.type === "secondary" ? 2 : 0;
-  const titleStyle = props.type === "secondary" ? { color: "#444" } : {};
+  const titleStyle =
+    props.type === "secondary" ? { color: theme.charcoalGrey } : {};
   const buttonStyle = [
     styles.buttonStyle,
     { backgroundColor, borderColor, borderWidth },
@@ -25,8 +28,7 @@ const Button = (props: Props) => {
       buttonStyle={buttonStyle}
       titleStyle={titleStyle}
       title={props.title}
-      borderWith={1}
-      minWidth={130}
+      borderWidth={1}
       height={40}
       disabled={props.disabled}
       onPress={props.onPress}
@@ -40,6 +42,7 @@ const styles = StyleSheet.create({
   buttonStyle: {
     marginLeft: 20,
     marginRight: 20,
-    borderRadius: 25,
+    borderRadius: 6,
+    minWidth: 250,
   },
 });

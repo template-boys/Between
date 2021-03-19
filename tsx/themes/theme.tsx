@@ -1,0 +1,15 @@
+export default {
+  purple: "#9CA3DB",
+  darkPurple: "#363457",
+  black: "#000000",
+  charcoalGrey: "#293033",
+  darkestGrey: "#212121",
+  midGrey: "#757575",
+  lightGrey: "#B7B7B7",
+  lighterGrey: "#E0E0E0",
+  lightestGrey: "#F2F2F2",
+  regular: "400",
+  medium: "600",
+  bold: "700",
+  errorRed: "#B80C09",
+};
