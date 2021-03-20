@@ -15,3 +15,13 @@ export const setLocationTwo = (location) => ({
 export const loginUser = () => ({
   type: "LOGIN_USER",
 });
+
+export const addSearchLocation = (newLocation) => ({
+  type: "ADD_LOCATION",
+  newLocation,
+});
+
+export const setSearchResult = (searchResult) => ({
+  type: "SET_SEARCH_RESULT",
+  searchResult,
+});

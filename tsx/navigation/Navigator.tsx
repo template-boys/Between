@@ -48,7 +48,7 @@ function App() {
         name="Search"
         options={{
           tabBarLabel: "",
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Icon name="search-outline" size={30} color={color} />
           ),
         }}
@@ -58,7 +58,7 @@ function App() {
         name="Activity"
         options={{
           tabBarLabel: "",
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Icon name="list-outline" size={30} color={color} />
           ),
         }}
@@ -68,7 +68,7 @@ function App() {
         name="Favorites"
         options={{
           tabBarLabel: "",
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Icon name="heart-outline" size={30} color={color} />
           ),
         }}
@@ -78,7 +78,7 @@ function App() {
         name="Profile"
         options={{
           tabBarLabel: "",
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Icon name="person-outline" size={30} color={color} />
           ),
         }}
