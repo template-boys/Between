@@ -27,7 +27,6 @@ export default function SearchScreen2({ navigation }: Props): ReactElement {
   };
 
   const handleSearch = async () => {
-    console.log(search);
     const result = await placeSearch(search, "en", location);
     console.log(JSON.stringify(result.data));
   };

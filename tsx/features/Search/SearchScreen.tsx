@@ -19,7 +19,6 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
 
   const setLocation = (location) => {
     dispatch(setLocationOne(location));
-    console.log(JSON.stringify(location));
   };
 
   return (

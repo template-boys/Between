@@ -8,7 +8,7 @@ interface Props {
   title: string;
   buttonStyle?: object;
   disabled?: boolean;
-  onPress?: () => void;
+  onPress?: (...args: any[]) => void;
 }
 
 const Button = (props: Props) => {
