@@ -24,8 +24,8 @@ export default function MapLocationView({
         region={{
           latitude: location.latitude,
           longitude: location.longitude,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
         }}
         pitchEnabled={false}
         rotateEnabled={false}

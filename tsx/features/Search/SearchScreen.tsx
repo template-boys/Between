@@ -17,10 +17,6 @@ interface Props {
   navigation: NavigationScreenProp<any, any>;
 }
 
-interface Item {
-  elementType?: keyof JSX.IntrinsicElements;
-}
-
 export default function SearchScreen({ navigation }: Props): ReactElement {
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
@@ -42,11 +38,9 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
         latitude: location.geometry.location.lat,
         longitude: location.geometry.location.lng,
       });
-      console.log(locationCoords);
     });
 
     middlePoint = getCenterOfBounds(locationCoords);
-    console.log("MIDDLE", middlePoint);
     const searchResult = await placeSearch(search, "en", middlePoint);
     setIsLoading(false);
     dispatch(setSearchResult(searchResult.data));
@@ -55,7 +49,7 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
 
   const { width: SCREEN_WIDTH } = Dimensions.get("window");
   const showSearchInput = searchLocations.length !== 0;
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({ item, index }) => {
     return (
       <MapLocationView
         diameter={200}

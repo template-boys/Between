@@ -6,6 +6,7 @@ const INITIAL_STATE = {
   loggedIn: false,
   searchLocations: [],
   searchResult: null,
+  user: null,
 };
 
 const testReducer = (state = INITIAL_STATE, action) => {
@@ -29,6 +30,13 @@ const testReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loggedIn: true,
+        user: action.payload,
+      };
+    case "LOGOUT_USER":
+      return {
+        ...state,
+        loggedIn: false,
+        user: null,
       };
     case "ADD_LOCATION":
       return {
@@ -40,7 +48,6 @@ const testReducer = (state = INITIAL_STATE, action) => {
         ...state,
         searchResult: action.searchResult,
       };
-
     default:
       return state;
   }

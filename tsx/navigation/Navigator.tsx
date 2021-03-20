@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, ThemeProvider } from "@react-navigation/native";
 import SearchNavigator from "./SearchNavigator";
 import ActivityNavigator from "./ActivityNavigator";
 import FavoritesNavigator from "./FavoritesNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen } from "../features/Login/LoginScreen";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import theme from "../themes/theme";
+import FirebaseAuth from "@react-native-firebase/auth";
+import { loginUser, logoutUser } from "../../testActions";
 
 const BottomTab = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
@@ -88,14 +90,26 @@ function App() {
   );
 }
 
-function BottomNavigator() {
+function Navigator() {
+  const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.testReducer.loggedIn);
+
+  FirebaseAuth().onAuthStateChanged((user) => {
+    if (user !== null && user !== undefined) {
+      dispatch(loginUser(user));
+    } else {
+      dispatch(logoutUser());
+    }
+  });
+
   return (
     <NavigationContainer>
       <RootStack.Navigator>
         {isLoggedIn ? (
           <RootStack.Screen
-            options={{ headerShown: false }}
+            options={{
+              headerShown: false,
+            }}
             name="App"
             component={App}
           />
@@ -111,4 +125,4 @@ function BottomNavigator() {
   );
 }
 
-export default BottomNavigator;
+export default Navigator;
