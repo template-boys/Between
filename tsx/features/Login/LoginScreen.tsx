@@ -6,10 +6,14 @@ import Button from "../../components/Button";
 import { loginUser } from "../../../testActions";
 import { useDispatch } from "react-redux";
 import theme from "../../themes/theme";
+import FirebaseAuth from "@react-native-firebase/auth";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export function LoginScreen() {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+
   const dispatch = useDispatch();
   return (
     <SafeAreaView
@@ -64,6 +68,9 @@ export function LoginScreen() {
       <Input
         placeholder="yourname@example.com"
         label="Email"
+        onChangeText={(value) => {
+          setEmail(value);
+        }}
         labelStyle={{
           color: theme.charcoalGrey,
           marginBottom: 8,
@@ -84,6 +91,9 @@ export function LoginScreen() {
         placeholder="yourpassword"
         secureTextEntry={true}
         label="Password"
+        onChangeText={(value) => {
+          setPassword(value);
+        }}
         labelStyle={{
           color: theme.charcoalGrey,
           marginBottom: 8,
@@ -111,7 +121,14 @@ export function LoginScreen() {
         type="primary"
         title="Log In"
         onPress={() => {
-          dispatch(loginUser());
+          FirebaseAuth()
+            .signInWithEmailAndPassword(email, password)
+            .then((user) => {
+              console.log("Logged in.");
+            })
+            .catch((error) => {
+              console.error(error);
+            });
         }}
         buttonStyle={{ width: 180, marginTop: 80 }}
       />
@@ -119,7 +136,23 @@ export function LoginScreen() {
         type="secondary"
         title="Sign Up"
         buttonStyle={{ width: 180, marginTop: 30 }}
-        onPress={() => {}}
+        onPress={() =>
+          FirebaseAuth()
+            .createUserWithEmailAndPassword(email, password)
+            .then((user) => {
+              console.log("User account created & signed in!");
+            })
+            .catch((error) => {
+              if (error.code === "auth/email-already-in-use") {
+                console.log("That email address is already in use!");
+              }
+
+              if (error.code === "auth/invalid-email") {
+                console.log("That email address is invalid!");
+              }
+              console.error(error);
+            })
+        }
       />
     </SafeAreaView>
   );

@@ -14,7 +14,7 @@ function AutoCompleteInputField(props: Props) {
 
   return (
     <GooglePlacesAutocomplete
-      placeholder="Search"
+      placeholder="Search city, address, or place"
       minLength={2}
       fetchDetails={true}
       onPress={(data, details = null) => {
