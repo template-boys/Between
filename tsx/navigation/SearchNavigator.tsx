@@ -11,26 +11,28 @@ const SearchStack = createStackNavigator();
 
 export default function SearchNavigator({}: Props): ReactElement {
   return (
-    <SearchStack.Navigator>
-      <SearchStack.Screen
-        name="In Between"
-        component={SearchScreen}
-        options={{
+    <SearchStack.Navigator
+      screenOptions={(props) => {
+        return {
           headerLeft: ({ canGoBack }) =>
             canGoBack && (
-              <Icon name="arrow-back-outline" size={30} color={theme.purple} />
+              <Icon
+                name="arrow-back-outline"
+                size={30}
+                color={theme.purple}
+                onPress={() => {
+                  props.navigation.goBack();
+                }}
+              />
             ),
-        }}
-      />
+          headerLeftContainerStyle: { paddingLeft: 10 },
+        };
+      }}
+    >
+      <SearchStack.Screen name="In Between" component={SearchScreen} />
       <SearchStack.Screen
         name="Search Screen 2"
         component={SearchResultsScreen}
-        options={{
-          headerLeft: ({ canGoBack }) =>
-            canGoBack && (
-              <Icon name="arrow-back-outline" size={30} color={theme.purple} />
-            ),
-        }}
       />
     </SearchStack.Navigator>
   );
