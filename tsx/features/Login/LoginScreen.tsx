@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import * as React from "react";
-import { Text, SafeAreaView, View, Dimensions, Animated } from "react-native";
+import { Text, SafeAreaView, View, Dimensions } from "react-native";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import { useDispatch } from "react-redux";
@@ -20,7 +20,7 @@ export function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Animated.View style={[styles.bottomAngle]} />
+      <View style={[styles.bottomAngle]} />
       <View style={styles.whiteOnTopOfAngle} />
       <Text style={[style.title1, { marginTop: 50, color: theme.darkPurple }]}>
         between
