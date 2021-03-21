@@ -4,8 +4,8 @@ import theme from "./theme";
 export default StyleSheet.create({
   title1: {
     color: theme.darkestGrey,
-    fontSize: 20,
-    lineHeight: 25,
+    fontSize: 30,
+    lineHeight: 32,
     fontWeight: "500",
   },
   title2: {

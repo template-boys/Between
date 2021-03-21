@@ -1,10 +1,14 @@
 import React, { ReactElement, useState } from "react";
-import { Text, View, Dimensions } from "react-native";
+import { Text, View, Dimensions, TouchableOpacity } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 import Carousel from "react-native-snap-carousel";
 import Button from "../../components/Button";
 import AutoCompleteInputField from "../../components/AutoCompleteInputField";
-import { addSearchLocation, setSearchResult } from "../../../testActions";
+import {
+  addSearchLocation,
+  removeSearchLocation,
+  setSearchResult,
+} from "../../../testActions";
 import { useDispatch, useSelector } from "react-redux";
 import style from "../../themes/style";
 import theme from "../../themes/theme";
@@ -12,6 +16,7 @@ import MapLocationView from "./components/MapView";
 import { Input } from "react-native-elements";
 import { placeSearch } from "../../api/PlaceSearch";
 import { getCenterOfBounds } from "geolib";
+import Icon from "react-native-vector-icons/Ionicons";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -49,16 +54,39 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
 
   const { width: SCREEN_WIDTH } = Dimensions.get("window");
   const showSearchInput = searchLocations.length !== 0;
+
   const _renderItem = ({ item, index }) => {
     return (
-      <MapLocationView
-        diameter={200}
-        location={{
-          longitude: item.geometry.location.lng,
-          latitude: item.geometry.location.lat,
-        }}
-        showShadow
-      />
+      <View style={{}}>
+        <TouchableOpacity
+          style={{
+            alignSelf: "flex-end",
+            position: "absolute",
+            alignItems: "center",
+          }}
+          onPress={() => {
+            dispatch(removeSearchLocation(index));
+          }}
+        >
+          <View
+            style={{
+              height: 30,
+              width: 30,
+            }}
+          >
+            <Icon name="close-outline" size={28} color={"red"} style={{}} />
+          </View>
+        </TouchableOpacity>
+        <MapLocationView
+          diameter={200}
+          location={{
+            longitude: item.geometry.location.lng,
+            latitude: item.geometry.location.lat,
+          }}
+          showShadow
+        />
+        <Text style={{ alignSelf: "center", marginTop: 15 }}>{item.name}</Text>
+      </View>
     );
   };
 

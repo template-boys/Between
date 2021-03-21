@@ -1,118 +1,47 @@
 import "react-native-gesture-handler";
 import * as React from "react";
-import { Text, SafeAreaView, View, Dimensions } from "react-native";
-import { Input } from "react-native-elements";
+import { Text, SafeAreaView, View, Dimensions, Animated } from "react-native";
+import Input from "../../components/Input";
 import Button from "../../components/Button";
-import { loginUser } from "../../../testActions";
 import { useDispatch } from "react-redux";
 import theme from "../../themes/theme";
 import FirebaseAuth from "@react-native-firebase/auth";
+import { StyleSheet } from "react-native";
+import style from "../../themes/style";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export function LoginScreen() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [error, setError] = React.useState("");
 
   const dispatch = useDispatch();
+
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        alignItems: "center",
-        alignSelf: "center",
-        width: SCREEN_WIDTH,
-        height: SCREEN_WIDTH / 1.7,
-      }}
-    >
-      <>
-        <View
-          style={{
-            backgroundColor: theme.darkPurple,
-            position: "absolute",
-            width: SCREEN_WIDTH,
-            height: SCREEN_HEIGHT,
-          }}
-        />
-        <View
-          style={{
-            borderRadius: SCREEN_WIDTH,
-            width: SCREEN_WIDTH * 2,
-            height: SCREEN_WIDTH * 2,
-            position: "absolute",
-            bottom: 0,
-            backgroundColor: "white",
-            top: -50,
-          }}
-        />
-      </>
-      <Text
-        style={{
-          fontSize: 32,
-          fontWeight: "600",
-          marginTop: 50,
-          color: theme.purple,
-        }}
-      >
-        {`}{`}
-      </Text>
-      <Text
-        style={{
-          fontSize: 32,
-          fontWeight: "600",
-          color: theme.charcoalGrey,
-        }}
-      >
-        inBetween
+    <SafeAreaView style={styles.container}>
+      <Animated.View style={[styles.bottomAngle]} />
+      <View style={styles.whiteOnTopOfAngle} />
+      <Text style={[style.title1, { marginTop: 50, color: theme.darkPurple }]}>
+        between
       </Text>
       <Input
         placeholder="yourname@example.com"
-        label="Email"
         onChangeText={(value) => {
+          setError("");
           setEmail(value);
         }}
-        labelStyle={{
-          color: theme.charcoalGrey,
-          marginBottom: 8,
-        }}
-        inputStyle={{
-          borderColor: theme.lightGrey,
-          padding: 10,
-          borderBottomWidth: 2,
-          color: theme.black,
-          paddingTop: 12,
-          paddingBottom: 12,
-        }}
-        placeholderTextColor={theme.lightGrey}
-        containerStyle={{ marginTop: 45, paddingLeft: 20, paddingRight: 20 }}
-        inputContainerStyle={{ borderBottomWidth: 0 }}
+        containerStyle={{ marginTop: 70 }}
+        email
       />
       <Input
-        placeholder="yourpassword"
-        secureTextEntry={true}
-        label="Password"
+        placeholder="password"
         onChangeText={(value) => {
+          setError("");
           setPassword(value);
         }}
-        labelStyle={{
-          color: theme.charcoalGrey,
-          marginBottom: 8,
-        }}
-        inputStyle={{
-          borderColor: theme.lightGrey,
-          padding: 10,
-          borderBottomWidth: 2,
-          color: theme.black,
-          paddingTop: 12,
-          paddingBottom: 12,
-        }}
-        placeholderTextColor={theme.lightGrey}
-        containerStyle={{
-          marginTop: 15,
-          paddingLeft: 20,
-          paddingRight: 20,
-        }}
-        inputContainerStyle={{ borderBottomWidth: 0 }}
+        secureTextEntry
+        errorMessage={error}
       />
       <View style={{ marginLeft: "auto" }}>
         <Text style={{ marginRight: 18 }}>Forgot Password?</Text>
@@ -120,6 +49,7 @@ export function LoginScreen() {
       <Button
         type="primary"
         title="Log In"
+        disabled={!email || !password || error !== ""}
         onPress={() => {
           FirebaseAuth()
             .signInWithEmailAndPassword(email, password)
@@ -127,7 +57,13 @@ export function LoginScreen() {
               console.log("Logged in.");
             })
             .catch((error) => {
-              console.error(error);
+              if (
+                error.code === "auth/invalid-email" ||
+                error.code === "auth/wrong-password"
+              ) {
+                console.log("Invalid username or password");
+                setError("Invalid username or password");
+              }
             });
         }}
         buttonStyle={{ width: 180, marginTop: 80 }}
@@ -157,3 +93,26 @@ export function LoginScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    alignSelf: "center",
+    width: SCREEN_WIDTH,
+  },
+  bottomAngle: {
+    backgroundColor: theme.darkPurple,
+    position: "absolute",
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  },
+  whiteOnTopOfAngle: {
+    borderRadius: SCREEN_WIDTH,
+    width: SCREEN_WIDTH * 2,
+    height: SCREEN_WIDTH * 2,
+    position: "absolute",
+    backgroundColor: "white",
+    top: -50,
+  },
+});
