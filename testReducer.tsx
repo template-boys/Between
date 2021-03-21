@@ -48,6 +48,13 @@ const testReducer = (state = INITIAL_STATE, action) => {
         ...state,
         searchResult: action.searchResult,
       };
+    case "REMOVE_SEARCH_RESULT":
+      const tempArray = [...state.searchLocations];
+      tempArray.splice(action.index, 1);
+      return {
+        ...state,
+        searchLocations: tempArray,
+      };
     default:
       return state;
   }

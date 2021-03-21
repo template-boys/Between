@@ -34,3 +34,10 @@ export const setSearchResult = (searchResult) => ({
   type: "SET_SEARCH_RESULT",
   searchResult,
 });
+
+export const removeSearchLocation = (index) => {
+  return {
+    type: "REMOVE_SEARCH_RESULT",
+    index,
+  };
+};

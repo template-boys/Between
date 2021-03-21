@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { v4 as UUIDGenerate } from "uuid";
 import { getGoogleApiKey } from "../utils/googleKeyUtil";
@@ -11,15 +11,18 @@ interface Props {
 function AutoCompleteInputField(props: Props) {
   const [apiKey, setApiKey] = useState(getGoogleApiKey());
   const [sessionID, setSessionID] = useState(UUIDGenerate());
+  const ref = useRef<any | null>(null);
 
   return (
     <GooglePlacesAutocomplete
+      ref={ref}
       placeholder="Search city, address, or place"
       minLength={2}
       fetchDetails={true}
       onPress={(data, details = null) => {
         setSessionID(UUIDGenerate());
         props.setLocation(details);
+        ref.current?.setAddressText("");
       }}
       onFail={(error) => console.error(error)}
       query={{
@@ -74,6 +77,9 @@ function AutoCompleteInputField(props: Props) {
         },
       }}
       debounce={200}
+      textInputProps={{
+        onBlur: () => ref.current?.setAddressText(""),
+      }}
     />
   );
 }
