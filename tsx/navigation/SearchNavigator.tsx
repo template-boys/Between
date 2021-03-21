@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
 import SearchScreen from "../features/Search/SearchScreen";
-import SearchScreen2 from "../features/Search/SearchScreen2";
+import SearchResultsScreen from "../features/Search/SearchResultsScreen";
 import theme from "../themes/theme";
 
 interface Props {}
@@ -24,7 +24,7 @@ export default function SearchNavigator({}: Props): ReactElement {
       />
       <SearchStack.Screen
         name="Search Screen 2"
-        component={SearchScreen2}
+        component={SearchResultsScreen}
         options={{
           headerLeft: ({ canGoBack }) =>
             canGoBack && (

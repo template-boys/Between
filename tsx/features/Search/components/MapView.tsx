@@ -19,20 +19,25 @@ export default function MapLocationView({
       <MapView
         style={[
           styles.mapStyles,
-          { height: diameter, width: diameter, borderRadius: diameter / 2 },
+          {
+            height: diameter,
+            width: diameter,
+            borderRadius: diameter / 2,
+          },
         ]}
         region={{
           latitude: location.latitude,
           longitude: location.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
         }}
+        mapType="satellite"
         pitchEnabled={false}
         rotateEnabled={false}
         zoomEnabled={false}
         scrollEnabled={false}
       >
-        <Marker coordinate={location} />
+        {/* <Marker coordinate={location} /> */}
       </MapView>
     </View>
   );
@@ -48,7 +53,7 @@ const styles = StyleSheet.create({
   },
   mapStyles: {
     zIndex: -10,
-    borderWidth: 2,
+    borderWidth: 4,
     borderColor: theme.purple,
   },
 });
