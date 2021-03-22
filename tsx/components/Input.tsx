@@ -42,7 +42,7 @@ const Input = (props: Props) => {
       label={props.label}
       placeholder={props.placeholder}
       onChangeText={props.onChangeText}
-      autoCapitalize={props.autoCapitalize}
+      autoCapitalize={props.autoCapitalize ? "words" : "none"}
       secureTextEntry={props.secureTextEntry}
       errorMessage={props.errorMessage}
       leftIcon={

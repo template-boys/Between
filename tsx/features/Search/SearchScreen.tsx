@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useRef, useState } from "react";
 import { Text, View, Dimensions, TouchableOpacity } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 import Carousel from "react-native-snap-carousel";
@@ -30,11 +30,17 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
     (state) => state.testReducer.searchLocations
   );
 
+  const carouselRef = useRef<any | null>(null);
+
   const setLocation = (location) => {
     dispatch(addSearchLocation(location));
+    setTimeout(() => {
+      carouselRef.current?.snapToItem(searchLocations.length + 1);
+    }, 250);
   };
 
   const handleSearch = async () => {
+    navigation.navigate("Search Screen 2");
     setIsLoading(true);
     let middlePoint;
     let locationCoords: any[] = [];
@@ -49,7 +55,6 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
     const searchResult = await placeSearch(search, "en", middlePoint);
     setIsLoading(false);
     dispatch(setSearchResult(searchResult.data));
-    navigation.navigate("Search Screen 2");
   };
 
   const { width: SCREEN_WIDTH } = Dimensions.get("window");
@@ -106,6 +111,7 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
       <AutoCompleteInputField setLocation={setLocation} />
       <View style={{ marginTop: 90 }}>
         <Carousel
+          ref={carouselRef}
           data={searchLocations}
           renderItem={(item) => _renderItem(item)}
           sliderWidth={SCREEN_WIDTH}
