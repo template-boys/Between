@@ -1,6 +1,6 @@
 export default {
-  purple: "#9CA3DB",
-  darkPurple: "#363457",
+  purple: "#9C9AFA",
+  darkPurple: "#7A48FF",
   black: "#000000",
   charcoalGrey: "#293033",
   darkestGrey: "#212121",
@@ -11,5 +11,5 @@ export default {
   regular: "400",
   medium: "600",
   bold: "700",
-  errorRed: "#B80C09",
+  errorRed: "#ff0033",
 };

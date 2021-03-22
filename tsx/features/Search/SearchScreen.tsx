@@ -1,22 +1,15 @@
 import React, { ReactElement, useRef, useState } from "react";
-import { Text, View, Dimensions, TouchableOpacity } from "react-native";
+import { View, Dimensions, StyleSheet } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
-import Carousel from "react-native-snap-carousel";
-import Button from "../../components/Button";
+import BottomSheet from "reanimated-bottom-sheet";
 import AutoCompleteInputField from "../../components/AutoCompleteInputField";
-import {
-  addSearchLocation,
-  removeSearchLocation,
-  setSearchResult,
-} from "../../../testActions";
+import { addSearchLocation, setSearchResult } from "../../../testActions";
 import { useDispatch, useSelector } from "react-redux";
-import style from "../../themes/style";
 import theme from "../../themes/theme";
-import MapLocationView from "./components/MapView";
-import { Input } from "react-native-elements";
 import { placeSearch } from "../../api/PlaceSearch";
 import { getCenterOfBounds } from "geolib";
 import Icon from "react-native-vector-icons/Ionicons";
+import FullMapView from "./components/FullMapView";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -31,12 +24,11 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
   );
 
   const carouselRef = useRef<any | null>(null);
+  const sheetRef = React.useRef<BottomSheet>(null);
 
   const setLocation = (location) => {
     dispatch(addSearchLocation(location));
-    setTimeout(() => {
-      carouselRef.current?.snapToItem(searchLocations.length + 1);
-    }, 250);
+    sheetRef.current?.snapTo(1);
   };
 
   const handleSearch = async () => {
@@ -57,101 +49,85 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
     dispatch(setSearchResult(searchResult.data));
   };
 
-  const { width: SCREEN_WIDTH } = Dimensions.get("window");
+  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get(
+    "window"
+  );
   const showSearchInput = searchLocations.length !== 0;
 
-  const _renderItem = ({ item, index }) => {
-    return (
-      <View style={{}}>
-        <TouchableOpacity
-          style={{
-            alignSelf: "flex-end",
-            position: "absolute",
-            alignItems: "center",
-          }}
-          onPress={() => {
-            dispatch(removeSearchLocation(index));
-          }}
-        >
-          <View
-            style={{
-              height: 30,
-              width: 30,
-            }}
-          >
-            <Icon name="close-outline" size={28} color={"red"} style={{}} />
-          </View>
-        </TouchableOpacity>
-        <MapLocationView
-          diameter={200}
-          location={{
-            longitude: item.geometry.location.lng,
-            latitude: item.geometry.location.lat,
-          }}
-          showShadow
-        />
-        <Text style={{ alignSelf: "center", marginTop: 15 }}>{item.name}</Text>
-      </View>
-    );
-  };
+  const renderContent = () => (
+    <View
+      style={{
+        backgroundColor: theme.lightestGrey,
+        height: SCREEN_HEIGHT,
+        paddingLeft: 25,
+        paddingRight: 25,
+      }}
+    >
+      <Icon
+        name="remove-outline"
+        size={40}
+        color={theme.charcoalGrey}
+        style={{ alignSelf: "center" }}
+      />
+      <AutoCompleteInputField setLocation={setLocation} />
+    </View>
+  );
 
   return (
-    <View style={{ display: "flex" }}>
-      <Text
+    <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 0.75,
+        }}
+      >
+        <FullMapView
+          onIconPress={() => {
+            sheetRef.current?.snapTo(0);
+          }}
+        />
+      </View>
+
+      <View
         style={[
-          style.title1,
+          styles.shadow,
           {
-            alignSelf: "center",
-            marginTop: 60,
+            flex: 0.3,
+            marginRight: 30,
+            marginLeft: 30,
+            borderRadius: 60,
+            backgroundColor: "white",
+            marginBottom: 20,
           },
         ]}
       >
-        Add Locations
-      </Text>
-      <AutoCompleteInputField setLocation={setLocation} />
-      <View style={{ marginTop: 90 }}>
-        <Carousel
-          ref={carouselRef}
-          data={searchLocations}
-          renderItem={(item) => _renderItem(item)}
-          sliderWidth={SCREEN_WIDTH}
-          itemWidth={240}
+        <View
+          style={{
+            width: SCREEN_WIDTH - 60,
+            height: 175,
+          }}
         />
       </View>
-      {showSearchInput && (
-        <View>
-          <Input
-            placeholder="What are you looking for?"
-            label="Type of place"
-            labelStyle={{
-              color: theme.charcoalGrey,
-              marginBottom: 8,
-            }}
-            inputStyle={{
-              borderColor: theme.lightGrey,
-              padding: 10,
-              borderBottomWidth: 2,
-              color: theme.black,
-              paddingTop: 12,
-              paddingBottom: 12,
-            }}
-            placeholderTextColor={theme.lightGrey}
-            containerStyle={{
-              marginTop: 45,
-              paddingLeft: 20,
-              paddingRight: 20,
-            }}
-            inputContainerStyle={{ borderBottomWidth: 0 }}
-            onChangeText={(value) => setSearch(value)}
-          />
-          <Button
-            type="primary"
-            title="Search"
-            disabled={searchLocations.length === 0 || !search}
-            onPress={handleSearch}
-          />
-        </View>
-      )}
+
+      <BottomSheet
+        ref={sheetRef}
+        enabledInnerScrolling={false}
+        snapPoints={[500, 0]}
+        borderRadius={60}
+        renderContent={renderContent}
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  contentContainer: {
+    flex: 1,
+  },
+  shadow: {
+    shadowColor: theme.lightGrey,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 1,
+    shadowRadius: 7,
+    elevation: 1,
+  },
+});

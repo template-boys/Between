@@ -13,8 +13,8 @@ interface Props {
 
 const Button = (props: Props) => {
   const backgroundColor =
-    props.type === "primary" ? theme.purple : "transparent";
-  const borderColor = props.type === "secondary" ? theme.purple : "";
+    props.type === "primary" ? theme.darkPurple : "transparent";
+  const borderColor = props.type === "secondary" ? theme.darkPurple : "";
   const borderWidth = props.type === "secondary" ? 2 : 0;
   const titleStyle =
     props.type === "secondary" ? { color: theme.charcoalGrey } : {};
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   buttonStyle: {
     marginLeft: 20,
     marginRight: 20,
-    borderRadius: 6,
+    borderRadius: 26,
     minWidth: 250,
   },
 });

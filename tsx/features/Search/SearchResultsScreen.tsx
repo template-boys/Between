@@ -69,7 +69,10 @@ export default function SearchResultsScreen({}: Props): ReactElement {
                 <ListItem.Subtitle
                   style={{
                     paddingRight: 5,
-                    color: locationOpen(location) == "Open" ? "green" : "red",
+                    color:
+                      locationOpen(location) == "Open"
+                        ? "green"
+                        : theme.errorRed,
                   }}
                 >
                   {locationOpen(location)}

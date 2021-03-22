@@ -50,9 +50,10 @@ function App() {
         name="Search"
         options={{
           tabBarLabel: "",
-          tabBarIcon: ({ color }) => (
-            <Icon name="search-outline" size={30} color={color} />
-          ),
+          tabBarIcon: ({ color, focused }) => {
+            const iconName = focused ? "search" : "search-outline";
+            return <Icon name={iconName} size={30} color={color} />;
+          },
         }}
         component={SearchNavigator}
       />
@@ -60,9 +61,10 @@ function App() {
         name="Activity"
         options={{
           tabBarLabel: "",
-          tabBarIcon: ({ color }) => (
-            <Icon name="list-outline" size={30} color={color} />
-          ),
+          tabBarIcon: ({ color, focused }) => {
+            const iconName = focused ? "list" : "list-outline";
+            return <Icon name={iconName} size={30} color={color} />;
+          },
         }}
         component={ActivityNavigator}
       />
@@ -70,9 +72,10 @@ function App() {
         name="Favorites"
         options={{
           tabBarLabel: "",
-          tabBarIcon: ({ color }) => (
-            <Icon name="heart-outline" size={30} color={color} />
-          ),
+          tabBarIcon: ({ color, focused }) => {
+            const iconName = focused ? "heart" : "heart-outline";
+            return <Icon name={iconName} size={30} color={color} />;
+          },
         }}
         component={FavoritesNavigator}
       />
@@ -80,9 +83,10 @@ function App() {
         name="Profile"
         options={{
           tabBarLabel: "",
-          tabBarIcon: ({ color }) => (
-            <Icon name="person-outline" size={30} color={color} />
-          ),
+          tabBarIcon: ({ color, focused }) => {
+            const iconName = focused ? "person" : "person-outline";
+            return <Icon name={iconName} size={30} color={color} />;
+          },
         }}
         component={ProfileNavigator}
       />
