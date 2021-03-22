@@ -15,7 +15,7 @@ export default function MapLocationView({
   location,
 }: Props): ReactElement {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { height: diameter + 5 }]}>
       <MapView
         style={[
           styles.mapStyles,
@@ -46,9 +46,9 @@ export default function MapLocationView({
 const styles = StyleSheet.create({
   container: {
     shadowColor: theme.lightGrey,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.8,
-    shadowRadius: 7,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 1,
+    shadowRadius: 5,
     elevation: 1,
     alignSelf: "center",
   },

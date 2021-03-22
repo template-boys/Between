@@ -29,7 +29,13 @@ export default function SearchNavigator({}: Props): ReactElement {
         };
       }}
     >
-      <SearchStack.Screen name="In Between" component={SearchScreen} />
+      <SearchStack.Screen
+        name="In Between"
+        component={SearchScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
       <SearchStack.Screen
         name="Search Screen 2"
         component={SearchResultsScreen}

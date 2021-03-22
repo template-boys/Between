@@ -30,7 +30,9 @@ const Input = (props: Props) => {
     ref?.current?.shake();
   }
 
-  const bottomBorderColor = !!props.errorMessage ? "red" : theme.purple;
+  const bottomBorderColor = !!props.errorMessage
+    ? theme.errorRed
+    : theme.purple;
   return (
     <RNEInput
       ref={ref}
@@ -45,12 +47,14 @@ const Input = (props: Props) => {
       autoCapitalize={props.autoCapitalize ? "words" : "none"}
       secureTextEntry={props.secureTextEntry}
       errorMessage={props.errorMessage}
+      autoCompleteType="off"
+      autoCorrect={false}
       leftIcon={
         iconType !== "" && (
           <Icon
             name={iconType}
             size={20}
-            color={!!props.errorMessage ? "red" : theme.purple}
+            color={!!props.errorMessage ? theme.errorRed : theme.purple}
           />
         )
       }

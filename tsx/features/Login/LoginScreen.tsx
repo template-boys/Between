@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
   },
   bottomAngle: {
-    backgroundColor: theme.darkPurple,
+    backgroundColor: theme.purple,
     position: "absolute",
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT,

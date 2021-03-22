@@ -3,7 +3,6 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import { v4 as UUIDGenerate } from "uuid";
 import { getGoogleApiKey } from "../utils/googleKeyUtil";
 import theme from "../themes/theme";
-
 interface Props {
   setLocation: (any) => void;
 }
@@ -13,11 +12,16 @@ function AutoCompleteInputField(props: Props) {
   const [sessionID, setSessionID] = useState(UUIDGenerate());
   const ref = useRef<any | null>(null);
 
+  // navigator.geolocation = require('@react-native-community/geolocation');
+
   return (
     <GooglePlacesAutocomplete
+      textInputProps={{
+        onBlur: () => ref.current?.setAddressText(""),
+        placeholderTextColor: theme.lightGrey,
+      }}
       ref={ref}
-      placeholder="Search city, address, or place"
-      minLength={2}
+      minLength={1}
       fetchDetails={true}
       onPress={(data, details = null) => {
         setSessionID(UUIDGenerate());
@@ -38,24 +42,24 @@ function AutoCompleteInputField(props: Props) {
       }}
       styles={{
         container: {
-          marginTop: 20,
           zIndex: 50,
           overflow: "visible",
         },
         textInputContainer: {
           borderTopWidth: 0,
-          borderBottomWidth: 3,
+          borderBottomWidth: 2,
           height: 50,
           overflow: "visible",
-          backgroundColor: "transparent",
-          borderColor: theme.purple,
+          backgroundColor: theme.lightestGrey,
+          borderColor: theme.darkPurple,
         },
         textInput: {
-          backgroundColor: "transparent",
+          backgroundColor: theme.lightestGrey,
           fontSize: 15,
           lineHeight: 22.5,
           paddingBottom: 0,
           flex: 1,
+          color: theme.charcoalGrey,
         },
         listView: {
           position: "absolute",
@@ -77,9 +81,12 @@ function AutoCompleteInputField(props: Props) {
         },
       }}
       debounce={200}
-      textInputProps={{
-        onBlur: () => ref.current?.setAddressText(""),
-      }}
+      placeholder="Search city, address, or place"
+      GoogleReverseGeocodingQuery={
+        {
+          // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+        }
+      }
     />
   );
 }
