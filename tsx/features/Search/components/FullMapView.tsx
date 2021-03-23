@@ -40,8 +40,8 @@ export default function FullMapView({ onIconPress }: Props): ReactElement {
       animated: true,
       edgePadding: {
         top: Platform.OS === "ios" ? 100 : PixelRatio.get() * 100 - 50, // 50 is the baseMapPadding https://github.com/react-native-community/react-native-maps/blob/master/lib/android/src/main/java/com/airbnb/android/react/maps/AirMapView.java#L85
-        right: 30,
-        left: 30,
+        right: 100,
+        left: 100,
         bottom: Platform.OS === "ios" ? 400 : PixelRatio.get() * 350 - 50,
       },
     });
@@ -118,7 +118,7 @@ export default function FullMapView({ onIconPress }: Props): ReactElement {
             center={center}
             radius={2000}
             strokeWidth={2}
-            strokeColor={theme.darkPurple}
+            strokeColor={theme.purple}
             fillColor={"rgba(122, 72, 255, .3)"}
           />
         )}

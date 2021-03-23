@@ -1,0 +1,62 @@
+diff --git a/node_modules/react-native-raw-bottom-sheet/index.d.ts b/node_modules/react-native-raw-bottom-sheet/index.d.ts
+index 31a5259..19c13f3 100644
+--- a/node_modules/react-native-raw-bottom-sheet/index.d.ts
++++ b/node_modules/react-native-raw-bottom-sheet/index.d.ts
+@@ -18,8 +18,10 @@ declare module "react-native-raw-bottom-sheet" {
+       wrapper?: StyleProp<ViewStyle>;
+       container?: StyleProp<ViewStyle>;
+       draggableIcon?: StyleProp<ViewStyle>;
++      draggableContainer?: StyleProp<ViewStyle>;
+     };
+     keyboardAvoidingViewEnabled?: boolean;
++    showTopBar?: boolean;
+   };
+ 
+   export default class RBSheet extends Component<RBSheetProps> {
+diff --git a/node_modules/react-native-raw-bottom-sheet/src/index.js b/node_modules/react-native-raw-bottom-sheet/src/index.js
+index 0b3eab0..401e4a5 100644
+--- a/node_modules/react-native-raw-bottom-sheet/src/index.js
++++ b/node_modules/react-native-raw-bottom-sheet/src/index.js
+@@ -96,7 +96,8 @@ class RBSheet extends Component {
+       closeOnPressBack,
+       children,
+       customStyles,
+-      keyboardAvoidingViewEnabled
++      keyboardAvoidingViewEnabled,
++      showTopBar
+     } = this.props;
+     const { animatedHeight, pan, modalVisible } = this.state;
+     const panStyle = {
+@@ -127,10 +128,10 @@ class RBSheet extends Component {
+             {...(!dragFromTopOnly && this.panResponder.panHandlers)}
+             style={[panStyle, styles.container, { height: animatedHeight }, customStyles.container]}
+           >
+-            {closeOnDragDown && (
++            {showTopBar && (
+               <View
+                 {...(dragFromTopOnly && this.panResponder.panHandlers)}
+-                style={styles.draggableContainer}
++                style={[styles.draggableContainer, customStyles.draggableContainer]}
+               >
+                 <View style={[styles.draggableIcon, customStyles.draggableIcon]} />
+               </View>
+@@ -157,7 +158,8 @@ RBSheet.propTypes = {
+   customStyles: PropTypes.objectOf(PropTypes.object),
+   onClose: PropTypes.func,
+   onOpen: PropTypes.func,
+-  children: PropTypes.node
++  children: PropTypes.node,
++  showTopBar: PropTypes.bool,
+ };
+ 
+ RBSheet.defaultProps = {
+@@ -174,7 +176,8 @@ RBSheet.defaultProps = {
+   customStyles: {},
+   onClose: null,
+   onOpen: null,
+-  children: <View />
++  children: <View />,
++  showTopBar: true,
+ };
+ 
+ export default RBSheet;

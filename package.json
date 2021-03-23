@@ -8,7 +8,8 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "prettier-format": "prettier --config .prettierrc './**/*.tsx' --write"
+    "prettier-format": "prettier --config .prettierrc './**/*.tsx' --write",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.10",
@@ -22,6 +23,7 @@
     "geolib": "^3.3.1",
     "install": "^0.13.0",
     "npm": "^7.6.2",
+    "patch-package": "^6.4.7",
     "qs": "^6.5.2",
     "react": "16.13.1",
     "react-native": "0.63.4",
@@ -30,7 +32,7 @@
     "react-native-gesture-handler": "^1.10.3",
     "react-native-google-places-autocomplete": "^2.2.0",
     "react-native-maps": "0.27.1",
-    "react-native-reanimated": "^2.0.0",
+    "react-native-raw-bottom-sheet": "^2.2.0",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-safe-area-view": "^1.1.1",
     "react-native-screens": "^2.18.1",
@@ -38,7 +40,6 @@
     "react-native-vector-icons": "^8.1.0",
     "react-navigation": "^4.4.4",
     "react-redux": "^7.2.2",
-    "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "redux": "^4.0.5",
     "uuid": "^3.4.0"
   },

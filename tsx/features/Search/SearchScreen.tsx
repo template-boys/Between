@@ -1,7 +1,7 @@
 import React, { ReactElement, useRef, useState } from "react";
 import { View, Dimensions, StyleSheet } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
-import BottomSheet from "reanimated-bottom-sheet";
+import RBSheet from "react-native-raw-bottom-sheet";
 import AutoCompleteInputField from "../../components/AutoCompleteInputField";
 import { addSearchLocation, setSearchResult } from "../../../testActions";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,11 +24,11 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
   );
 
   const carouselRef = useRef<any | null>(null);
-  const sheetRef = React.useRef<BottomSheet>(null);
+  const sheetRef = useRef<any | null>(null);
 
   const setLocation = (location) => {
     dispatch(addSearchLocation(location));
-    sheetRef.current?.snapTo(1);
+    sheetRef.current?.close();
   };
 
   const handleSearch = async () => {
@@ -82,7 +82,7 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
       >
         <FullMapView
           onIconPress={() => {
-            sheetRef.current?.snapTo(0);
+            sheetRef.current?.open();
           }}
         />
       </View>
@@ -107,14 +107,43 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
           }}
         />
       </View>
-
-      <BottomSheet
+      <RBSheet
         ref={sheetRef}
-        enabledInnerScrolling={false}
-        snapPoints={[500, 0]}
-        borderRadius={60}
-        renderContent={renderContent}
-      />
+        height={SCREEN_HEIGHT / 2}
+        closeOnDragDown={true}
+        showTopBar={false}
+        closeOnPressMask={true}
+        customStyles={{
+          draggableContainer: {
+            backgroundColor: "white",
+            borderTopLeftRadius: 100,
+            borderTopRightRadius: 100,
+          },
+          wrapper: {
+            backgroundColor: "rgba(119, 119, 119, 0.3)",
+            height: SCREEN_HEIGHT / 2,
+          },
+          container: {
+            borderRadius: 56,
+          },
+          draggableIcon: {
+            backgroundColor: "transparent",
+          },
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: "white",
+            height: SCREEN_HEIGHT,
+            paddingLeft: 25,
+            paddingRight: 25,
+          }}
+        >
+          <View style={{ marginTop: 15 }}>
+            <AutoCompleteInputField setLocation={setLocation} />
+          </View>
+        </View>
+      </RBSheet>
     </View>
   );
 }
