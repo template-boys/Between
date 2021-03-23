@@ -8,7 +8,7 @@ interface Props {
   onChangeText: (value: string) => void;
   label?: string;
   placeholder: string;
-  autoCapitalize: boolean;
+  autoCapitalize?: boolean;
   containerStyle?: ViewStyle;
   secureTextEntry?: boolean;
   errorMessage?: string;
