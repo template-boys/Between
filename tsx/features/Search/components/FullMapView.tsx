@@ -24,7 +24,7 @@ export default function FullMapView({ onIconPress }: Props): ReactElement {
 
   const dispatch = useDispatch();
   const searchLocations = useSelector(
-    (state) => state.testReducer.searchLocations
+    (state: any) => state.testReducer.searchLocations
   );
   const [pressedMarker, setPressedMarker] = React.useState(-1);
   const mapRef = React.useRef<any | null>(null);

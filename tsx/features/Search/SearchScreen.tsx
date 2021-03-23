@@ -1,15 +1,16 @@
-import React, { ReactElement, useRef, useState } from "react";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
 import { View, Dimensions, StyleSheet } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 import RBSheet from "react-native-raw-bottom-sheet";
 import AutoCompleteInputField from "../../components/AutoCompleteInputField";
-import { addSearchLocation, setSearchResult } from "../../../testActions";
+import { addSearchLocation, setSearchLoading, setSearchResult } from "../../../testActions";
 import { useDispatch, useSelector } from "react-redux";
 import theme from "../../themes/theme";
 import { placeSearch } from "../../api/PlaceSearch";
 import { getCenterOfBounds } from "geolib";
 import Icon from "react-native-vector-icons/Ionicons";
 import FullMapView from "./components/FullMapView";
+import PlaceList from "./components/PlaceList";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -17,14 +18,20 @@ interface Props {
 
 export default function SearchScreen({ navigation }: Props): ReactElement {
   const dispatch = useDispatch();
-  const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const searchLocations = useSelector(
-    (state) => state.testReducer.searchLocations
+  const { searchLocations, searchType, isSearchLoading } = useSelector(
+    (state: any) => state.testReducer
   );
 
-  const carouselRef = useRef<any | null>(null);
+  console.log(searchType);
+
   const sheetRef = useRef<any | null>(null);
+
+  useEffect(() => {
+    if (searchLocations.length > 1) {
+      handleSearch();
+    }
+  }, [searchLocations, searchType]);
 
   const setLocation = (location) => {
     dispatch(addSearchLocation(location));
@@ -32,8 +39,7 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
   };
 
   const handleSearch = async () => {
-    navigation.navigate("Search Screen 2");
-    setIsLoading(true);
+    dispatch(setSearchLoading(true));
     let middlePoint;
     let locationCoords: any[] = [];
     searchLocations.forEach((location) => {
@@ -44,9 +50,9 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
     });
 
     middlePoint = getCenterOfBounds(locationCoords);
-    const searchResult = await placeSearch(search, "en", middlePoint);
-    setIsLoading(false);
-    dispatch(setSearchResult(searchResult.data));
+    const searchResult = await placeSearch(searchType, "en", middlePoint);
+    dispatch(setSearchLoading(false));
+    dispatch(setSearchResult(searchResult.data?.results));
   };
 
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get(
@@ -86,27 +92,7 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
           }}
         />
       </View>
-
-      <View
-        style={[
-          styles.shadow,
-          {
-            flex: 0.3,
-            marginRight: 30,
-            marginLeft: 30,
-            borderRadius: 60,
-            backgroundColor: "white",
-            marginBottom: 20,
-          },
-        ]}
-      >
-        <View
-          style={{
-            width: SCREEN_WIDTH - 60,
-            height: 175,
-          }}
-        />
-      </View>
+      {searchLocations.length > 1 && <PlaceList />}
       <RBSheet
         ref={sheetRef}
         height={SCREEN_HEIGHT / 2}
@@ -151,12 +137,5 @@ export default function SearchScreen({ navigation }: Props): ReactElement {
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-  },
-  shadow: {
-    shadowColor: theme.lightGrey,
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 1,
-    shadowRadius: 7,
-    elevation: 1,
   },
 });

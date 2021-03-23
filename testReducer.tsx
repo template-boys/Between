@@ -7,6 +7,8 @@ const INITIAL_STATE = {
   searchLocations: [],
   searchResult: null,
   user: null,
+  searchType: "Coffee",
+  searchLoading: false,
 };
 
 const testReducer = (state = INITIAL_STATE, action) => {
@@ -25,6 +27,16 @@ const testReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         locationTwo: action.payload,
+      };
+    case "SET_SEARCH_TYPE":
+      return {
+        ...state,
+        searchType: action.payload,
+      };
+    case "SET_SEARCH_LOADING":
+      return {
+        ...state,
+        searchLoading: action.payload,
       };
     case "LOGIN_USER":
       return {

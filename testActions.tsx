@@ -12,6 +12,16 @@ export const setLocationTwo = (location) => ({
   payload: location,
 });
 
+export const setSearchType = (type) => ({
+  type: "SET_SEARCH_TYPE",
+  payload: type,
+});
+
+export const setSearchLoading = (isLoading) => ({
+  type: "SET_SEARCH_LOADING",
+  payload: isLoading,
+});
+
 export const loginUser = (user) => ({
   type: "LOGIN_USER",
   payload: user,
