@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { Badge } from "react-native-elements";
 import Carousel from "react-native-snap-carousel";
 import { useDispatch, useSelector } from "react-redux";
-import { setSearchType } from "../../../../testActions";
+import { setSearchType } from "../../Search/redux/searchActions";
 import theme from "../../../themes/theme";
 
 interface Props {

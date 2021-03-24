@@ -11,7 +11,7 @@ import { LoginScreen } from "../features/Login/LoginScreen";
 import { useSelector, useDispatch } from "react-redux";
 import theme from "../themes/theme";
 import FirebaseAuth from "@react-native-firebase/auth";
-import { loginUser, logoutUser } from "../../testActions";
+import { loginUser, logoutUser } from "../features/Login/redux/loginActions";
 
 const BottomTab = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
