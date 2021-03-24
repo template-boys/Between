@@ -5,6 +5,7 @@ import Carousel from "react-native-snap-carousel";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchType } from "../../Search/redux/searchActions";
 import theme from "../../../themes/theme";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface Props {
   searchResult: any;
@@ -16,6 +17,8 @@ export default function PlaceList({
   searchLoading,
 }: Props): ReactElement {
   const dispatch = useDispatch();
+
+  const [typeIndex, setTypeIndex] = React.useState(0);
 
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get(
     "window"
@@ -32,35 +35,42 @@ export default function PlaceList({
   ];
 
   const carouselRef = useRef<any | null>(null);
-
-  useEffect(() => {
-    if (!searchLoading) {
-      carouselRef.current?.snapToItem(0);
-    }
-  }, [searchLoading]);
+  const typeCarouselRef = useRef<any | null>(null);
 
   const _renderType = ({ item, index }) => {
+    const borderStyle =
+      typeIndex === index
+        ? { borderColor: theme.darkPurple, borderWidth: 2 }
+        : {};
     return (
-      <View
-        style={[
-          styles.shadow,
-          {
-            justifyContent: "center",
-            alignItems: "center",
-            height: 40,
-            minWidth: 70,
-            padding: 5,
-            marginRight: 10,
-            marginLeft: 10,
-            borderRadius: 20,
-            backgroundColor: "white",
-          },
-        ]}
+      <TouchableOpacity
+        onPress={() => {
+          typeCarouselRef.current?.snapToItem(index);
+          setTypeIndex(index);
+        }}
       >
-        <Text style={{ color: theme.charcoalGrey, fontWeight: "500" }}>
-          {item}
-        </Text>
-      </View>
+        <View
+          style={[
+            styles.shadow,
+            {
+              justifyContent: "center",
+              alignItems: "center",
+              height: 40,
+              minWidth: SCREEN_WIDTH / 4.5,
+              padding: 5,
+              marginRight: 10,
+              marginLeft: 10,
+              borderRadius: 20,
+              backgroundColor: "white",
+            },
+            borderStyle,
+          ]}
+        >
+          <Text style={{ color: theme.charcoalGrey, fontWeight: "500" }}>
+            {item}
+          </Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -98,25 +108,33 @@ export default function PlaceList({
     );
   };
 
+  useEffect(() => {
+    if (!searchLoading) {
+      carouselRef.current?.snapToItem(0);
+    }
+  }, [searchLoading]);
+
   return (
     <View style={{ flex: 0.35 }}>
       {searchResult && (
         <>
           <Carousel
+            ref={typeCarouselRef}
             data={types}
             renderItem={_renderType}
             sliderWidth={SCREEN_WIDTH}
-            itemWidth={SCREEN_WIDTH / 5}
+            itemWidth={SCREEN_WIDTH / 4.5}
             onSnapToItem={(index) => {
               dispatch(setSearchType(types[index]));
             }}
+            enableSnap={false}
           />
           <Carousel
             ref={carouselRef}
             data={searchResult}
             renderItem={_renderPlace}
             sliderWidth={SCREEN_WIDTH}
-            itemWidth={SCREEN_WIDTH - 60}
+            itemWidth={SCREEN_WIDTH - 100}
           />
         </>
       )}
