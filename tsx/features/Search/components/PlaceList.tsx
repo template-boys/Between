@@ -2,19 +2,20 @@ import React, { ReactElement, useEffect, useRef } from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { Badge } from "react-native-elements";
 import Carousel from "react-native-snap-carousel";
-import { Icon } from "react-native-vector-icons/Icon";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchType } from "../../../../testActions";
 import theme from "../../../themes/theme";
 
-interface Props {}
+interface Props {
+  searchResult: any;
+  searchLoading: boolean;
+}
 
-export default function PlaceList({}: Props): ReactElement {
+export default function PlaceList({
+  searchResult,
+  searchLoading,
+}: Props): ReactElement {
   const dispatch = useDispatch();
-  const { searchResult, searchLoading } = useSelector((state: any) => {
-    // console.log(JSON.stringify(state.testReducer.searchResult?.results));
-    return state.testReducer;
-  });
 
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get(
     "window"

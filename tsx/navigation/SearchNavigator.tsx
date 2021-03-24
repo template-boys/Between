@@ -1,9 +1,9 @@
 import React, { ReactElement } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
-import SearchScreen from "../features/Search/SearchScreen";
 import SearchResultsScreen from "../features/Search/SearchResultsScreen";
 import theme from "../themes/theme";
+import SearchContainer from "../features/Search/SearchContainer";
 
 interface Props {}
 
@@ -31,7 +31,7 @@ export default function SearchNavigator({}: Props): ReactElement {
     >
       <SearchStack.Screen
         name="In Between"
-        component={SearchScreen}
+        component={SearchContainer}
         options={{
           headerShown: false,
         }}

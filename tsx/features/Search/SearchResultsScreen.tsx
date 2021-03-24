@@ -1,7 +1,7 @@
-import React, { ReactElement, useState } from "react";
-import { Text, View } from "react-native";
+import React, { ReactElement } from "react";
+import { View } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
-import { ListItem, Badge } from "react-native-elements";
+import { ListItem } from "react-native-elements";
 import Icon from "react-native-vector-icons/Ionicons";
 
 import { useSelector } from "react-redux";
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function SearchResultsScreen({}: Props): ReactElement {
-  const searchResult = useSelector((state) => state.testReducer.searchResult);
+  const searchResult = useSelector((state) => state.searchReducer.searchResult);
 
   const locationOpen = (location) => {
     if (location.opening_hours) {

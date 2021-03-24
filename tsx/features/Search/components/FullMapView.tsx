@@ -2,29 +2,28 @@ import React, { ReactElement } from "react";
 import { PixelRatio, Platform, StyleSheet } from "react-native";
 import { View, Dimensions } from "react-native";
 import { TouchableOpacity } from "react-native";
-import MapView, { Circle, Marker, Polyline } from "react-native-maps";
-import { useSelector, useDispatch } from "react-redux";
+import MapView, { Circle, Marker } from "react-native-maps";
 import Icon from "react-native-vector-icons/Ionicons";
+import { getCenterOfBounds } from "geolib";
 import theme from "../../../themes/theme";
 import mapTheme from "./mapStyle";
-import { getCenterOfBounds } from "geolib";
-import { removeSearchLocation } from "../../../../testActions";
 import Button from "../../../components/Button";
 
 interface Props {
   showShadow?: boolean;
   diameter?: number;
   onIconPress?: () => void;
+  onRemovePress: (index: number) => void;
+  searchLocations: any;
 }
 
-export default function FullMapView({ onIconPress }: Props): ReactElement {
+export default function FullMapView({
+  onIconPress,
+  searchLocations,
+  onRemovePress,
+}: Props): ReactElement {
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get(
     "window"
-  );
-
-  const dispatch = useDispatch();
-  const searchLocations = useSelector(
-    (state: any) => state.testReducer.searchLocations
   );
   const [pressedMarker, setPressedMarker] = React.useState(-1);
   const mapRef = React.useRef<any | null>(null);
@@ -55,7 +54,7 @@ export default function FullMapView({ onIconPress }: Props): ReactElement {
     mapRef.current.fitToCoordinates(markers, {
       animated: true,
       edgePadding: {
-        top: Platform.OS === "ios" ? 100 : PixelRatio.get() * 100 - 50, // 50 is the baseMapPadding https://github.com/react-native-community/react-native-maps/blob/master/lib/android/src/main/java/com/airbnb/android/react/maps/AirMapView.java#L85
+        top: Platform.OS === "ios" ? 100 : PixelRatio.get() * 100 - 50,
         right: 100,
         left: 100,
         bottom: Platform.OS === "ios" ? 400 : PixelRatio.get() * 350 - 50,
@@ -79,7 +78,6 @@ export default function FullMapView({ onIconPress }: Props): ReactElement {
   let center;
   if (markers.length > 1) {
     center = getCenterOfBounds(markers);
-    console.log(center);
   }
 
   return (
@@ -97,7 +95,7 @@ export default function FullMapView({ onIconPress }: Props): ReactElement {
             title="Remove"
             type="primary"
             onPress={() => {
-              dispatch(removeSearchLocation(pressedMarker));
+              onRemovePress(pressedMarker);
               setPressedMarker(-1);
             }}
           />

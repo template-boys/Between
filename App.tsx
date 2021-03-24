@@ -1,14 +1,15 @@
 import "react-native-gesture-handler";
 import * as React from "react";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
-import testReducer from "./testReducer";
+import { createStore, applyMiddleware } from "redux";
+import rootReducer from "./rootReducer";
 import Navigator from "./tsx/navigation/Navigator";
 import { StatusBar } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import thunk from "redux-thunk";
 
 function App() {
-  const store = createStore(testReducer);
+  const store = createStore(rootReducer, applyMiddleware(thunk));
   return (
     <Provider store={store}>
       <SafeAreaProvider>

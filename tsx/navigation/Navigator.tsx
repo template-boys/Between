@@ -96,7 +96,7 @@ function App() {
 
 function Navigator() {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.testReducer.loggedIn);
+  const isLoggedIn = useSelector((state) => state.loginReducer.loggedIn);
 
   FirebaseAuth().onAuthStateChanged((user) => {
     if (user !== null && user !== undefined) {
