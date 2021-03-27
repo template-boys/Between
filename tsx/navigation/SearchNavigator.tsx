@@ -3,7 +3,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
 import SearchResultsScreen from "../features/Search/SearchResultsScreen";
 import theme from "../themes/theme";
-import SearchContainer from "../features/Search/SearchContainer";
+import SearchScreen from "../features/Search/SearchScreen";
+import PlaceDetailsScreen from "../features/Search/PlaceDetailsScreen";
 
 interface Props {}
 
@@ -19,7 +20,7 @@ export default function SearchNavigator({}: Props): ReactElement {
               <Icon
                 name="arrow-back-outline"
                 size={30}
-                color={theme.purple}
+                color={theme.darkPurple}
                 onPress={() => {
                   props.navigation.goBack();
                 }}
@@ -31,7 +32,7 @@ export default function SearchNavigator({}: Props): ReactElement {
     >
       <SearchStack.Screen
         name="In Between"
-        component={SearchContainer}
+        component={SearchScreen}
         options={{
           headerShown: false,
         }}
@@ -39,6 +40,13 @@ export default function SearchNavigator({}: Props): ReactElement {
       <SearchStack.Screen
         name="Search Screen 2"
         component={SearchResultsScreen}
+      />
+      <SearchStack.Screen
+        name="PlaceDetailsScreen"
+        component={PlaceDetailsScreen}
+        options={{
+          title: "Details",
+        }}
       />
     </SearchStack.Navigator>
   );

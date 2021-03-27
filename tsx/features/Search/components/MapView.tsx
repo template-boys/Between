@@ -1,60 +1,102 @@
 import React, { ReactElement } from "react";
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Polyline } from "react-native-maps";
 import theme from "../../../themes/theme";
+import mapTheme from "./mapStyle";
 
 interface Props {
   location: { longitude: number; latitude: number };
-  showShadow: boolean;
-  diameter: number;
+  polylineArray?: any[];
 }
 
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+
 export default function MapLocationView({
-  diameter,
   location,
+  polylineArray,
 }: Props): ReactElement {
+  const mapRef = React.useRef<any | null>(null);
+
+  //Zoom map to show all coordinate of directions array when they change
+  React.useEffect(() => {
+    //This timeout is needed for the animation to actually occur
+    setTimeout(() => {
+      mapRef.current?.fitToCoordinates(polylineArray, {
+        animated: true,
+        edgePadding: {
+          top: 70,
+          right: 30,
+          left: 30,
+          bottom: 70,
+        },
+      });
+    }, 250);
+  }, [polylineArray]);
+
   return (
-    <View style={[styles.container, { height: diameter + 5 }]}>
+    <View style={{ backgroundColor: "white" }}>
       <MapView
+        ref={mapRef}
         style={[
           styles.mapStyles,
           {
-            height: diameter,
-            width: diameter,
-            borderRadius: diameter / 2,
+            height: SCREEN_HEIGHT / 3,
+            width: SCREEN_WIDTH,
+            borderRadius: 26,
+            alignSelf: "center",
+            backgroundColor: "white",
           },
         ]}
-        region={{
+        initialRegion={{
           latitude: location.latitude,
           longitude: location.longitude,
           latitudeDelta: 0.005,
           longitudeDelta: 0.005,
         }}
-        mapType="satellite"
+        provider={"google"}
+        customMapStyle={mapTheme}
         pitchEnabled={false}
         rotateEnabled={false}
         zoomEnabled={false}
         scrollEnabled={false}
       >
-        {/* <Marker coordinate={location} /> */}
+        {polylineArray && polylineArray?.length > 0 && (
+          <>
+            <Polyline
+              coordinates={polylineArray}
+              strokeWidth={5}
+              strokeColor="red"
+              strokeColors={[theme.darkPurple, theme.blue]}
+              fillColor={theme.darkPurple}
+            />
+            <Marker
+              coordinate={{
+                longitude: polylineArray[0]?.longitude,
+                latitude: polylineArray[0]?.latitude,
+              }}
+              key={"origin"}
+              pinColor={theme.darkPurple}
+            ></Marker>
+            <Marker
+              coordinate={{
+                longitude: polylineArray[polylineArray?.length - 1]?.longitude,
+                latitude: polylineArray[polylineArray?.length - 1]?.latitude,
+              }}
+              key={"destination"}
+              pinColor={theme.blue}
+            ></Marker>
+          </>
+        )}
       </MapView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    shadowColor: theme.lightGrey,
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 1,
-    shadowRadius: 5,
-    elevation: 1,
-    alignSelf: "center",
-  },
   mapStyles: {
     zIndex: -10,
-    borderWidth: 4,
-    borderColor: theme.purple,
+    borderWidth: 15,
+    borderColor: "white",
   },
 });

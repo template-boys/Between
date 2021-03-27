@@ -1,22 +1,20 @@
-import React, { ReactElement, useRef, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { getCenterOfBounds } from "geolib";
+import React, { ReactElement, useEffect, useRef } from "react";
+import { View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import FullMapView from "./components/FullMapView";
 import PlaceList from "./components/PlaceList";
 import SearchBottomSheet from "./components/SearchBottomSheet";
 import SearchBottomSheetView from "./components/SearchBottomSheetView";
+import {
+  addSearchLocation as addSearchLocationAction,
+  setSearchType as setSearchTypeAction,
+  removeSearchLocation as removeSearchLocationAction,
+  getPlaceSearch as getPlaceSearchActon,
+} from "./redux/searchActions";
 
-interface Props {
-  searchLocations: any;
-  searchType: string;
-  searchLoading: boolean;
-  searchResult: any;
-  addSearchLocation: (any) => void;
-  setSearchType: (any) => void;
-  getPlaceSearch: (any) => void;
-  removeSearchLocation: (index: number) => void;
-}
-
-export default function SearchScreen(props: Props): ReactElement {
+export default function SearchScreen({ navigation }): ReactElement {
+  const dispatch = useDispatch();
   const searchBottomSheetRef = useRef<any | null>(null);
   const openPagesheet = () => {
     searchBottomSheetRef.current?.open();
@@ -24,6 +22,51 @@ export default function SearchScreen(props: Props): ReactElement {
   const closePagesheet = () => {
     searchBottomSheetRef.current?.close();
   };
+
+  const searchLocations = useSelector(
+    (state) => state.searchReducer.searchLocations
+  );
+  const searchResult = useSelector(
+    (state) => state.searchReducer.searchResult?.results ?? []
+  );
+  const searchType = useSelector((state) => state.searchReducer.searchType);
+  const searchLoading = useSelector(
+    (state) => state.searchReducer.searchLoading
+  );
+
+  //Search Actions
+  const addSearchLocation = (location) => {
+    dispatch(addSearchLocationAction(location));
+  };
+  const setSearchType = (type) => {
+    dispatch(setSearchTypeAction(type));
+  };
+  const setSearchLoading = (isLoading: boolean) => {
+    dispatch(setSearchLoading(isLoading));
+  };
+  const removeSearchLocation = (index: number) => {
+    dispatch(removeSearchLocationAction(index));
+  };
+  const setPlaceIndex = (index: number) => {
+    dispatch(setPlaceIndex(index));
+  };
+  const getPlaceSearch = (query) => {
+    let locationCoords: any[] = [];
+    searchLocations.forEach((location) => {
+      locationCoords.push({
+        latitude: location.geometry.location.lat,
+        longitude: location.geometry.location.lng,
+      });
+    });
+    const middlePoint = getCenterOfBounds(locationCoords);
+    dispatch(getPlaceSearchActon(query, middlePoint));
+  };
+
+  useEffect(() => {
+    if (searchLocations.length > 1) {
+      getPlaceSearch(searchType);
+    }
+  }, [searchLocations, searchType]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -36,20 +79,22 @@ export default function SearchScreen(props: Props): ReactElement {
           onIconPress={() => {
             openPagesheet();
           }}
-          searchLocations={props.searchLocations}
-          onRemovePress={props.removeSearchLocation}
+          searchLocations={searchLocations}
+          onRemovePress={removeSearchLocation}
+          searchResult={searchResult}
         />
       </View>
-      {props.searchLocations.length > 1 && (
+      {searchLocations.length > 1 && (
         <PlaceList
-          searchResult={props.searchResult}
-          searchLoading={props.searchLoading}
+          searchResult={searchResult}
+          searchLoading={searchLoading}
+          navigation={navigation}
         />
       )}
       <SearchBottomSheet ref={searchBottomSheetRef}>
         <SearchBottomSheetView
           addSearchLocation={(location) => {
-            props.addSearchLocation(location);
+            addSearchLocation(location);
             closePagesheet();
           }}
         />
@@ -57,9 +102,3 @@ export default function SearchScreen(props: Props): ReactElement {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    flex: 1,
-  },
-});
