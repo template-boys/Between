@@ -9,6 +9,7 @@ interface Props {
   buttonStyle?: object;
   disabled?: boolean;
   onPress?: (...args: any[]) => void;
+  icon?: any;
 }
 
 const Button = (props: Props) => {
@@ -20,7 +21,11 @@ const Button = (props: Props) => {
     props.type === "secondary" ? { color: theme.charcoalGrey } : {};
   const buttonStyle = [
     styles.buttonStyle,
-    { backgroundColor, borderColor, borderWidth },
+    {
+      backgroundColor,
+      borderColor,
+      borderWidth,
+    },
     props.buttonStyle,
   ];
   return (
@@ -32,6 +37,8 @@ const Button = (props: Props) => {
       height={40}
       disabled={props.disabled}
       onPress={props.onPress}
+      icon={props.icon}
+      iconRight={!!props.icon}
     />
   );
 };

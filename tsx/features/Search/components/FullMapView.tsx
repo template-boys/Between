@@ -2,32 +2,39 @@ import React, { ReactElement } from "react";
 import { PixelRatio, Platform, StyleSheet } from "react-native";
 import { View, Dimensions } from "react-native";
 import { TouchableOpacity } from "react-native";
-import MapView, { Circle, Marker, Polyline } from "react-native-maps";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import MapView, { Marker } from "react-native-maps";
 import Icon from "react-native-vector-icons/Ionicons";
 import theme from "../../../themes/theme";
 import mapTheme from "./mapStyle";
-import { getCenterOfBounds } from "geolib";
-import { removeSearchLocation } from "../../../../testActions";
 import Button from "../../../components/Button";
 
 interface Props {
   showShadow?: boolean;
   diameter?: number;
   onIconPress?: () => void;
+  onRemovePress: (index: number) => void;
+  searchLocations: any;
+  searchResult: any;
 }
 
-export default function FullMapView({ onIconPress }: Props): ReactElement {
+export default function FullMapView({
+  onIconPress,
+  searchLocations,
+  onRemovePress,
+  searchResult,
+}: Props): ReactElement {
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get(
     "window"
   );
-
-  const dispatch = useDispatch();
-  const searchLocations = useSelector(
-    (state) => state.testReducer.searchLocations
-  );
   const [pressedMarker, setPressedMarker] = React.useState(-1);
   const mapRef = React.useRef<any | null>(null);
+  const placeMarker = React.useRef<any | null>(null);
+
+  const placeIndex = useSelector((state) => state.searchReducer.placeIndex);
+  const searchLoading = useSelector(
+    (state) => state.searchReducer.searchLoading
+  );
 
   //hardcoded, should be users location
   const region = {
@@ -55,7 +62,7 @@ export default function FullMapView({ onIconPress }: Props): ReactElement {
     mapRef.current.fitToCoordinates(markers, {
       animated: true,
       edgePadding: {
-        top: Platform.OS === "ios" ? 100 : PixelRatio.get() * 100 - 50, // 50 is the baseMapPadding https://github.com/react-native-community/react-native-maps/blob/master/lib/android/src/main/java/com/airbnb/android/react/maps/AirMapView.java#L85
+        top: Platform.OS === "ios" ? 200 : PixelRatio.get() * 100 - 50,
         right: 100,
         left: 100,
         bottom: Platform.OS === "ios" ? 400 : PixelRatio.get() * 350 - 50,
@@ -68,19 +75,17 @@ export default function FullMapView({ onIconPress }: Props): ReactElement {
     markers.push({
       latitude: location.geometry.location.lat,
       longitude: location.geometry.location.lng,
-      description: "dfsdf",
+      description: location.formatted_address,
       latitudeDelta: 5,
       longitudeDelta: 5,
-      title: "title",
       pinColor: theme.darkPurple,
     });
   });
 
-  let center;
-  if (markers.length > 1) {
-    center = getCenterOfBounds(markers);
-    console.log(center);
-  }
+  const showPlaceMarker =
+    searchResult[placeIndex]?.coordinates &&
+    !searchLoading &&
+    searchLocations.length > 1;
 
   return (
     <View style={[styles.container, {}]}>
@@ -97,33 +102,50 @@ export default function FullMapView({ onIconPress }: Props): ReactElement {
             title="Remove"
             type="primary"
             onPress={() => {
-              dispatch(removeSearchLocation(pressedMarker));
+              onRemovePress(pressedMarker);
               setPressedMarker(-1);
             }}
           />
         </TouchableOpacity>
       )}
-      <View
+
+      <TouchableOpacity
+        onPress={() => {
+          !!onIconPress && onIconPress();
+        }}
         style={{
+          flexDirection: "row",
+          // marginRight: 30,
           position: "absolute",
           alignSelf: "flex-end",
           marginTop: SCREEN_HEIGHT / 12,
         }}
       >
-        <View
-          style={{
-            marginRight: 30,
-          }}
-        >
-          <TouchableOpacity
+        {searchLocations.length === 0 ? (
+          <Button
+            title="Add a Location"
+            type="primary"
+            icon={<Icon name="add-outline" size={30} color={"white"} />}
+            buttonStyle={{
+              paddingLeft: 25,
+              padingRight: 30,
+              justifyContent: "space-between",
+              width: SCREEN_WIDTH / 2,
+            }}
             onPress={() => {
               !!onIconPress && onIconPress();
             }}
-          >
-            <Icon name="add-circle" size={50} color={theme.darkPurple} />
-          </TouchableOpacity>
-        </View>
-      </View>
+          />
+        ) : (
+          <Icon
+            name="add-circle"
+            size={50}
+            color={theme.darkPurple}
+            style={{ marginRight: 30 }}
+          />
+        )}
+      </TouchableOpacity>
+
       <MapView
         ref={mapRef}
         onPress={() => {
@@ -146,7 +168,7 @@ export default function FullMapView({ onIconPress }: Props): ReactElement {
       >
         {markers.map((marker, i) => (
           <Marker
-            key={i}
+            key={marker?.latitude}
             identifier={`id${i}`}
             coordinate={marker}
             description={marker.description}
@@ -157,14 +179,13 @@ export default function FullMapView({ onIconPress }: Props): ReactElement {
             }}
           ></Marker>
         ))}
-        {!!center && (
-          <Circle
-            center={center}
-            radius={2000}
-            strokeWidth={2}
-            strokeColor={theme.purple}
-            fillColor={"rgba(122, 72, 255, .2)"}
-          />
+        {showPlaceMarker && (
+          <Marker
+            description={searchResult[placeIndex]?.name}
+            coordinate={searchResult[placeIndex]?.coordinates}
+            key={searchResult[placeIndex]?.name}
+            pinColor={theme.blue}
+          ></Marker>
         )}
       </MapView>
     </View>

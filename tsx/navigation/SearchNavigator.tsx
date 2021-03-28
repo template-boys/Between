@@ -1,9 +1,10 @@
 import React, { ReactElement } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
-import SearchScreen from "../features/Search/SearchScreen";
 import SearchResultsScreen from "../features/Search/SearchResultsScreen";
 import theme from "../themes/theme";
+import SearchScreen from "../features/Search/SearchScreen";
+import PlaceDetailsScreen from "../features/Search/PlaceDetailsScreen";
 
 interface Props {}
 
@@ -19,7 +20,7 @@ export default function SearchNavigator({}: Props): ReactElement {
               <Icon
                 name="arrow-back-outline"
                 size={30}
-                color={theme.purple}
+                color={theme.darkPurple}
                 onPress={() => {
                   props.navigation.goBack();
                 }}
@@ -39,6 +40,13 @@ export default function SearchNavigator({}: Props): ReactElement {
       <SearchStack.Screen
         name="Search Screen 2"
         component={SearchResultsScreen}
+      />
+      <SearchStack.Screen
+        name="PlaceDetailsScreen"
+        component={PlaceDetailsScreen}
+        options={{
+          title: "Details",
+        }}
       />
     </SearchStack.Navigator>
   );
