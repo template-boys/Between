@@ -1,4 +1,4 @@
-import { placeSearch, directionsSearch } from "../../../api/PlaceSearch";
+import { directionsSearch, yelpSearch } from "../../../api/thirdPartyApis";
 import actionTypes from "./searchActionTypes";
 
 export const setSessionID = () => ({
@@ -106,7 +106,7 @@ export const getDirections = (origin, destination) => {
   };
 };
 
-// Main action for using Google's place search API
+// Main action for using Yelp's place search API
 // Parameters:
 // query: string (keyword e.g. coffee, bar, pizza)
 // middlePoint: location to search around
@@ -114,6 +114,9 @@ export const getDirections = (origin, destination) => {
 // Checks cache before hitting API.
 // If we already searched for that query and middlepoint
 // use that instead
+//
+// We are also allowed to cache it serverside for up to 24 hours
+// So that might be worth it in the future
 export const getPlaceSearch = (query: string, middlePoint) => {
   return async (dispatch, getState) => {
     dispatch(setSearchLoading(true));
@@ -125,12 +128,12 @@ export const getPlaceSearch = (query: string, middlePoint) => {
         cacheItem?.middlePoint?.longitude === middlePoint?.longitude &&
         cacheItem.query === query
       ) {
-        console.log("We have that place search cached, not hitting api");
-        result = cacheItem.result;
+        console.log("We have that place search cached, not hitting api", query);
+        result = cacheItem?.result;
       }
     });
     if (!result) {
-      result = await placeSearch(query, "en", middlePoint);
+      result = await yelpSearch(query, middlePoint);
       result = result?.data;
       if (state.searchReducer.cacheSearchResults.length >= 8) {
         dispatch(removeFirstCachedResult());

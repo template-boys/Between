@@ -2,6 +2,8 @@ import { getCenterOfBounds } from "geolib";
 import React, { ReactElement, useEffect, useRef } from "react";
 import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { showMessage } from "react-native-flash-message";
+
 import FullMapView from "./components/FullMapView";
 import PlaceList from "./components/PlaceList";
 import SearchBottomSheet from "./components/SearchBottomSheet";
@@ -27,7 +29,7 @@ export default function SearchScreen({ navigation }): ReactElement {
     (state) => state.searchReducer.searchLocations
   );
   const searchResult = useSelector(
-    (state) => state.searchReducer.searchResult?.results ?? []
+    (state) => state.searchReducer.searchResult?.businesses ?? []
   );
   const searchType = useSelector((state) => state.searchReducer.searchType);
   const searchLoading = useSelector(
@@ -65,6 +67,14 @@ export default function SearchScreen({ navigation }): ReactElement {
   useEffect(() => {
     if (searchLocations.length > 1) {
       getPlaceSearch(searchType);
+    } else if (searchLocations.length === 1) {
+      showMessage({
+        message: "Add more locations to find your between spot.",
+        type: "info",
+        onPress: () => {
+          openPagesheet();
+        },
+      });
     }
   }, [searchLocations, searchType]);
 

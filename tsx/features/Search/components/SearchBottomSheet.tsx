@@ -13,7 +13,7 @@ const SearchBottomSheet = forwardRef((props: Props, ref: any) => {
   return (
     <RBSheet
       ref={ref}
-      height={SCREEN_HEIGHT / 2}
+      height={SCREEN_HEIGHT / 3}
       closeOnDragDown={true}
       showTopBar={false}
       closeOnPressMask={true}
@@ -28,7 +28,9 @@ const SearchBottomSheet = forwardRef((props: Props, ref: any) => {
           height: SCREEN_HEIGHT / 2,
         },
         container: {
-          borderRadius: 56,
+          borderTopLeftRadius: 26,
+          borderTopRightRadius: 26,
+          // borderTopRadius: 56,
         },
         draggableIcon: {
           backgroundColor: "transparent",

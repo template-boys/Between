@@ -12,6 +12,7 @@ export default keyMirror({
 
   //Adds location from auto complete input
   ADD_LOCATION: null,
+  REMOVE_LOCATION_INDEX: null,
 
   //Currently selected place index
   SET_PLACE_INDEX: null,

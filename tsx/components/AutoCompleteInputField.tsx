@@ -14,6 +14,10 @@ function AutoCompleteInputField(props: Props) {
 
   // navigator.geolocation = require('@react-native-community/geolocation');
 
+  React.useEffect(() => {
+    ref?.current?.focus();
+  }, []);
+
   return (
     <GooglePlacesAutocomplete
       textInputProps={{

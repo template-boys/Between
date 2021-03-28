@@ -83,7 +83,7 @@ export default function FullMapView({
   });
 
   const showPlaceMarker =
-    searchResult[placeIndex]?.geometry?.location &&
+    searchResult[placeIndex]?.coordinates &&
     !searchLoading &&
     searchLocations.length > 1;
 
@@ -182,10 +182,7 @@ export default function FullMapView({
         {showPlaceMarker && (
           <Marker
             description={searchResult[placeIndex]?.name}
-            coordinate={{
-              latitude: searchResult[placeIndex]?.geometry?.location?.lat,
-              longitude: searchResult[placeIndex]?.geometry?.location?.lng,
-            }}
+            coordinate={searchResult[placeIndex]?.coordinates}
             key={searchResult[placeIndex]?.name}
             pinColor={theme.blue}
           ></Marker>

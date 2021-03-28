@@ -27,11 +27,6 @@ export default function PlaceList({
 }: Props): ReactElement {
   const dispatch = useDispatch();
 
-  const [typeIndex, setTypeIndex] = React.useState(1);
-  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get(
-    "window"
-  );
-
   const types = [
     <Icon
       style={{ alignSelf: "center" }}
@@ -48,6 +43,13 @@ export default function PlaceList({
     "Fast Food",
   ];
 
+  const searchType = useSelector((state) => state.searchReducer.searchType);
+
+  const [typeIndex, setTypeIndex] = React.useState(types.indexOf(searchType));
+  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get(
+    "window"
+  );
+
   const carouselRef = useRef<any | null>(null);
   const typeCarouselRef = useRef<any | null>(null);
 
@@ -61,6 +63,7 @@ export default function PlaceList({
         onPress={() => {
           typeCarouselRef.current?.snapToItem(index);
           setTypeIndex(index);
+          dispatch(setSearchType(types[index]));
         }}
       >
         <View
@@ -122,7 +125,10 @@ export default function PlaceList({
           {searchLoading ? "" : item.name}
         </Text>
         <Text style={{ color: theme.charcoalGrey, fontWeight: "200" }}>
-          {!searchLoading && item.formatted_address}
+          {!searchLoading && item?.location?.display_address[0]}
+        </Text>
+        <Text style={{ color: theme.charcoalGrey, fontWeight: "200" }}>
+          {!searchLoading && item?.location?.display_address[1]}
         </Text>
         <TouchableOpacity
           onPress={() => {
@@ -145,7 +151,7 @@ export default function PlaceList({
   };
 
   useEffect(() => {
-    if (!searchLoading) {
+    if (searchLoading) {
       carouselRef.current?.snapToItem(0);
     }
   }, [searchLoading]);
@@ -168,9 +174,6 @@ export default function PlaceList({
             renderItem={_renderType}
             sliderWidth={SCREEN_WIDTH}
             itemWidth={SCREEN_WIDTH / 4.5}
-            onSnapToItem={(index) => {
-              dispatch(setSearchType(types[index]));
-            }}
             enableSnap={false}
             scrollEnabled={!searchLoading}
             firstItem={1}

@@ -13,7 +13,6 @@ export default function SearchBottomSheetView({ addSearchLocation }: Props) {
     <View
       style={{
         backgroundColor: "white",
-        height: SCREEN_HEIGHT,
         paddingLeft: 25,
         paddingRight: 25,
       }}

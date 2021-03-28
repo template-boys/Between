@@ -1,13 +1,22 @@
 import React from "react";
 import { View, Text, Image, Linking } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
+import Icon from "react-native-vector-icons/FontAwesome";
 import { useSelector, useDispatch } from "react-redux";
 import style from "../../themes/style";
-import theme from "../../themes/theme";
 import MapView from "./components/MapView";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { getDirections } from "./redux/searchActions";
 import polyline from "google-polyline";
+
+const one = require("./static/1.png");
+const oneHalf = require("./static/1.5.png");
+const two = require("./static/2.png");
+const twoHalf = require("./static/2.5.png");
+const three = require("./static/3.png");
+const threeHalf = require("./static/3.5.png");
+const four = require("./static/4.png");
+const fourHalf = require("./static/4.5.png");
+const five = require("./static/5.png");
 
 interface Props {
   navigation: any;
@@ -23,41 +32,9 @@ const PlaceDetailsScreen = (props: Props) => {
   const searchLocations = useSelector(
     (state) => state.searchReducer.searchLocations
   );
-  const place = searchResult?.results[placeIndex] ?? null;
-  const latitude = place?.geometry?.location?.lat;
-  const longitude = place?.geometry?.location?.lng;
-
-  //Get what icon name the Math.floor(rating) should be
-  const getHalfStarIndex = () => {
-    const placeRating = place?.rating;
-    let result = "";
-    if (placeRating % 1 >= 0.28 && placeRating % 1 < 0.78) {
-      result = "star-half";
-    } else if (placeRating % 1 >= 0.78 || placeRating % 1 === 0) {
-      result = "star";
-    } else {
-      result = "star-outline";
-    }
-    return result;
-  };
-
-  const getStars = [1, 2, 3, 4, 5].map((item, key) => {
-    const floorResult = getHalfStarIndex();
-    let name = "star";
-    if (Math.ceil(place?.rating) === item) {
-      name = floorResult;
-    } else if (item > place?.rating) {
-      name = "star-outline";
-    }
-    return (
-      <Icon
-        style={{ alignSelf: "center" }}
-        name={name}
-        size={20}
-        color={theme.darkPurple}
-      />
-    );
-  });
+  const place = searchResult?.businesses[placeIndex] ?? null;
+  const latitude = place?.coordinates?.latitude;
+  const longitude = place?.coordinates?.longitude;
 
   //dynamic in the future (whatever location user wants to see from)
   const pickup = {
@@ -78,7 +55,7 @@ const PlaceDetailsScreen = (props: Props) => {
     dispatch(
       getDirections(
         searchLocations[0].formatted_address,
-        place?.formatted_address
+        `${place?.location?.display_address[0]} ${place?.location?.display_address[1]}`
       )
     );
   }, []);
@@ -91,6 +68,28 @@ const PlaceDetailsScreen = (props: Props) => {
     });
   }
 
+  const rating = place?.rating;
+  let imageSource;
+  if (rating === 1) {
+    imageSource = one;
+  } else if (rating === 1.5) {
+    imageSource = oneHalf;
+  } else if (rating === 2) {
+    imageSource = two;
+  } else if (rating === 2.5) {
+    imageSource = twoHalf;
+  } else if (rating === 3) {
+    imageSource = three;
+  } else if (rating === 3.5) {
+    imageSource = threeHalf;
+  } else if (rating === 4) {
+    imageSource = four;
+  } else if (rating === 4.5) {
+    imageSource = fourHalf;
+  } else {
+    imageSource = five;
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <MapView
@@ -98,24 +97,25 @@ const PlaceDetailsScreen = (props: Props) => {
         polylineArray={polylineArray}
       />
       <View style={{ alignItems: "flex-start", marginLeft: 18 }}>
-        <View style={{ flexDirection: "row", marginTop: 4 }}>
-          {getStars}
-          <Text
-            style={{ fontWeight: "200", fontSize: 12, paddingTop: 4 }}
-          >{`(${place?.user_ratings_total} reviews)`}</Text>
-        </View>
-        <Text style={[style.title1, { marginTop: 10 }]}>{place?.name}</Text>
-        <Text style={{ fontWeight: "200" }}>{place?.formatted_address}</Text>
-        <Text style={{ fontWeight: "200" }}>
-          {place?.formatted_phone_number}
-        </Text>
-        {!place?.open_now && (
-          <Text style={[style.body4, { color: "green", marginTop: 4 }]}>
-            Open now
+        <Text style={{ fontWeight: "600" }}>
+          Directions from:{" "}
+          <Text style={{ fontWeight: "200" }}>
+            {searchLocations[0]?.formatted_address}
           </Text>
-        )}
+        </Text>
+        <View
+          style={{ flexDirection: "row", marginTop: 0, alignItems: "center" }}
+        >
+          <Image source={imageSource} />
+          <Text
+            style={{
+              fontWeight: "200",
+              fontSize: 12,
+              paddingTop: 4,
+              marginLeft: 5,
+            }}
+          >{`(${place?.review_count} reviews)`}</Text>
 
-        <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
             onPress={() => {
               Linking.openURL(lyftURL).catch((err) =>
@@ -125,10 +125,33 @@ const PlaceDetailsScreen = (props: Props) => {
           >
             <Image
               source={require("./static/lyft.png")}
-              style={{ width: 60, height: 60 }}
+              style={{ width: 45, height: 45 }}
             />
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(place?.url).catch((err) =>
+                console.error("Couldn't load page", err)
+              );
+            }}
+          >
+            <Icon name="yelp" size={35} color={"#d32323"} />
+          </TouchableOpacity>
         </View>
+        <Text style={[style.title1, { marginTop: 6 }]}>{place?.name}</Text>
+        <Text style={{ fontWeight: "200" }}>
+          {place?.location?.display_address[0]}
+        </Text>
+        <Text style={{ fontWeight: "200" }}>
+          {place?.location?.display_address[1]}
+        </Text>
+
+        <Text style={{ fontWeight: "200" }}>{place?.display_phone}</Text>
+        {!place?.open_now && (
+          <Text style={[style.body4, { color: "green", marginTop: 4 }]}>
+            Open now
+          </Text>
+        )}
       </View>
     </View>
   );
