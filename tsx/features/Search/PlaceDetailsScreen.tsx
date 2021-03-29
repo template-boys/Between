@@ -1,29 +1,26 @@
-import React from "react";
-import { View, Text, Image, Linking } from "react-native";
+import React, { useRef, useState } from "react";
+import { View, Text, Image, Linking, Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useSelector, useDispatch } from "react-redux";
 import style from "../../themes/style";
 import MapView from "./components/MapView";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { getDirections } from "./redux/searchActions";
-import polyline from "google-polyline";
+import { getPolylineArray } from "./utils/directionsUtils";
+import { getRatingImage } from "./utils/searchUtils";
+import Carousel from "react-native-snap-carousel";
+import theme from "../../themes/theme";
 
-const one = require("./static/1.png");
-const oneHalf = require("./static/1.5.png");
-const two = require("./static/2.png");
-const twoHalf = require("./static/2.5.png");
-const three = require("./static/3.png");
-const threeHalf = require("./static/3.5.png");
-const four = require("./static/4.png");
-const fourHalf = require("./static/4.5.png");
-const five = require("./static/5.png");
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 interface Props {
   navigation: any;
 }
 
 const PlaceDetailsScreen = (props: Props) => {
+  const carouselRef = useRef<any | null>(null);
   const dispatch = useDispatch();
+  const [selectedLocationIndex, setSelectedLocationIndex] = useState(0);
   const searchResult = useSelector((state) => state.searchReducer.searchResult);
   const placeIndex = useSelector((state) => state.searchReducer.placeIndex);
   const currentRouteDirections = useSelector(
@@ -38,8 +35,8 @@ const PlaceDetailsScreen = (props: Props) => {
 
   //dynamic in the future (whatever location user wants to see from)
   const pickup = {
-    latitude: searchLocations[0]?.geometry?.location?.lat,
-    longitude: searchLocations[0]?.geometry?.location?.lng,
+    latitude: searchLocations[selectedLocationIndex]?.geometry?.location?.lat,
+    longitude: searchLocations[selectedLocationIndex]?.geometry?.location?.lng,
   };
 
   const lyftURL = `https://lyft.com/ride?id=lyft&pickup[latitude]=${pickup.latitude}&pickup[longitude]=${pickup.longitude}&destination[latitude]=${latitude}&destination[longitude]=${longitude}&partner=lL5keX91WP4D`;
@@ -54,41 +51,50 @@ const PlaceDetailsScreen = (props: Props) => {
 
     dispatch(
       getDirections(
-        searchLocations[0].formatted_address,
-        `${place?.location?.display_address[0]} ${place?.location?.display_address[1]}`
+        {
+          longitude:
+            searchLocations[selectedLocationIndex]?.geometry?.location?.lng,
+          latitude:
+            searchLocations[selectedLocationIndex]?.geometry?.location?.lat,
+        },
+        {
+          longitude: place?.coordinates?.longitude,
+          latitude: place?.coordinates?.latitude,
+        }
       )
     );
   }, []);
 
+  const imageSource = getRatingImage(place?.rating);
+
   let polylineArray: any[] = [];
-  if (currentRouteDirections?.length > 0) {
-    const decoded = polyline.decode(currentRouteDirections);
-    decoded.forEach((location) => {
-      polylineArray.push({ latitude: location[0], longitude: location[1] });
-    });
+
+  if (!!currentRouteDirections) {
+    polylineArray = getPolylineArray(currentRouteDirections);
   }
 
-  const rating = place?.rating;
-  let imageSource;
-  if (rating === 1) {
-    imageSource = one;
-  } else if (rating === 1.5) {
-    imageSource = oneHalf;
-  } else if (rating === 2) {
-    imageSource = two;
-  } else if (rating === 2.5) {
-    imageSource = twoHalf;
-  } else if (rating === 3) {
-    imageSource = three;
-  } else if (rating === 3.5) {
-    imageSource = threeHalf;
-  } else if (rating === 4) {
-    imageSource = four;
-  } else if (rating === 4.5) {
-    imageSource = fourHalf;
-  } else {
-    imageSource = five;
-  }
+  const _renderSearchLocation = ({ item, index }) => {
+    return (
+      <View
+        style={{
+          margin: 4,
+          borderRadius: 26,
+          padding: 10,
+          alignItems: "center",
+          shadowColor: theme.lightGrey,
+          shadowOffset: { width: 3, height: 3 },
+          shadowOpacity: 0.3,
+          shadowRadius: 3,
+          elevation: 1,
+          backgroundColor: theme.lightestGrey,
+        }}
+      >
+        <Text style={{ fontWeight: "400", textAlign: "center" }}>
+          {item?.formatted_address}
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -96,15 +102,39 @@ const PlaceDetailsScreen = (props: Props) => {
         location={{ latitude, longitude }}
         polylineArray={polylineArray}
       />
+      <Text
+        style={{ fontWeight: "300", alignSelf: "center", marginBottom: 15 }}
+      >
+        Show Directions to {place?.name} from:
+      </Text>
+      <Carousel
+        containerCustomStyle={{ flexGrow: 0 }}
+        ref={carouselRef}
+        data={searchLocations}
+        renderItem={_renderSearchLocation}
+        sliderWidth={SCREEN_WIDTH}
+        itemWidth={SCREEN_WIDTH / 1.4}
+        removeClippedSubviews={false}
+        onSnapToItem={(index) => {
+          setSelectedLocationIndex(index);
+          dispatch(
+            getDirections(
+              {
+                longitude: searchLocations[index]?.geometry?.location?.lng,
+                latitude: searchLocations[index]?.geometry?.location?.lat,
+              },
+              {
+                longitude: place?.coordinates?.longitude,
+                latitude: place?.coordinates?.latitude,
+              }
+            )
+          );
+        }}
+      />
+
       <View style={{ alignItems: "flex-start", marginLeft: 18 }}>
-        <Text style={{ fontWeight: "600" }}>
-          Directions from:{" "}
-          <Text style={{ fontWeight: "200" }}>
-            {searchLocations[0]?.formatted_address}
-          </Text>
-        </Text>
         <View
-          style={{ flexDirection: "row", marginTop: 0, alignItems: "center" }}
+          style={{ flexDirection: "row", marginTop: 10, alignItems: "center" }}
         >
           <Image source={imageSource} />
           <Text
