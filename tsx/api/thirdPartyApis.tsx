@@ -1,11 +1,17 @@
 import axios from "axios";
-import { getGoogleApiKey, getYelpApiKey } from "../utils/googleKeyUtil";
+import { getYelpApiKey, getMapBoxKey } from "../utils/googleKeyUtil";
 
-export const directionsSearch = async (origin, destination) => {
-  console.log("Axios GET api/directions");
-  const key = getGoogleApiKey();
-  const BASE_DIRECTIONS_URL = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${key}`;
-  return await axios.get(BASE_DIRECTIONS_URL);
+export const mapBoxDirectionsSearch = async (
+  origin: { latitude: number; longitude: number },
+  destination: { latitude: number; longitude: number }
+) => {
+  console.log(origin, destination);
+
+  const key = getMapBoxKey();
+  const MAP_BOX_URL = `https://api.mapbox.com/directions/v5/mapbox/driving/${origin.longitude},${origin.latitude};${destination.longitude},${destination.latitude}?geometries=polyline&access_token=${key}`;
+  console.log(MAP_BOX_URL);
+
+  return await axios.get(MAP_BOX_URL);
 };
 
 export const yelpSearch = async (term: string, location) => {

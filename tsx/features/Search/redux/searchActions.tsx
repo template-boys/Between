@@ -1,4 +1,7 @@
-import { directionsSearch, yelpSearch } from "../../../api/thirdPartyApis";
+import {
+  mapBoxDirectionsSearch,
+  yelpSearch,
+} from "../../../api/thirdPartyApis";
 import actionTypes from "./searchActionTypes";
 
 export const setSessionID = () => ({
@@ -84,8 +87,10 @@ export const getDirections = (origin, destination) => {
 
     cachedDirections.forEach((cacheItem: any) => {
       if (
-        cacheItem?.origin === origin &&
-        cacheItem?.destination === destination
+        cacheItem?.origin?.latitude === origin?.latitude &&
+        cacheItem?.origin?.longitude === origin?.longitude &&
+        cacheItem?.destination?.latitude === destination?.latitude &&
+        cacheItem?.destination?.longitude === destination?.longitude
       ) {
         console.log("we have those directions cached");
         directions = cacheItem.directions;
@@ -93,8 +98,8 @@ export const getDirections = (origin, destination) => {
     });
 
     if (!directions) {
-      directions = await directionsSearch(origin, destination);
-      directions = directions?.data?.routes[0].overview_polyline?.points;
+      directions = await mapBoxDirectionsSearch(origin, destination);
+      directions = directions?.data?.routes[0]?.geometry;
       if (state.searchReducer.cachedDirections?.length >= 25) {
         dispatch(removeFirstCachedDirection());
       }
