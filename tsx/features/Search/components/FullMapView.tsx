@@ -73,9 +73,9 @@ export default function FullMapView({
 
   searchLocations.forEach((location) => {
     markers.push({
-      latitude: location.geometry.location.lat,
-      longitude: location.geometry.location.lng,
-      description: location.formatted_address,
+      latitude: location?.position?.lat,
+      longitude: location?.position?.lon,
+      description: location?.poi?.name ?? location?.address?.freeformAddress,
       latitudeDelta: 5,
       longitudeDelta: 5,
       pinColor: theme.darkPurple,

@@ -56,8 +56,8 @@ export default function SearchScreen({ navigation }): ReactElement {
     let locationCoords: any[] = [];
     searchLocations.forEach((location) => {
       locationCoords.push({
-        latitude: location.geometry.location.lat,
-        longitude: location.geometry.location.lng,
+        latitude: location?.position?.lat,
+        longitude: location?.position?.lon,
       });
     });
     const middlePoint = getCenterOfBounds(locationCoords);

@@ -4,4 +4,6 @@ declare module "@env" {
   export const YELP_API_KEY: string;
   export const YELP_CLIENT_ID: string;
   export const MAP_BOX_API_KEY: string;
+  export const HERE_API_KEY: string;
+  export const TOM_TOM_KEY: string;
 }
