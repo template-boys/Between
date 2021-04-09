@@ -1,9 +1,12 @@
 import "react-native-gesture-handler";
 import * as React from "react";
-import { Text, SafeAreaView, View, Dimensions } from "react-native";
+import { Text, SafeAreaView, View, Dimensions, Touchable } from "react-native";
 // import BottomSheet from "reanimated-bottom-sheet";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
+import Logo from "../../components/Logo.svg";
+import GoogleLogo from "../../components/GoogleLogo.svg";
+import FacebookLogo from "../../components/FacebookLogo.svg";
 import { useDispatch } from "react-redux";
 import theme from "../../themes/theme";
 import FirebaseAuth from "@react-native-firebase/auth";
@@ -45,22 +48,60 @@ export function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={[styles.bottomAngle]} />
-      <View style={styles.whiteOnTopOfAngle} />
-      <Text style={[style.title1, { marginTop: 50, color: theme.darkPurple }]}>
-        between
+      <View style={{ marginTop: 60 }}>
+        <Logo width={60} height={60} />
+      </View>
+      <Text
+        style={[
+          style.title2,
+          {
+            fontSize: 20,
+            marginTop: 10,
+          },
+        ]}
+      >
+        Between
+      </Text>
+      <Text
+        style={[
+          style.title1,
+          {
+            marginLeft: 25,
+            fontSize: 25,
+            marginTop: 60,
+            alignSelf: "flex-start",
+          },
+        ]}
+      >
+        Sign In
+      </Text>
+      <Text
+        style={{
+          marginLeft: 25,
+          fontSize: 15,
+          color: "#a8a8a8",
+          fontFamily: "Poppins-Regular",
+          fontWeight: "400",
+          marginTop: 10,
+          alignSelf: "flex-start",
+        }}
+      >
+        Don't have an account?{" "}
+        <Text style={{ color: theme.darkPurple, fontWeight: "500" }}>
+          Sign Up
+        </Text>
       </Text>
       <Input
-        placeholder="yourname@example.com"
+        placeholder="Email Address"
         onChangeText={(value) => {
           setError("");
           setEmail(value);
         }}
-        containerStyle={{ marginTop: 70 }}
+        containerStyle={{ marginTop: 30, marginBottom: 0 }}
         email
       />
       <Input
-        placeholder="password"
+        placeholder="Password"
         onChangeText={(value) => {
           setError("");
           setPassword(value);
@@ -68,9 +109,7 @@ export function LoginScreen() {
         secureTextEntry
         errorMessage={error}
       />
-      <View style={{ marginLeft: "auto" }}>
-        <Text style={{ marginRight: 18 }}>Forgot Password?</Text>
-      </View>
+
       <Button
         type="primary"
         title="Log In"
@@ -91,66 +130,96 @@ export function LoginScreen() {
               }
             });
         }}
-        buttonStyle={{ width: 180, marginTop: 80 }}
+        buttonStyle={{
+          marginTop: 40,
+          width: Dimensions.get("window").width - 50,
+          height: 65,
+          borderRadius: 10,
+        }}
+        containerViewStyle={{
+          width: Dimensions.get("window").width,
+        }}
       />
-      <Button
-        type="secondary"
-        title="Sign Up"
-        buttonStyle={{ width: 180, marginTop: 30 }}
-        onPress={
-          () => sheetRef.current?.open()
-          // FirebaseAuth()
-          //   .createUserWithEmailAndPassword(email, password)
-          //   .then((user) => {
-          //     console.log("User account created & signed in!");
-          //   })
-          //   .catch((error) => {
-          //     if (error.code === "auth/email-already-in-use") {
-          //       console.log("That email address is already in use!");
-          //     }
+      <Text
+        style={[
+          style.title1,
+          {
+            fontSize: 15,
+            color: "#a8a8a8",
+            fontFamily: "Poppins-Regular",
+            fontWeight: "400",
+            marginTop: 15,
+          },
+        ]}
+      >
+        Forgot your password?{" "}
+      </Text>
+      <Text
+        style={[
+          style.title1,
+          {
+            fontSize: 15,
+            color: theme.darkPurple,
+            fontFamily: "Poppins-Regular",
+            fontWeight: "500",
+            marginTop: 10,
+          },
+        ]}
+      >
+        Reset Now
+      </Text>
 
-          //     if (error.code === "auth/invalid-email") {
-          //       console.log("That email address is invalid!");
-          //     }
-          //     console.error(error);
-          //   })
-        }
-      />
-      <RBSheet
-        ref={sheetRef}
-        height={SCREEN_HEIGHT}
-        closeOnDragDown={true}
-        closeOnPressMask={true}
-        showTopBar={false}
-        customStyles={{
-          wrapper: {
-            backgroundColor: "transparent",
-            height: SCREEN_HEIGHT,
-            bottom: 25,
-          },
-          draggableIcon: {
-            backgroundColor: "transparent",
-          },
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 35,
         }}
       >
-        <View
+        <Text
           style={{
-            backgroundColor: theme.purple,
-            height: SCREEN_HEIGHT,
-            paddingLeft: 25,
-            paddingRight: 25,
+            marginLeft: 25,
+            fontSize: 12,
+            color: "#a8a8a8",
+            fontFamily: "Poppins-Regular",
+            fontWeight: "400",
+            marginTop: 7,
+            alignSelf: "flex-start",
           }}
         >
-          <TouchableOpacity
-            onPress={() => {
-              sheetRef.current?.close();
-            }}
-            style={{ marginTop: 70 }}
-          >
-            <Icon name="close" size={50} color={"white"} />
-          </TouchableOpacity>
+          Sign Up with
+        </Text>
+        <View
+          style={{
+            borderColor: "#ededed",
+            borderWidth: 1,
+            height: 1,
+            flex: 1,
+            marginLeft: 8,
+            marginRight: 25,
+            marginTop: 6,
+          }}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: Dimensions.get("window").width - 50,
+          marginTop: 20,
+        }}
+      >
+        <View style={styles.thirdPartyLoginSquare}>
+          <GoogleLogo height={21} width={21} />
+          <Text style={styles.thirdPartyLoginText}>Google Login</Text>
         </View>
-      </RBSheet>
+        <View style={styles.thirdPartyLoginSquare}>
+          <FacebookLogo height={21} width={21} />
+          <Text style={styles.thirdPartyLoginText}>Facebook Login</Text>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -175,5 +244,22 @@ const styles = StyleSheet.create({
     position: "absolute",
     backgroundColor: "white",
     top: -50,
+  },
+  thirdPartyLoginSquare: {
+    padding: 20,
+    paddingLeft: 30,
+    paddingRight: 30,
+    height: 60,
+    borderWidth: 2,
+    borderColor: "#ededed",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  thirdPartyLoginText: {
+    fontFamily: "Poppins-Regular",
+    fontSize: 12,
+    marginLeft: 10,
   },
 });

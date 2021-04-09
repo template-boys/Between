@@ -30,17 +30,20 @@ const Input = (props: Props) => {
     ref?.current?.shake();
   }
 
-  const bottomBorderColor = !!props.errorMessage
-    ? theme.errorRed
-    : theme.purple;
   return (
     <RNEInput
       ref={ref}
       labelStyle={styles.labelStyle}
       inputStyle={styles.inputStyle}
-      placeholderTextColor={theme.lightGrey}
+      placeholderTextColor={"#A8A8A8"}
       containerStyle={containerStyle}
-      inputContainerStyle={{ borderBottomColor: bottomBorderColor }}
+      inputContainerStyle={{
+        borderRadius: 10,
+        borderWidth: 1.5,
+        borderColor: "#EDEDED",
+        paddingLeft: 15,
+        height: 60,
+      }}
       label={props.label}
       placeholder={props.placeholder}
       onChangeText={props.onChangeText}
@@ -53,8 +56,8 @@ const Input = (props: Props) => {
         iconType !== "" && (
           <Icon
             name={iconType}
-            size={20}
-            color={!!props.errorMessage ? theme.errorRed : theme.purple}
+            size={24}
+            color={!!props.errorMessage ? theme.errorRed : theme.darkPurple}
           />
         )
       }
@@ -72,18 +75,18 @@ export default Input;
 
 const styles = StyleSheet.create({
   inputStyle: {
-    padding: 7,
-    color: theme.charcoalGrey,
-    paddingTop: 12,
-    paddingBottom: 12,
+    padding: 12,
+    color: "#7a7a7a",
+    fontSize: 14,
+    fontWeight: "300",
+    fontFamily: "Poppins-Regular",
   },
   containerStyle: {
-    marginTop: 10,
     paddingLeft: 20,
     paddingRight: 20,
+    margin: 0,
   },
   labelStyle: {
     color: theme.charcoalGrey,
-    marginBottom: 8,
   },
 });

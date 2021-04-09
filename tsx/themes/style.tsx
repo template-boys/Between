@@ -3,15 +3,15 @@ import theme from "./theme";
 
 export default StyleSheet.create({
   title1: {
-    color: theme.darkestGrey,
+    color: "#313131",
+    fontWeight: "bold",
     fontSize: 30,
-    lineHeight: 32,
-    fontWeight: "500",
   },
   title2: {
-    color: theme.darkestGrey,
+    fontFamily: "Poppins-Regular",
+    color: "#313131",
     fontSize: 20,
-    lineHeight: 25,
+    fontWeight: "600",
   },
   body1: {
     color: theme.darkestGrey,
