@@ -2,16 +2,35 @@ import { StyleSheet } from "react-native";
 import theme from "./theme";
 
 export default StyleSheet.create({
-  title1: {
-    color: "#313131",
-    fontWeight: "bold",
-    fontSize: 30,
-  },
-  title2: {
+  light: {
     fontFamily: "Poppins-Regular",
-    color: "#313131",
-    fontSize: 20,
+    fontWeight: "300",
+    fontSize: 14,
+    color: "#7a7a7a",
+  },
+  regular: {
+    fontFamily: "Poppins-Regular",
+    fontWeight: "400",
+    fontSize: 15,
+    color: "#a8a8a8",
+  },
+  medium: {
+    fontFamily: "Poppins-Regular",
+    fontWeight: "500",
+    fontSize: 15,
+    color: theme.darkPurple,
+  },
+  semiBold: {
+    fontFamily: "Poppins-Regular",
     fontWeight: "600",
+    fontSize: 20,
+    color: "#313131",
+  },
+  bold: {
+    fontFamily: "Poppins-Regular",
+    fontWeight: "700",
+    fontSize: 25,
+    color: "#313131",
   },
   body1: {
     color: theme.darkestGrey,

@@ -82,9 +82,8 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Regular",
   },
   containerStyle: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    margin: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
   },
   labelStyle: {
     color: theme.charcoalGrey,
