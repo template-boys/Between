@@ -35,8 +35,8 @@ const PlaceDetailsScreen = (props: Props) => {
 
   //dynamic in the future (whatever location user wants to see from)
   const pickup = {
-    latitude: searchLocations[selectedLocationIndex]?.geometry?.location?.lat,
-    longitude: searchLocations[selectedLocationIndex]?.geometry?.location?.lng,
+    latitude: searchLocations[selectedLocationIndex]?.position?.lat,
+    longitude: searchLocations[selectedLocationIndex]?.position?.lon,
   };
 
   const lyftURL = `https://lyft.com/ride?id=lyft&pickup[latitude]=${pickup.latitude}&pickup[longitude]=${pickup.longitude}&destination[latitude]=${latitude}&destination[longitude]=${longitude}&partner=lL5keX91WP4D`;
@@ -52,10 +52,8 @@ const PlaceDetailsScreen = (props: Props) => {
     dispatch(
       getDirections(
         {
-          longitude:
-            searchLocations[selectedLocationIndex]?.geometry?.location?.lng,
-          latitude:
-            searchLocations[selectedLocationIndex]?.geometry?.location?.lat,
+          longitude: searchLocations[selectedLocationIndex]?.position?.lon,
+          latitude: searchLocations[selectedLocationIndex]?.position?.lat,
         },
         {
           longitude: place?.coordinates?.longitude,
@@ -90,7 +88,7 @@ const PlaceDetailsScreen = (props: Props) => {
         }}
       >
         <Text style={{ fontWeight: "400", textAlign: "center" }}>
-          {item?.formatted_address}
+          {item?.poi?.name ?? item?.address?.freeformAddress}
         </Text>
       </View>
     );
@@ -120,8 +118,8 @@ const PlaceDetailsScreen = (props: Props) => {
           dispatch(
             getDirections(
               {
-                longitude: searchLocations[index]?.geometry?.location?.lng,
-                latitude: searchLocations[index]?.geometry?.location?.lat,
+                longitude: searchLocations[index]?.position?.lon,
+                latitude: searchLocations[index]?.position?.lat,
               },
               {
                 longitude: place?.coordinates?.longitude,
