@@ -10,6 +10,7 @@ interface Props {
   disabled?: boolean;
   onPress?: (...args: any[]) => void;
   icon?: any;
+  containerViewStyle?: any;
 }
 
 const Button = (props: Props) => {
@@ -31,7 +32,7 @@ const Button = (props: Props) => {
   return (
     <RNEButton
       buttonStyle={buttonStyle}
-      titleStyle={titleStyle}
+      titleStyle={[titleStyle, styles.titleStyle]}
       title={props.title}
       borderWidth={1}
       height={40}
@@ -39,6 +40,7 @@ const Button = (props: Props) => {
       onPress={props.onPress}
       icon={props.icon}
       iconRight={!!props.icon}
+      containerViewStyle={props.containerViewStyle}
     />
   );
 };
@@ -49,7 +51,10 @@ const styles = StyleSheet.create({
   buttonStyle: {
     marginLeft: 20,
     marginRight: 20,
-    borderRadius: 26,
+    borderRadius: 30,
     minWidth: 250,
+  },
+  titleStyle: {
+    fontFamily: "Poppins-Regular",
   },
 });
