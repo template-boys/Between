@@ -1,23 +1,23 @@
 import "react-native-gesture-handler";
 import * as React from "react";
-import { Text, SafeAreaView, View, Dimensions, Touchable } from "react-native";
-// import BottomSheet from "reanimated-bottom-sheet";
+import {
+  Text,
+  SafeAreaView,
+  View,
+  Dimensions,
+  TouchableOpacity,
+  Keyboard,
+} from "react-native";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import Logo from "../../components/Logo.svg";
 import GoogleLogo from "../../components/GoogleLogo.svg";
 import FacebookLogo from "../../components/FacebookLogo.svg";
-import { useDispatch } from "react-redux";
-import theme from "../../themes/theme";
 import FirebaseAuth from "@react-native-firebase/auth";
 import { StyleSheet } from "react-native";
 import style from "../../themes/style";
-import Icon from "react-native-vector-icons/Ionicons";
-import { TouchableOpacity } from "react-native";
-import RBSheet from "react-native-raw-bottom-sheet";
-import AutoCompleteInputField from "../../components/AutoCompleteInputField";
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CONTAINER_WIDTH = SCREEN_WIDTH - 50;
 
 export function LoginScreen() {
@@ -25,33 +25,11 @@ export function LoginScreen() {
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState("");
 
-  const sheetRef = React.useRef<any | null>(null);
-  const dispatch = useDispatch();
-
-  const renderContent = () => (
-    <View
-      style={{
-        backgroundColor: theme.purple,
-        height: SCREEN_HEIGHT,
-        paddingLeft: 25,
-        paddingRight: 25,
-        paddingTop: 150,
-      }}
-    >
-      <TouchableOpacity
-        onPress={() => {
-          sheetRef.current?.snapTo(0);
-        }}
-      >
-        <Icon name="close" size={50} color={"white"} />
-      </TouchableOpacity>
-    </View>
-  );
+  const inputRef = React.useRef<any | null>(null);
 
   return (
     <SafeAreaView style={{ alignItems: "center" }}>
       <View style={styles.container}>
-        {/* Logo Container */}
         <View style={styles.logoContainer}>
           <Logo width={60} height={60} />
           <Text
@@ -69,16 +47,29 @@ export function LoginScreen() {
         {/* Form Container */}
         <View style={styles.formContainer}>
           <Text style={style.bold}>Sign In</Text>
-          <Text
-            style={[
-              style.regular,
-              {
-                marginTop: 10,
-              },
-            ]}
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            Don't have an account? <Text style={style.medium}>Sign Up</Text>
-          </Text>
+            <Text
+              style={[
+                style.regular,
+                {
+                  textAlign: "center",
+                },
+              ]}
+            >
+              Don't have an account?{" "}
+            </Text>
+            <TouchableOpacity>
+              <Text style={[style.medium]}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+
           <Input
             placeholder="Email Address"
             onChangeText={(value) => {
@@ -87,6 +78,29 @@ export function LoginScreen() {
             }}
             containerStyle={{ marginTop: 30, marginBottom: 0 }}
             email
+            errorMessage={!!error ? " " : undefined}
+            onSubmitEditing={() => {
+              if (!!email && !password) {
+                inputRef?.current?.focus();
+              }
+              !!email &&
+                !!password &&
+                !error &&
+                FirebaseAuth()
+                  .signInWithEmailAndPassword(email, password)
+                  .then((user) => {
+                    console.log("Logged in.");
+                  })
+                  .catch((error) => {
+                    if (
+                      error.code === "auth/invalid-email" ||
+                      error.code === "auth/wrong-password"
+                    ) {
+                      console.log("Invalid username or password");
+                      setError("Invalid username or password");
+                    }
+                  });
+            }}
           />
           <Input
             placeholder="Password"
@@ -96,6 +110,26 @@ export function LoginScreen() {
             }}
             secureTextEntry
             errorMessage={error}
+            onSubmitEditing={() => {
+              !!email &&
+                !!password &&
+                !error &&
+                FirebaseAuth()
+                  .signInWithEmailAndPassword(email, password)
+                  .then((user) => {
+                    console.log("Logged in.");
+                  })
+                  .catch((error) => {
+                    if (
+                      error.code === "auth/invalid-email" ||
+                      error.code === "auth/wrong-password"
+                    ) {
+                      console.log("Invalid username or password");
+                      setError("Invalid username or password");
+                    }
+                  });
+            }}
+            inputRef={inputRef}
           />
         </View>
 
@@ -106,6 +140,7 @@ export function LoginScreen() {
             title="Log In"
             disabled={!email || !password || error !== ""}
             onPress={() => {
+              Keyboard.dismiss();
               FirebaseAuth()
                 .signInWithEmailAndPassword(email, password)
                 .then((user) => {
@@ -137,16 +172,18 @@ export function LoginScreen() {
           >
             Forgot your password?{" "}
           </Text>
-          <Text
-            style={[
-              style.medium,
-              {
-                marginTop: 10,
-              },
-            ]}
-          >
-            Reset Now
-          </Text>
+          <TouchableOpacity>
+            <Text
+              style={[
+                style.medium,
+                {
+                  marginTop: 10,
+                },
+              ]}
+            >
+              Reset Now
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* ThirdParty Container */}
@@ -163,18 +200,18 @@ export function LoginScreen() {
             <View style={styles.divider} />
           </View>
           <View style={styles.thirdPartyButtonContainer}>
-            <View style={styles.thirdPartyLoginSquare}>
+            <TouchableOpacity style={styles.thirdPartyLoginSquare}>
               <GoogleLogo height={21} width={21} />
               <Text style={[style.regular, styles.thirdPartyLoginText]}>
                 Google
               </Text>
-            </View>
-            <View style={styles.thirdPartyLoginSquare}>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.thirdPartyLoginSquare}>
               <FacebookLogo height={21} width={21} />
               <Text style={[style.regular, styles.thirdPartyLoginText]}>
                 Facebook
               </Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -192,23 +229,31 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
-    flexShrink: 10,
+    paddingTop: 20,
+    // backgroundColor: "violet",
   },
   formContainer: {
     alignItems: "flex-start",
+    justifyContent: "center",
     width: CONTAINER_WIDTH,
-    flex: 1.5,
+    flex: 2,
+    paddingTop: 20,
+    paddingBottom: 20,
+    // backgroundColor: "skyblue",
+    zIndex: 100,
   },
   loginContainer: {
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
-    flexShrink: 10,
+    // backgroundColor: "aqua",
   },
   thirdPartyContainer: {
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
-    flex: 0.5,
+    flex: 1,
+    // backgroundColor: "blue",
+    paddingBottom: 10,
   },
   thirdPartyButtonContainer: {
     flexDirection: "row",
@@ -221,8 +266,8 @@ const styles = StyleSheet.create({
     padding: 20,
     height: 60,
     minWidth: CONTAINER_WIDTH / 2 - 20,
-    borderWidth: 2,
-    borderColor: "#ededed",
+    borderWidth: 1.5,
+    borderColor: "#e3e3e3",
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
@@ -237,7 +282,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   divider: {
-    borderColor: "#ededed",
+    borderColor: "#e3e3e3",
     borderWidth: 1,
     height: 1,
     flex: 1,
