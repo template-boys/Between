@@ -29,7 +29,11 @@ export function LoginScreen() {
 
   return (
     <SafeAreaView style={{ alignItems: "center" }}>
-      <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.container}
+        onPress={() => Keyboard.dismiss()}
+        activeOpacity={1}
+      >
         <View style={styles.logoContainer}>
           <Logo width={60} height={60} />
           <Text
@@ -65,7 +69,11 @@ export function LoginScreen() {
             >
               Don't have an account?{" "}
             </Text>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={(e) => {
+                Keyboard.dismiss();
+              }}
+            >
               <Text style={[style.medium]}>Sign Up</Text>
             </TouchableOpacity>
           </View>
@@ -139,7 +147,7 @@ export function LoginScreen() {
             type="primary"
             title="Log In"
             disabled={!email || !password || error !== ""}
-            onPress={() => {
+            onPress={(e) => {
               Keyboard.dismiss();
               FirebaseAuth()
                 .signInWithEmailAndPassword(email, password)
@@ -172,7 +180,11 @@ export function LoginScreen() {
           >
             Forgot your password?{" "}
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={(ev) => {
+              Keyboard.dismiss();
+            }}
+          >
             <Text
               style={[
                 style.medium,
@@ -214,7 +226,7 @@ export function LoginScreen() {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
