@@ -49,8 +49,6 @@ export default Button;
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    marginLeft: 20,
-    marginRight: 20,
     borderRadius: 30,
     minWidth: 250,
   },

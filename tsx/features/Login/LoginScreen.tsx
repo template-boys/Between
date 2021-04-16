@@ -1,265 +1,303 @@
 import "react-native-gesture-handler";
 import * as React from "react";
-import { Text, SafeAreaView, View, Dimensions, Touchable } from "react-native";
-// import BottomSheet from "reanimated-bottom-sheet";
+import {
+  Text,
+  SafeAreaView,
+  View,
+  Dimensions,
+  TouchableOpacity,
+  Keyboard,
+} from "react-native";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import Logo from "../../components/Logo.svg";
 import GoogleLogo from "../../components/GoogleLogo.svg";
 import FacebookLogo from "../../components/FacebookLogo.svg";
-import { useDispatch } from "react-redux";
-import theme from "../../themes/theme";
 import FirebaseAuth from "@react-native-firebase/auth";
 import { StyleSheet } from "react-native";
 import style from "../../themes/style";
-import Icon from "react-native-vector-icons/Ionicons";
-import { TouchableOpacity } from "react-native";
-import RBSheet from "react-native-raw-bottom-sheet";
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const CONTAINER_WIDTH = SCREEN_WIDTH - 50;
 
 export function LoginScreen() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState("");
 
-  const sheetRef = React.useRef<any | null>(null);
-  const dispatch = useDispatch();
-
-  const renderContent = () => (
-    <View
-      style={{
-        backgroundColor: theme.purple,
-        height: SCREEN_HEIGHT,
-        paddingLeft: 25,
-        paddingRight: 25,
-        paddingTop: 150,
-      }}
-    >
-      <TouchableOpacity
-        onPress={() => {
-          sheetRef.current?.snapTo(0);
-        }}
-      >
-        <Icon name="close" size={50} color={"white"} />
-      </TouchableOpacity>
-    </View>
-  );
+  const inputRef = React.useRef<any | null>(null);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={{ marginTop: 60 }}>
-        <Logo width={60} height={60} />
-      </View>
-      <Text
-        style={[
-          style.title2,
-          {
-            fontSize: 20,
-            marginTop: 10,
-          },
-        ]}
+    <SafeAreaView style={{ alignItems: "center" }}>
+      <TouchableOpacity
+        style={styles.container}
+        onPress={() => Keyboard.dismiss()}
+        activeOpacity={1}
       >
-        Between
-      </Text>
-      <Text
-        style={[
-          style.title1,
-          {
-            marginLeft: 25,
-            fontSize: 25,
-            marginTop: 60,
-            alignSelf: "flex-start",
-          },
-        ]}
-      >
-        Sign In
-      </Text>
-      <Text
-        style={{
-          marginLeft: 25,
-          fontSize: 15,
-          color: "#a8a8a8",
-          fontFamily: "Poppins-Regular",
-          fontWeight: "400",
-          marginTop: 10,
-          alignSelf: "flex-start",
-        }}
-      >
-        Don't have an account?{" "}
-        <Text style={{ color: theme.darkPurple, fontWeight: "500" }}>
-          Sign Up
-        </Text>
-      </Text>
-      <Input
-        placeholder="Email Address"
-        onChangeText={(value) => {
-          setError("");
-          setEmail(value);
-        }}
-        containerStyle={{ marginTop: 30, marginBottom: 0 }}
-        email
-      />
-      <Input
-        placeholder="Password"
-        onChangeText={(value) => {
-          setError("");
-          setPassword(value);
-        }}
-        secureTextEntry
-        errorMessage={error}
-      />
+        <View style={styles.logoContainer}>
+          <Logo width={60} height={60} />
+          <Text
+            style={[
+              style.semiBold,
+              {
+                marginTop: 10,
+              },
+            ]}
+          >
+            Between
+          </Text>
+        </View>
 
-      <Button
-        type="primary"
-        title="Log In"
-        disabled={!email || !password || error !== ""}
-        onPress={() => {
-          FirebaseAuth()
-            .signInWithEmailAndPassword(email, password)
-            .then((user) => {
-              console.log("Logged in.");
-            })
-            .catch((error) => {
-              if (
-                error.code === "auth/invalid-email" ||
-                error.code === "auth/wrong-password"
-              ) {
-                console.log("Invalid username or password");
-                setError("Invalid username or password");
+        {/* Form Container */}
+        <View style={styles.formContainer}>
+          <Text style={style.bold}>Sign In</Text>
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={[
+                style.regular,
+                {
+                  textAlign: "center",
+                },
+              ]}
+            >
+              Don't have an account?{" "}
+            </Text>
+            <TouchableOpacity
+              onPress={(e) => {
+                Keyboard.dismiss();
+              }}
+            >
+              <Text style={[style.medium]}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Input
+            placeholder="Email Address"
+            onChangeText={(value) => {
+              setError("");
+              setEmail(value);
+            }}
+            containerStyle={{ marginTop: 30, marginBottom: 0 }}
+            email
+            errorMessage={!!error ? " " : undefined}
+            onSubmitEditing={() => {
+              if (!!email && !password) {
+                inputRef?.current?.focus();
               }
-            });
-        }}
-        buttonStyle={{
-          marginTop: 40,
-          width: Dimensions.get("window").width - 50,
-          height: 65,
-          borderRadius: 10,
-        }}
-        containerViewStyle={{
-          width: Dimensions.get("window").width,
-        }}
-      />
-      <Text
-        style={[
-          style.title1,
-          {
-            fontSize: 15,
-            color: "#a8a8a8",
-            fontFamily: "Poppins-Regular",
-            fontWeight: "400",
-            marginTop: 15,
-          },
-        ]}
-      >
-        Forgot your password?{" "}
-      </Text>
-      <Text
-        style={[
-          style.title1,
-          {
-            fontSize: 15,
-            color: theme.darkPurple,
-            fontFamily: "Poppins-Regular",
-            fontWeight: "500",
-            marginTop: 10,
-          },
-        ]}
-      >
-        Reset Now
-      </Text>
+              !!email &&
+                !!password &&
+                !error &&
+                FirebaseAuth()
+                  .signInWithEmailAndPassword(email, password)
+                  .then((user) => {
+                    console.log("Logged in.");
+                  })
+                  .catch((error) => {
+                    if (
+                      error.code === "auth/invalid-email" ||
+                      error.code === "auth/wrong-password"
+                    ) {
+                      console.log("Invalid username or password");
+                      setError("Invalid username or password");
+                    }
+                  });
+            }}
+          />
+          <Input
+            placeholder="Password"
+            onChangeText={(value) => {
+              setError("");
+              setPassword(value);
+            }}
+            secureTextEntry
+            errorMessage={error}
+            onSubmitEditing={() => {
+              !!email &&
+                !!password &&
+                !error &&
+                FirebaseAuth()
+                  .signInWithEmailAndPassword(email, password)
+                  .then((user) => {
+                    console.log("Logged in.");
+                  })
+                  .catch((error) => {
+                    if (
+                      error.code === "auth/invalid-email" ||
+                      error.code === "auth/wrong-password"
+                    ) {
+                      console.log("Invalid username or password");
+                      setError("Invalid username or password");
+                    }
+                  });
+            }}
+            inputRef={inputRef}
+          />
+        </View>
 
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 35,
-        }}
-      >
-        <Text
-          style={{
-            marginLeft: 25,
-            fontSize: 12,
-            color: "#a8a8a8",
-            fontFamily: "Poppins-Regular",
-            fontWeight: "400",
-            marginTop: 7,
-            alignSelf: "flex-start",
-          }}
-        >
-          Sign Up with
-        </Text>
-        <View
-          style={{
-            borderColor: "#ededed",
-            borderWidth: 1,
-            height: 1,
-            flex: 1,
-            marginLeft: 8,
-            marginRight: 25,
-            marginTop: 6,
-          }}
-        />
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: Dimensions.get("window").width - 50,
-          marginTop: 20,
-        }}
-      >
-        <View style={styles.thirdPartyLoginSquare}>
-          <GoogleLogo height={21} width={21} />
-          <Text style={styles.thirdPartyLoginText}>Google Login</Text>
+        {/* Login Container */}
+        <View style={styles.loginContainer}>
+          <Button
+            type="primary"
+            title="Log In"
+            disabled={!email || !password || error !== ""}
+            onPress={(e) => {
+              Keyboard.dismiss();
+              FirebaseAuth()
+                .signInWithEmailAndPassword(email, password)
+                .then((user) => {
+                  console.log("Logged in.");
+                })
+                .catch((error) => {
+                  if (
+                    error.code === "auth/invalid-email" ||
+                    error.code === "auth/wrong-password"
+                  ) {
+                    console.log("Invalid username or password");
+                    setError("Invalid username or password");
+                  }
+                });
+            }}
+            buttonStyle={{
+              width: CONTAINER_WIDTH,
+              height: 50,
+              borderRadius: 10,
+            }}
+          />
+          <Text
+            style={[
+              style.regular,
+              {
+                marginTop: 15,
+              },
+            ]}
+          >
+            Forgot your password?{" "}
+          </Text>
+          <TouchableOpacity
+            onPress={(ev) => {
+              Keyboard.dismiss();
+            }}
+          >
+            <Text
+              style={[
+                style.medium,
+                {
+                  marginTop: 10,
+                },
+              ]}
+            >
+              Reset Now
+            </Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.thirdPartyLoginSquare}>
-          <FacebookLogo height={21} width={21} />
-          <Text style={styles.thirdPartyLoginText}>Facebook Login</Text>
+
+        {/* ThirdParty Container */}
+        <View style={styles.thirdPartyContainer}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Text style={[style.regular, styles.dividerText]}>
+              Sign Up with
+            </Text>
+            <View style={styles.divider} />
+          </View>
+          <View style={styles.thirdPartyButtonContainer}>
+            <TouchableOpacity style={styles.thirdPartyLoginSquare}>
+              <GoogleLogo height={21} width={21} />
+              <Text style={[style.regular, styles.thirdPartyLoginText]}>
+                Google
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.thirdPartyLoginSquare}>
+              <FacebookLogo height={21} width={21} />
+              <Text style={[style.regular, styles.thirdPartyLoginText]}>
+                Facebook
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
-    alignSelf: "center",
-    width: SCREEN_WIDTH,
+    height: "100%",
+    width: CONTAINER_WIDTH,
   },
-  bottomAngle: {
-    backgroundColor: theme.purple,
-    position: "absolute",
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
+  logoContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+    paddingTop: 20,
+    // backgroundColor: "violet",
   },
-  whiteOnTopOfAngle: {
-    borderRadius: SCREEN_WIDTH,
-    width: SCREEN_WIDTH * 2,
-    height: SCREEN_WIDTH * 2,
-    position: "absolute",
-    backgroundColor: "white",
-    top: -50,
+  formContainer: {
+    alignItems: "flex-start",
+    justifyContent: "center",
+    width: CONTAINER_WIDTH,
+    flex: 2,
+    paddingTop: 20,
+    paddingBottom: 20,
+    // backgroundColor: "skyblue",
+    zIndex: 100,
+  },
+  loginContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+    // backgroundColor: "aqua",
+  },
+  thirdPartyContainer: {
+    justifyContent: "flex-end",
+    alignItems: "center",
+    flex: 1,
+    // backgroundColor: "blue",
+    paddingBottom: 10,
+  },
+  thirdPartyButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: CONTAINER_WIDTH,
+    marginTop: 15,
   },
   thirdPartyLoginSquare: {
     padding: 20,
-    paddingLeft: 30,
-    paddingRight: 30,
     height: 60,
-    borderWidth: 2,
-    borderColor: "#ededed",
+    minWidth: CONTAINER_WIDTH / 2 - 20,
+    borderWidth: 1.5,
+    borderColor: "#e3e3e3",
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
   },
   thirdPartyLoginText: {
-    fontFamily: "Poppins-Regular",
-    fontSize: 12,
     marginLeft: 10,
+    fontSize: 12,
+    color: "#132335",
+  },
+  dividerText: {
+    fontSize: 12,
+  },
+  divider: {
+    borderColor: "#e3e3e3",
+    borderWidth: 1,
+    height: 1,
+    flex: 1,
+    marginLeft: 8,
   },
 });

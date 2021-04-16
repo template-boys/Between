@@ -13,6 +13,9 @@ interface Props {
   secureTextEntry?: boolean;
   errorMessage?: string;
   email?: boolean;
+  hasError?: boolean;
+  onSubmitEditing?: any;
+  inputRef?: any;
 }
 
 const Input = (props: Props) => {
@@ -24,7 +27,7 @@ const Input = (props: Props) => {
     iconType = "mail-outline";
   }
 
-  const ref = useRef<any | null>(null);
+  const ref = props.inputRef || useRef<any | null>(null);
 
   if (ref !== null && !!props.errorMessage) {
     ref?.current?.shake();
@@ -37,12 +40,16 @@ const Input = (props: Props) => {
       inputStyle={styles.inputStyle}
       placeholderTextColor={"#A8A8A8"}
       containerStyle={containerStyle}
+      inputAccessoryViewID="Done"
+      returnKeyType="go"
       inputContainerStyle={{
         borderRadius: 10,
-        borderWidth: 1.5,
-        borderColor: "#EDEDED",
+        borderWidth: 2,
+        borderColor: "#e3e3e3",
         paddingLeft: 15,
         height: 60,
+        //need to explicitly set bottom border width
+        borderBottomWidth: 2,
       }}
       label={props.label}
       placeholder={props.placeholder}
@@ -52,12 +59,17 @@ const Input = (props: Props) => {
       errorMessage={props.errorMessage}
       autoCompleteType="off"
       autoCorrect={false}
+      onSubmitEditing={props.onSubmitEditing}
       leftIcon={
         iconType !== "" && (
           <Icon
             name={iconType}
             size={24}
-            color={!!props.errorMessage ? theme.errorRed : theme.darkPurple}
+            color={
+              !!props.errorMessage || !!props.hasError
+                ? theme.errorRed
+                : theme.darkPurple
+            }
           />
         )
       }
@@ -76,15 +88,14 @@ export default Input;
 const styles = StyleSheet.create({
   inputStyle: {
     padding: 12,
-    color: "#7a7a7a",
+    color: "#313131",
     fontSize: 14,
-    fontWeight: "300",
+    fontWeight: "400",
     fontFamily: "Poppins-Regular",
   },
   containerStyle: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    margin: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
   },
   labelStyle: {
     color: theme.charcoalGrey,
