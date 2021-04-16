@@ -9,6 +9,12 @@ import Navigator from "./tsx/navigation/Navigator";
 import { StatusBar, Text, StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import thunk from "redux-thunk";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+
+GoogleSignin.configure({
+  webClientId:
+    "501057678471-7avl7nsmkrd0h4d2g1q477r0faoh2gu4.apps.googleusercontent.com",
+});
 
 import { Component } from "react";
 

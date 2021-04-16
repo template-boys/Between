@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { StyleSheet, ViewStyle } from "react-native";
-import { Input as RNEInput } from "react-native-elements";
+import { Input as RNEInput, withTheme } from "react-native-elements";
 import Icon from "react-native-vector-icons/Ionicons";
 import theme from "../themes/theme";
 
@@ -10,21 +10,26 @@ interface Props {
   placeholder: string;
   autoCapitalize?: boolean;
   containerStyle?: ViewStyle;
+  inputContainerStyle?: ViewStyle;
   secureTextEntry?: boolean;
   errorMessage?: string;
   email?: boolean;
   hasError?: boolean;
   onSubmitEditing?: any;
   inputRef?: any;
+  isMapSearch?: boolean;
 }
 
 const Input = (props: Props) => {
   const containerStyle = [styles.containerStyle, props.containerStyle];
   let iconType = "";
+
   if (props.secureTextEntry) {
     iconType = "lock-closed-outline";
   } else if (props.email) {
     iconType = "mail-outline";
+  } else if (props.isMapSearch) {
+    iconType = "locate-outline";
   }
 
   const ref = props.inputRef || useRef<any | null>(null);
@@ -42,15 +47,18 @@ const Input = (props: Props) => {
       containerStyle={containerStyle}
       inputAccessoryViewID="Done"
       returnKeyType="go"
-      inputContainerStyle={{
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: "#e3e3e3",
-        paddingLeft: 15,
-        height: 60,
-        //need to explicitly set bottom border width
-        borderBottomWidth: 2,
-      }}
+      inputContainerStyle={[
+        {
+          borderRadius: 10,
+          borderWidth: 2,
+          borderColor: "#e3e3e3",
+          paddingLeft: 15,
+          height: 60,
+          //need to explicitly set bottom border width
+          borderBottomWidth: 2,
+        },
+        props.inputContainerStyle,
+      ]}
       label={props.label}
       placeholder={props.placeholder}
       onChangeText={props.onChangeText}

@@ -8,6 +8,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import theme from "../../../themes/theme";
 import mapTheme from "./mapStyle";
 import Button from "../../../components/Button";
+import AutoCompleteInputField from "../../../components/AutoCompleteInputField";
 
 interface Props {
   showShadow?: boolean;
@@ -108,8 +109,19 @@ export default function FullMapView({
           />
         </TouchableOpacity>
       )}
+      <View
+        style={{
+          position: "absolute",
+          alignSelf: "center",
+          marginTop: SCREEN_HEIGHT / 12,
+          flex: 1,
+          width: SCREEN_WIDTH - 50,
+        }}
+      >
+        <AutoCompleteInputField setLocation={() => {}} />
+      </View>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           !!onIconPress && onIconPress();
         }}
@@ -144,7 +156,7 @@ export default function FullMapView({
             style={{ marginRight: 30 }}
           />
         )}
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <MapView
         ref={mapRef}

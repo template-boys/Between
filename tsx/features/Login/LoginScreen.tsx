@@ -13,12 +13,58 @@ import Button from "../../components/Button";
 import Logo from "../../components/Logo.svg";
 import GoogleLogo from "../../components/GoogleLogo.svg";
 import FacebookLogo from "../../components/FacebookLogo.svg";
+import AppleLogo from "../../components/AppleLogo.svg";
 import FirebaseAuth from "@react-native-firebase/auth";
 import { StyleSheet } from "react-native";
 import style from "../../themes/style";
+import auth from "@react-native-firebase/auth";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { appleAuth } from "@invertase/react-native-apple-authentication";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CONTAINER_WIDTH = SCREEN_WIDTH - 50;
+
+const onGoogleButtonPress = async () => {
+  try {
+    // Get the users ID token
+    const { idToken } = await GoogleSignin.signIn();
+
+    // Create a Google credential with the token
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+    // Sign-in the user with the credential
+    return auth().signInWithCredential(googleCredential);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const onAppleButtonPress = async () => {
+  try {
+    // Start the sign-in request
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+    });
+
+    // Ensure Apple returned a user identityToken
+    if (!appleAuthRequestResponse.identityToken) {
+      throw "Apple Sign-In failed - no identify token returned";
+    }
+
+    // Create a Firebase credential from the response
+    const { identityToken, nonce } = appleAuthRequestResponse;
+    const appleCredential = auth.AppleAuthProvider.credential(
+      identityToken,
+      nonce
+    );
+
+    // Sign the user in with the credential
+    return auth().signInWithCredential(appleCredential);
+  } catch (error) {
+    console.warn(error);
+  }
+};
 
 export function LoginScreen() {
   const [email, setEmail] = React.useState("");
@@ -207,21 +253,35 @@ export function LoginScreen() {
             }}
           >
             <Text style={[style.regular, styles.dividerText]}>
-              Sign Up with
+              Sign In with
             </Text>
             <View style={styles.divider} />
           </View>
           <View style={styles.thirdPartyButtonContainer}>
-            <TouchableOpacity style={styles.thirdPartyLoginSquare}>
-              <GoogleLogo height={21} width={21} />
+            <TouchableOpacity
+              style={styles.thirdPartyLoginSquare}
+              onPress={() =>
+                onGoogleButtonPress().then(() =>
+                  console.log("Signed in with Google!")
+                )
+              }
+            >
+              <GoogleLogo height={30} width={30} />
               <Text style={[style.regular, styles.thirdPartyLoginText]}>
                 Google
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.thirdPartyLoginSquare}>
-              <FacebookLogo height={21} width={21} />
+            <TouchableOpacity
+              style={styles.thirdPartyLoginSquare}
+              onPress={() =>
+                onAppleButtonPress().then(() =>
+                  console.log("Apple sign-in complete!")
+                )
+              }
+            >
+              <AppleLogo height={30} width={30} />
               <Text style={[style.regular, styles.thirdPartyLoginText]}>
-                Facebook
+                Apple
               </Text>
             </TouchableOpacity>
           </View>

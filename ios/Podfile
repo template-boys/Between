@@ -12,6 +12,7 @@ target 'AwesomeTSProject' do
 
   pod 'react-native-maps', path: rn_maps_path
   pod 'react-native-google-maps', path: rn_maps_path  # Remove this line if you don't want to support GoogleMaps on iOS
+  pod 'GoogleSignIn', '~> 5.0.2'
 
   target 'AwesomeTSProjectTests' do
     inherit! :complete
