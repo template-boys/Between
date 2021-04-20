@@ -1,8 +1,17 @@
 import { getCenterOfBounds } from "geolib";
-import React, { ReactElement, useEffect, useRef } from "react";
-import { View } from "react-native";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
+import {
+  Dimensions,
+  FlatList,
+  Keyboard,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { showMessage } from "react-native-flash-message";
+import { debounce } from "lodash";
 
 import FullMapView from "./components/FullMapView";
 import PlaceList from "./components/PlaceList";
@@ -14,10 +23,26 @@ import {
   removeSearchLocation as removeSearchLocationAction,
   getPlaceSearch as getPlaceSearchActon,
 } from "./redux/searchActions";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import AutoCompleteInputField from "../../components/AutoCompleteInputField";
+import theme from "../../themes/theme";
+import { tomTomAutoComplete } from "../../api/thirdPartyApis";
+import Icon from "react-native-vector-icons/Ionicons";
+import style from "../../themes/style";
+import DestinationSearchResult from "./components/DestinationSearchResult";
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function SearchScreen({ navigation }): ReactElement {
   const dispatch = useDispatch();
+  const insets = useSafeAreaInsets();
+  const [autoCompleteValues, setAutoCompleteValues] = useState([]);
+  const [autoCompleteFocus, setAutoCompleteFocus] = useState<boolean>(false);
   const searchBottomSheetRef = useRef<any | null>(null);
+  const autoCompleteRef = useRef<any | null>(null);
   const openPagesheet = () => {
     searchBottomSheetRef.current?.open();
   };
@@ -78,37 +103,132 @@ export default function SearchScreen({ navigation }): ReactElement {
     }
   }, [searchLocations, searchType]);
 
+  const getAutoCompleteResults = debounce(async (query) => {
+    if (!query) {
+      setAutoCompleteValues([]);
+      return;
+    }
+    const result = await tomTomAutoComplete(query);
+    setAutoCompleteValues(result?.data?.results ?? []);
+  }, 1000);
+
+  console.log(searchLocations);
+
   return (
-    <View style={{ flex: 1 }}>
-      <View
-        style={{
-          flex: 0.75,
-        }}
-      >
-        <FullMapView
-          onIconPress={() => {
-            openPagesheet();
+    <>
+      <View style={[styles.container, { marginTop: insets.top }]}>
+        <AutoCompleteInputField
+          containerStyle={styles.autoCompleteStyle}
+          inputRef={autoCompleteRef}
+          inputProps={{
+            onChange: (value) => {
+              getAutoCompleteResults(value);
+            },
+            onFocus: () => {
+              setAutoCompleteFocus(true);
+            },
           }}
-          searchLocations={searchLocations}
-          onRemovePress={removeSearchLocation}
-          searchResult={searchResult}
         />
+        {/* <View
+          style={{
+            marginTop: 15,
+            marginBottom: 5,
+            backgroundColor: "white",
+          }}
+        >
+          <DestinationSearchResult
+            searchResult={{
+              type: "Street",
+              address: {
+                streetName: "Choose from",
+                municipality: "Favorites",
+                freeformAddress: "Favorites",
+              },
+            }}
+          />
+        </View> */}
+        {autoCompleteFocus && (
+          <FlatList
+            data={autoCompleteValues}
+            style={styles.flatListContainer}
+            contentContainerStyle={styles.listContainer}
+            keyboardDismissMode="on-drag"
+            keyboardShouldPersistTaps="always"
+            renderItem={({ item, index }) => (
+              <TouchableOpacity
+                onPress={() => {
+                  addSearchLocation(item);
+                  setAutoCompleteFocus(false);
+                  Keyboard.dismiss();
+                }}
+              >
+                <DestinationSearchResult searchResult={item} />
+              </TouchableOpacity>
+            )}
+          />
+        )}
       </View>
-      {searchLocations.length > 1 && (
-        <PlaceList
-          searchResult={searchResult}
-          searchLoading={searchLoading}
-          navigation={navigation}
-        />
-      )}
-      <SearchBottomSheet ref={searchBottomSheetRef}>
-        <SearchBottomSheetView
-          addSearchLocation={(location) => {
-            addSearchLocation(location);
-            closePagesheet();
-          }}
-        />
-      </SearchBottomSheet>
-    </View>
+      <FullMapView
+        onIconPress={() => {
+          openPagesheet();
+        }}
+        searchLocations={searchLocations}
+        onRemovePress={removeSearchLocation}
+        searchResult={searchResult}
+      />
+    </>
+    // <View style={{ flex: 1 }}>
+    //   <View
+    //     style={{
+    //       flex: 0.75,
+    //     }}
+    //   >
+    //     <FullMapView
+    //       onIconPress={() => {
+    //         openPagesheet();
+    //       }}
+    //       searchLocations={searchLocations}
+    //       onRemovePress={removeSearchLocation}
+    //       searchResult={searchResult}
+    //     />
+    //   </View>
+    //   {searchLocations.length > 1 && (
+    //     <PlaceList
+    //       searchResult={searchResult}
+    //       searchLoading={searchLoading}
+    //       navigation={navigation}
+    //     />
+    //   )}
+    //   <SearchBottomSheet ref={searchBottomSheetRef}>
+    //     <SearchBottomSheetView
+    //       addSearchLocation={(location) => {
+    //         addSearchLocation(location);
+    //         closePagesheet();
+    //       }}
+    //     />
+    //   </SearchBottomSheet>
+    // </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // backgroundColor: "coral",
+  },
+  autoCompleteStyle: {
+    marginTop: 10,
+    marginLeft: 15,
+    marginRight: 15,
+  },
+  flatListContainer: {
+    zIndex: -5,
+    width: SCREEN_WIDTH,
+    backgroundColor: "white",
+    flex: 1,
+    marginTop: 10,
+  },
+  listContainer: {
+    backgroundColor: "white",
+  },
+});

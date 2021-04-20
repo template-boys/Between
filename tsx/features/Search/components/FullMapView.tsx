@@ -89,124 +89,55 @@ export default function FullMapView({
     searchLocations.length > 1;
 
   return (
-    <View style={[styles.container, {}]}>
-      {pressedMarker >= 0 && (
-        <TouchableOpacity
-          style={{
-            position: "absolute",
-
-            marginTop: SCREEN_HEIGHT / 11,
-            alignSelf: "flex-start",
+    <MapView
+      ref={mapRef}
+      onPress={() => {
+        setPressedMarker(-1);
+      }}
+      style={[
+        styles.mapStyles,
+        {
+          width: SCREEN_WIDTH,
+          height: SCREEN_HEIGHT,
+        },
+      ]}
+      initialRegion={region}
+      provider={"google"}
+      customMapStyle={mapTheme}
+      pitchEnabled={false}
+      rotateEnabled={false}
+      zoomEnabled={false}
+      scrollEnabled={false}
+    >
+      {markers.map((marker, i) => (
+        <Marker
+          key={marker?.latitude}
+          identifier={`id${i}`}
+          coordinate={marker}
+          description={marker.description}
+          pinColor={pressedMarker === i ? theme.errorRed : theme.darkPurple}
+          onPress={(e) => {
+            e.stopPropagation();
+            setPressedMarker(i);
           }}
-        >
-          <Button
-            title="Remove"
-            type="primary"
-            onPress={() => {
-              onRemovePress(pressedMarker);
-              setPressedMarker(-1);
-            }}
-          />
-        </TouchableOpacity>
+        ></Marker>
+      ))}
+      {showPlaceMarker && (
+        <Marker
+          description={searchResult[placeIndex]?.name}
+          coordinate={searchResult[placeIndex]?.coordinates}
+          key={searchResult[placeIndex]?.name}
+          pinColor={theme.blue}
+        ></Marker>
       )}
-      <View
-        style={{
-          position: "absolute",
-          alignSelf: "center",
-          marginTop: SCREEN_HEIGHT / 12,
-          flex: 1,
-          width: SCREEN_WIDTH - 50,
-        }}
-      >
-        <AutoCompleteInputField setLocation={() => {}} />
-      </View>
-
-      {/* <TouchableOpacity
-        onPress={() => {
-          !!onIconPress && onIconPress();
-        }}
-        style={{
-          flexDirection: "row",
-          // marginRight: 30,
-          position: "absolute",
-          alignSelf: "flex-end",
-          marginTop: SCREEN_HEIGHT / 12,
-        }}
-      >
-        {searchLocations.length === 0 ? (
-          <Button
-            title="Add a Location"
-            type="primary"
-            icon={<Icon name="add-outline" size={30} color={"white"} />}
-            buttonStyle={{
-              paddingLeft: 25,
-              padingRight: 30,
-              justifyContent: "space-between",
-              width: SCREEN_WIDTH / 2,
-            }}
-            onPress={() => {
-              !!onIconPress && onIconPress();
-            }}
-          />
-        ) : (
-          <Icon
-            name="add-circle"
-            size={50}
-            color={theme.darkPurple}
-            style={{ marginRight: 30 }}
-          />
-        )}
-      </TouchableOpacity> */}
-
-      <MapView
-        ref={mapRef}
-        onPress={() => {
-          setPressedMarker(-1);
-        }}
-        style={[
-          styles.mapStyles,
-          {
-            width: SCREEN_WIDTH,
-            height: SCREEN_HEIGHT,
-          },
-        ]}
-        initialRegion={region}
-        provider={"google"}
-        customMapStyle={mapTheme}
-        pitchEnabled={false}
-        rotateEnabled={false}
-        zoomEnabled={false}
-        scrollEnabled={false}
-      >
-        {markers.map((marker, i) => (
-          <Marker
-            key={marker?.latitude}
-            identifier={`id${i}`}
-            coordinate={marker}
-            description={marker.description}
-            pinColor={pressedMarker === i ? theme.errorRed : theme.darkPurple}
-            onPress={(e) => {
-              e.stopPropagation();
-              setPressedMarker(i);
-            }}
-          ></Marker>
-        ))}
-        {showPlaceMarker && (
-          <Marker
-            description={searchResult[placeIndex]?.name}
-            coordinate={searchResult[placeIndex]?.coordinates}
-            key={searchResult[placeIndex]?.name}
-            pinColor={theme.blue}
-          ></Marker>
-        )}
-      </MapView>
-    </View>
+    </MapView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {},
   mapStyles: {
+    position: "absolute",
     zIndex: -10,
   },
 });

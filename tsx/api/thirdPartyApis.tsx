@@ -51,7 +51,7 @@ export const tomTomAutoComplete = async (query) => {
   const key = getTomTomKey();
   const encodeUrl = require("encodeurl");
   const url = encodeUrl(
-    `https://api.tomtom.com/search/2/search/${query}.json?key=${key}&lon=-87.9806&lat=42.0884`
+    `https://api.tomtom.com/search/2/search/${query}.json?key=${key}&lon=-87.9806&lat=42.0884&typeahead=true&minFuzzyLevel=2&maxFuzzyLevel=4`
   );
   return await axios.get(url);
 };

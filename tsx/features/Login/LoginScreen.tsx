@@ -20,6 +20,8 @@ import style from "../../themes/style";
 import auth from "@react-native-firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { appleAuth } from "@invertase/react-native-apple-authentication";
+import CustomInput from "../../components/CustomInput";
+import theme from "../../themes/theme";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CONTAINER_WIDTH = SCREEN_WIDTH - 50;
@@ -69,9 +71,31 @@ const onAppleButtonPress = async () => {
 export function LoginScreen() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [error, setError] = React.useState("");
+  const [error, setError] = React.useState<string | null>("");
 
-  const inputRef = React.useRef<any | null>(null);
+  const passwordRef = React.useRef<any | null>(null);
+
+  const logIn = async () => {
+    Keyboard.dismiss();
+    FirebaseAuth()
+      .signInWithEmailAndPassword(email, password)
+      .then((user) => {
+        console.log("Logged in.");
+      })
+      .catch((error) => {
+        if (
+          error.code === "auth/invalid-email" ||
+          error.code === "auth/wrong-password" ||
+          error.code === "auth/user-not-found"
+        ) {
+          console.log("Invalid username or password");
+          setError("Invalid username or password");
+        } else {
+          console.log(error.code);
+          setError("Something went wrong");
+        }
+      });
+  };
 
   return (
     <SafeAreaView style={{ alignItems: "center" }}>
@@ -124,67 +148,47 @@ export function LoginScreen() {
             </TouchableOpacity>
           </View>
 
-          <Input
-            placeholder="Email Address"
+          <CustomInput
+            placeholder={"Email Address"}
+            autoCompleteType={"email"}
+            iconName={"mail-outline"}
+            hasError={!!error}
+            inputContainerStyle={{ marginTop: 15 }}
             onChangeText={(value) => {
-              setError("");
+              setError(null);
               setEmail(value);
             }}
-            containerStyle={{ marginTop: 30, marginBottom: 0 }}
-            email
-            errorMessage={!!error ? " " : undefined}
             onSubmitEditing={() => {
               if (!!email && !password) {
-                inputRef?.current?.focus();
+                passwordRef?.current?.focus();
               }
-              !!email &&
-                !!password &&
-                !error &&
-                FirebaseAuth()
-                  .signInWithEmailAndPassword(email, password)
-                  .then((user) => {
-                    console.log("Logged in.");
-                  })
-                  .catch((error) => {
-                    if (
-                      error.code === "auth/invalid-email" ||
-                      error.code === "auth/wrong-password"
-                    ) {
-                      console.log("Invalid username or password");
-                      setError("Invalid username or password");
-                    }
-                  });
+              if (!!email && !!password && !error) {
+                logIn();
+              }
             }}
           />
-          <Input
-            placeholder="Password"
+          <CustomInput
+            inputRef={passwordRef}
+            placeholder={"Password"}
+            autoCompleteType={"password"}
+            iconName={"lock-closed-outline"}
+            returnKeyType={"go"}
+            secureTextEntry={true}
+            hasError={!!error}
+            inputContainerStyle={{ marginTop: 15 }}
             onChangeText={(value) => {
-              setError("");
+              setError(null);
               setPassword(value);
             }}
-            secureTextEntry
-            errorMessage={error}
             onSubmitEditing={() => {
-              !!email &&
-                !!password &&
-                !error &&
-                FirebaseAuth()
-                  .signInWithEmailAndPassword(email, password)
-                  .then((user) => {
-                    console.log("Logged in.");
-                  })
-                  .catch((error) => {
-                    if (
-                      error.code === "auth/invalid-email" ||
-                      error.code === "auth/wrong-password"
-                    ) {
-                      console.log("Invalid username or password");
-                      setError("Invalid username or password");
-                    }
-                  });
+              if (!!email && !!password && !error) {
+                logIn();
+              }
             }}
-            inputRef={inputRef}
           />
+          <Text style={[style.regular, styles.errorMessage]}>
+            {!!error && error}
+          </Text>
         </View>
 
         {/* Login Container */}
@@ -192,23 +196,9 @@ export function LoginScreen() {
           <Button
             type="primary"
             title="Log In"
-            disabled={!email || !password || error !== ""}
-            onPress={(e) => {
-              Keyboard.dismiss();
-              FirebaseAuth()
-                .signInWithEmailAndPassword(email, password)
-                .then((user) => {
-                  console.log("Logged in.");
-                })
-                .catch((error) => {
-                  if (
-                    error.code === "auth/invalid-email" ||
-                    error.code === "auth/wrong-password"
-                  ) {
-                    console.log("Invalid username or password");
-                    setError("Invalid username or password");
-                  }
-                });
+            disabled={!email || !password || !!error}
+            onPress={() => {
+              logIn();
             }}
             buttonStyle={{
               width: CONTAINER_WIDTH,
@@ -302,7 +292,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     paddingTop: 20,
-    // backgroundColor: "violet",
   },
   formContainer: {
     alignItems: "flex-start",
@@ -311,20 +300,17 @@ const styles = StyleSheet.create({
     flex: 2,
     paddingTop: 20,
     paddingBottom: 20,
-    // backgroundColor: "skyblue",
     zIndex: 100,
   },
   loginContainer: {
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
-    // backgroundColor: "aqua",
   },
   thirdPartyContainer: {
     justifyContent: "flex-end",
     alignItems: "center",
     flex: 1,
-    // backgroundColor: "blue",
     paddingBottom: 10,
   },
   thirdPartyButtonContainer: {
@@ -349,6 +335,11 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 12,
     color: "#132335",
+  },
+  errorMessage: {
+    margin: 5,
+    color: theme.errorRed,
+    fontSize: 11,
   },
   dividerText: {
     fontSize: 12,
