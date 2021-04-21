@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* AwesomeTSProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* AwesomeTSProjectTests.m */; };
+		00E356F31AD99517003FC87E /* BetweenTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BetweenTests.m */; };
 		05401D62D8FB4927B794B3B6 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D2EA10E94434A55AFA469B7 /* Poppins-Bold.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -18,21 +18,21 @@
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		2DCD954D1E0B4F2C00145EB5 /* AwesomeTSProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* AwesomeTSProjectTests.m */; };
+		2DCD954D1E0B4F2C00145EB5 /* BetweenTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BetweenTests.m */; };
 		33F11A65AD8D4829BBEEDBD1 /* Poppins-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5C70397A05D1453986BAE126 /* Poppins-ExtraLight.ttf */; };
-		540B6BB2850F3AE98D8560E2 /* libPods-AwesomeTSProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5599A252C049DC162B6915EE /* libPods-AwesomeTSProject.a */; };
-		76E58708C492E4EEF49D25D5 /* libPods-AwesomeTSProject-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB5D7009C006A13B919B69F5 /* libPods-AwesomeTSProject-tvOSTests.a */; };
+		540B6BB2850F3AE98D8560E2 /* libPods-Between.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5599A252C049DC162B6915EE /* libPods-Between.a */; };
+		76E58708C492E4EEF49D25D5 /* libPods-Between-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB5D7009C006A13B919B69F5 /* libPods-Between-tvOSTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8385BB8EC2B647B4B8583D75 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 892719A7B8B0454094426A0D /* Poppins-Medium.ttf */; };
 		83EAC84EBCB049F8AA9AAED0 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D54432BBA247442295AF47A7 /* Poppins-Regular.ttf */; };
 		88370AF564D94DE4BDDFA0E6 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B4BDC48C8214D6281C8DF15 /* Poppins-SemiBold.ttf */; };
 		8E776F847D8B498E85CFD4B6 /* Poppins-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B61AFB01627C42F38FB9558B /* Poppins-BlackItalic.ttf */; };
 		93D533900A44474DBC9913C4 /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E844E20F08D4443883FCD609 /* Poppins-Black.ttf */; };
-		A528560A07940CAE6BD93614 /* libPods-AwesomeTSProject-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3D12A7A5EDA7B9BE4383A53 /* libPods-AwesomeTSProject-tvOS.a */; };
+		A528560A07940CAE6BD93614 /* libPods-Between-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3D12A7A5EDA7B9BE4383A53 /* libPods-Between-tvOS.a */; };
 		A71DA58E2606A00000C035D5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A71DA58D2606A00000C035D5 /* GoogleService-Info.plist */; };
 		A73776AE1DDD483ABA17D562 /* Poppins-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 937115BB08F945BDB45BE653 /* Poppins-SemiBoldItalic.ttf */; };
 		B67A8E0888FE4B8FAC77BBB4 /* Poppins-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F226E56855FF4AFD90442279 /* Poppins-ExtraBoldItalic.ttf */; };
-		B80EF7A4C75837FB29AEF2D7 /* libPods-AwesomeTSProject-AwesomeTSProjectTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD24A94BF19BF5B0F1BD1E84 /* libPods-AwesomeTSProject-AwesomeTSProjectTests.a */; };
+		B80EF7A4C75837FB29AEF2D7 /* libPods-Between-BetweenTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD24A94BF19BF5B0F1BD1E84 /* libPods-Between-BetweenTests.a */; };
 		BF8C1223D22D4D68AC493D58 /* Poppins-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7782859A6A1D4E7BAB0ADDFE /* Poppins-BoldItalic.ttf */; };
 		C81869CE67074ABE9F72C796 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EB3FC63D8D5A41A9AC8144D2 /* Poppins-Light.ttf */; };
 		D91D17BA61324FB78EEEF07A /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 56F08907BE684B1B933C8DDD /* Poppins-ExtraBold.ttf */; };
@@ -47,52 +47,52 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = AwesomeTSProject;
+			remoteInfo = Between;
 		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
-			remoteInfo = "AwesomeTSProject-tvOS";
+			remoteInfo = "Between-tvOS";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
-		00E356EE1AD99517003FC87E /* AwesomeTSProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AwesomeTSProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* BetweenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BetweenTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* AwesomeTSProjectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AwesomeTSProjectTests.m; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* AwesomeTSProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AwesomeTSProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = AwesomeTSProject/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = AwesomeTSProject/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AwesomeTSProject/Images.xcassets; sourceTree = SOURCE_ROOT; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = AwesomeTSProject/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = AwesomeTSProject/main.m; sourceTree = "<group>"; };
-		15A2ECF3C5B14D9BB793400C /* Pods-AwesomeTSProject-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeTSProject-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-AwesomeTSProject-tvOSTests/Pods-AwesomeTSProject-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		182A2F05B326D08845314EBB /* Pods-AwesomeTSProject-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeTSProject-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-AwesomeTSProject-tvOSTests/Pods-AwesomeTSProject-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* BetweenTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BetweenTests.m; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* Between.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Between.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Between/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Between/AppDelegate.m; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Between/Images.xcassets; sourceTree = SOURCE_ROOT; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Between/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Between/main.m; sourceTree = "<group>"; };
+		15A2ECF3C5B14D9BB793400C /* Pods-Between-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Between-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-Between-tvOSTests/Pods-Between-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		182A2F05B326D08845314EBB /* Pods-Between-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Between-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-Between-tvOSTests/Pods-Between-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		1D2EA10E94434A55AFA469B7 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../assets/fonts/Poppins/Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		2B4BDC48C8214D6281C8DF15 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../assets/fonts/Poppins/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
-		2D02E47B1E0B4A5D006451C7 /* AwesomeTSProject-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AwesomeTSProject-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D02E4901E0B4A5D006451C7 /* AwesomeTSProject-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AwesomeTSProject-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E47B1E0B4A5D006451C7 /* Between-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Between-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E4901E0B4A5D006451C7 /* Between-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Between-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		420B09B60BC949FCA1CC7DA3 /* Poppins-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLightItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
-		5599A252C049DC162B6915EE /* libPods-AwesomeTSProject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AwesomeTSProject.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5599A252C049DC162B6915EE /* libPods-Between.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Between.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		56F08907BE684B1B933C8DDD /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBold.ttf"; path = "../assets/fonts/Poppins/Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
 		5C2C0D3610A249FF94B1880A /* Poppins-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-MediumItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-MediumItalic.ttf"; sourceTree = "<group>"; };
 		5C70397A05D1453986BAE126 /* Poppins-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLight.ttf"; path = "../assets/fonts/Poppins/Poppins-ExtraLight.ttf"; sourceTree = "<group>"; };
-		5CAC5E8775400E3DAF594536 /* Pods-AwesomeTSProject-AwesomeTSProjectTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeTSProject-AwesomeTSProjectTests.release.xcconfig"; path = "Target Support Files/Pods-AwesomeTSProject-AwesomeTSProjectTests/Pods-AwesomeTSProject-AwesomeTSProjectTests.release.xcconfig"; sourceTree = "<group>"; };
+		5CAC5E8775400E3DAF594536 /* Pods-Between-BetweenTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Between-BetweenTests.release.xcconfig"; path = "Target Support Files/Pods-Between-BetweenTests/Pods-Between-BetweenTests.release.xcconfig"; sourceTree = "<group>"; };
 		7782859A6A1D4E7BAB0ADDFE /* Poppins-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BoldItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-BoldItalic.ttf"; sourceTree = "<group>"; };
-		786E2B0DFFBE82076B7E9A42 /* Pods-AwesomeTSProject-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeTSProject-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-AwesomeTSProject-tvOS/Pods-AwesomeTSProject-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		815F9E7EFAFE9A5B9A50E04B /* Pods-AwesomeTSProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeTSProject.release.xcconfig"; path = "Target Support Files/Pods-AwesomeTSProject/Pods-AwesomeTSProject.release.xcconfig"; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AwesomeTSProject/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		786E2B0DFFBE82076B7E9A42 /* Pods-Between-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Between-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Between-tvOS/Pods-Between-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		815F9E7EFAFE9A5B9A50E04B /* Pods-Between.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Between.release.xcconfig"; path = "Target Support Files/Pods-Between/Pods-Between.release.xcconfig"; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Between/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		892719A7B8B0454094426A0D /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../assets/fonts/Poppins/Poppins-Medium.ttf"; sourceTree = "<group>"; };
 		937115BB08F945BDB45BE653 /* Poppins-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBoldItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		989CD77DB8DD447BA320992A /* Poppins-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Thin.ttf"; path = "../assets/fonts/Poppins/Poppins-Thin.ttf"; sourceTree = "<group>"; };
-		9ACEF1EAC38948E6AB05616D /* Pods-AwesomeTSProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeTSProject.debug.xcconfig"; path = "Target Support Files/Pods-AwesomeTSProject/Pods-AwesomeTSProject.debug.xcconfig"; sourceTree = "<group>"; };
+		9ACEF1EAC38948E6AB05616D /* Pods-Between.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Between.debug.xcconfig"; path = "Target Support Files/Pods-Between/Pods-Between.debug.xcconfig"; sourceTree = "<group>"; };
 		9B76CC4F39C84BFAB6085CB2 /* Poppins-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Italic.ttf"; path = "../assets/fonts/Poppins/Poppins-Italic.ttf"; sourceTree = "<group>"; };
-		9C7CFB2CB5B858C810769B29 /* Pods-AwesomeTSProject-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeTSProject-tvOS.release.xcconfig"; path = "Target Support Files/Pods-AwesomeTSProject-tvOS/Pods-AwesomeTSProject-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		9E64AD7F6BF6AD315364AF51 /* Pods-AwesomeTSProject-AwesomeTSProjectTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeTSProject-AwesomeTSProjectTests.debug.xcconfig"; path = "Target Support Files/Pods-AwesomeTSProject-AwesomeTSProjectTests/Pods-AwesomeTSProject-AwesomeTSProjectTests.debug.xcconfig"; sourceTree = "<group>"; };
-		A715DEB02626B84B0054C9A8 /* AwesomeTSProject.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = AwesomeTSProject.entitlements; path = AwesomeTSProject/AwesomeTSProject.entitlements; sourceTree = "<group>"; };
+		9C7CFB2CB5B858C810769B29 /* Pods-Between-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Between-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Between-tvOS/Pods-Between-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		9E64AD7F6BF6AD315364AF51 /* Pods-Between-BetweenTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Between-BetweenTests.debug.xcconfig"; path = "Target Support Files/Pods-Between-BetweenTests/Pods-Between-BetweenTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A715DEB02626B84B0054C9A8 /* Between.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Between.entitlements; path = Between/Between.entitlements; sourceTree = "<group>"; };
 		A71DA58D2606A00000C035D5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A7C9B78126045AEE0025E367 /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		A7C9B78226045AEE0025E367 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
@@ -111,7 +111,7 @@
 		A7C9B78F26045AEE0025E367 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		A7C9B79026045AEE0025E367 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		ADD3B04BEA7C41DE8C83CDE5 /* Poppins-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-LightItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-LightItalic.ttf"; sourceTree = "<group>"; };
-		B3D12A7A5EDA7B9BE4383A53 /* libPods-AwesomeTSProject-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AwesomeTSProject-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3D12A7A5EDA7B9BE4383A53 /* libPods-Between-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Between-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B61AFB01627C42F38FB9558B /* Poppins-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BlackItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-BlackItalic.ttf"; sourceTree = "<group>"; };
 		D0CC3BC0851A4236A4B4EB7D /* Poppins-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ThinItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-ThinItalic.ttf"; sourceTree = "<group>"; };
 		D54432BBA247442295AF47A7 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../assets/fonts/Poppins/Poppins-Regular.ttf"; sourceTree = "<group>"; };
@@ -120,8 +120,8 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F226E56855FF4AFD90442279 /* Poppins-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBoldItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
-		FB5D7009C006A13B919B69F5 /* libPods-AwesomeTSProject-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AwesomeTSProject-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FD24A94BF19BF5B0F1BD1E84 /* libPods-AwesomeTSProject-AwesomeTSProjectTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AwesomeTSProject-AwesomeTSProjectTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB5D7009C006A13B919B69F5 /* libPods-Between-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Between-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD24A94BF19BF5B0F1BD1E84 /* libPods-Between-BetweenTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Between-BetweenTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,7 +129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B80EF7A4C75837FB29AEF2D7 /* libPods-AwesomeTSProject-AwesomeTSProjectTests.a in Frameworks */,
+				B80EF7A4C75837FB29AEF2D7 /* libPods-Between-BetweenTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,7 +137,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				540B6BB2850F3AE98D8560E2 /* libPods-AwesomeTSProject.a in Frameworks */,
+				540B6BB2850F3AE98D8560E2 /* libPods-Between.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,7 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A528560A07940CAE6BD93614 /* libPods-AwesomeTSProject-tvOS.a in Frameworks */,
+				A528560A07940CAE6BD93614 /* libPods-Between-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,20 +153,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				76E58708C492E4EEF49D25D5 /* libPods-AwesomeTSProject-tvOSTests.a in Frameworks */,
+				76E58708C492E4EEF49D25D5 /* libPods-Between-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* AwesomeTSProjectTests */ = {
+		00E356EF1AD99517003FC87E /* BetweenTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* AwesomeTSProjectTests.m */,
+				00E356F21AD99517003FC87E /* BetweenTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = AwesomeTSProjectTests;
+			path = BetweenTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -177,10 +177,10 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* AwesomeTSProject */ = {
+		13B07FAE1A68108700A75B9A /* Between */ = {
 			isa = PBXGroup;
 			children = (
-				A715DEB02626B84B0054C9A8 /* AwesomeTSProject.entitlements */,
+				A715DEB02626B84B0054C9A8 /* Between.entitlements */,
 				A71DA58D2606A00000C035D5 /* GoogleService-Info.plist */,
 				A7C9B78026045AEE0025E367 /* Fonts */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -191,7 +191,7 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = AwesomeTSProject;
+			name = Between;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -199,10 +199,10 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				5599A252C049DC162B6915EE /* libPods-AwesomeTSProject.a */,
-				FD24A94BF19BF5B0F1BD1E84 /* libPods-AwesomeTSProject-AwesomeTSProjectTests.a */,
-				B3D12A7A5EDA7B9BE4383A53 /* libPods-AwesomeTSProject-tvOS.a */,
-				FB5D7009C006A13B919B69F5 /* libPods-AwesomeTSProject-tvOSTests.a */,
+				5599A252C049DC162B6915EE /* libPods-Between.a */,
+				FD24A94BF19BF5B0F1BD1E84 /* libPods-Between-BetweenTests.a */,
+				B3D12A7A5EDA7B9BE4383A53 /* libPods-Between-tvOS.a */,
+				FB5D7009C006A13B919B69F5 /* libPods-Between-tvOSTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -217,9 +217,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* AwesomeTSProject */,
+				13B07FAE1A68108700A75B9A /* Between */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* AwesomeTSProjectTests */,
+				00E356EF1AD99517003FC87E /* BetweenTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				EC615325A77823906AB46124 /* Pods */,
@@ -233,10 +233,10 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* AwesomeTSProject.app */,
-				00E356EE1AD99517003FC87E /* AwesomeTSProjectTests.xctest */,
-				2D02E47B1E0B4A5D006451C7 /* AwesomeTSProject-tvOS.app */,
-				2D02E4901E0B4A5D006451C7 /* AwesomeTSProject-tvOSTests.xctest */,
+				13B07F961A680F5B00A75B9A /* Between.app */,
+				00E356EE1AD99517003FC87E /* BetweenTests.xctest */,
+				2D02E47B1E0B4A5D006451C7 /* Between-tvOS.app */,
+				2D02E4901E0B4A5D006451C7 /* Between-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -293,14 +293,14 @@
 		EC615325A77823906AB46124 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				9ACEF1EAC38948E6AB05616D /* Pods-AwesomeTSProject.debug.xcconfig */,
-				815F9E7EFAFE9A5B9A50E04B /* Pods-AwesomeTSProject.release.xcconfig */,
-				9E64AD7F6BF6AD315364AF51 /* Pods-AwesomeTSProject-AwesomeTSProjectTests.debug.xcconfig */,
-				5CAC5E8775400E3DAF594536 /* Pods-AwesomeTSProject-AwesomeTSProjectTests.release.xcconfig */,
-				786E2B0DFFBE82076B7E9A42 /* Pods-AwesomeTSProject-tvOS.debug.xcconfig */,
-				9C7CFB2CB5B858C810769B29 /* Pods-AwesomeTSProject-tvOS.release.xcconfig */,
-				15A2ECF3C5B14D9BB793400C /* Pods-AwesomeTSProject-tvOSTests.debug.xcconfig */,
-				182A2F05B326D08845314EBB /* Pods-AwesomeTSProject-tvOSTests.release.xcconfig */,
+				9ACEF1EAC38948E6AB05616D /* Pods-Between.debug.xcconfig */,
+				815F9E7EFAFE9A5B9A50E04B /* Pods-Between.release.xcconfig */,
+				9E64AD7F6BF6AD315364AF51 /* Pods-Between-BetweenTests.debug.xcconfig */,
+				5CAC5E8775400E3DAF594536 /* Pods-Between-BetweenTests.release.xcconfig */,
+				786E2B0DFFBE82076B7E9A42 /* Pods-Between-tvOS.debug.xcconfig */,
+				9C7CFB2CB5B858C810769B29 /* Pods-Between-tvOS.release.xcconfig */,
+				15A2ECF3C5B14D9BB793400C /* Pods-Between-tvOSTests.debug.xcconfig */,
+				182A2F05B326D08845314EBB /* Pods-Between-tvOSTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -308,9 +308,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* AwesomeTSProjectTests */ = {
+		00E356ED1AD99517003FC87E /* BetweenTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "AwesomeTSProjectTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "BetweenTests" */;
 			buildPhases = (
 				6F87A98F82B9C929B64836FC /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -324,14 +324,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = AwesomeTSProjectTests;
-			productName = AwesomeTSProjectTests;
-			productReference = 00E356EE1AD99517003FC87E /* AwesomeTSProjectTests.xctest */;
+			name = BetweenTests;
+			productName = BetweenTests;
+			productReference = 00E356EE1AD99517003FC87E /* BetweenTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* AwesomeTSProject */ = {
+		13B07F861A680F5B00A75B9A /* Between */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "AwesomeTSProject" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Between" */;
 			buildPhases = (
 				72D2ECE3A9D5C37ECC61AB2B /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
@@ -347,14 +347,14 @@
 			);
 			dependencies = (
 			);
-			name = AwesomeTSProject;
-			productName = AwesomeTSProject;
-			productReference = 13B07F961A680F5B00A75B9A /* AwesomeTSProject.app */;
+			name = Between;
+			productName = Between;
+			productReference = 13B07F961A680F5B00A75B9A /* Between.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E47A1E0B4A5D006451C7 /* AwesomeTSProject-tvOS */ = {
+		2D02E47A1E0B4A5D006451C7 /* Between-tvOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "AwesomeTSProject-tvOS" */;
+			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Between-tvOS" */;
 			buildPhases = (
 				9FF96E8E587B675CA1ED8208 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
@@ -367,14 +367,14 @@
 			);
 			dependencies = (
 			);
-			name = "AwesomeTSProject-tvOS";
-			productName = "AwesomeTSProject-tvOS";
-			productReference = 2D02E47B1E0B4A5D006451C7 /* AwesomeTSProject-tvOS.app */;
+			name = "Between-tvOS";
+			productName = "Between-tvOS";
+			productReference = 2D02E47B1E0B4A5D006451C7 /* Between-tvOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E48F1E0B4A5D006451C7 /* AwesomeTSProject-tvOSTests */ = {
+		2D02E48F1E0B4A5D006451C7 /* Between-tvOSTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "AwesomeTSProject-tvOSTests" */;
+			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Between-tvOSTests" */;
 			buildPhases = (
 				C2CDB619546BA66FE9BC1327 /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
@@ -386,9 +386,9 @@
 			dependencies = (
 				2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */,
 			);
-			name = "AwesomeTSProject-tvOSTests";
-			productName = "AwesomeTSProject-tvOSTests";
-			productReference = 2D02E4901E0B4A5D006451C7 /* AwesomeTSProject-tvOSTests.xctest */;
+			name = "Between-tvOSTests";
+			productName = "Between-tvOSTests";
+			productReference = 2D02E4901E0B4A5D006451C7 /* Between-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -418,7 +418,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "AwesomeTSProject" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Between" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -431,10 +431,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* AwesomeTSProject */,
-				00E356ED1AD99517003FC87E /* AwesomeTSProjectTests */,
-				2D02E47A1E0B4A5D006451C7 /* AwesomeTSProject-tvOS */,
-				2D02E48F1E0B4A5D006451C7 /* AwesomeTSProject-tvOSTests */,
+				13B07F861A680F5B00A75B9A /* Between */,
+				00E356ED1AD99517003FC87E /* BetweenTests */,
+				2D02E47A1E0B4A5D006451C7 /* Between-tvOS */,
+				2D02E48F1E0B4A5D006451C7 /* Between-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -536,7 +536,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AwesomeTSProject-AwesomeTSProjectTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Between-BetweenTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -558,7 +558,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AwesomeTSProject-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Between-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -571,7 +571,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AwesomeTSProject/Pods-AwesomeTSProject-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Between/Pods-Between-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -580,7 +580,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AwesomeTSProject/Pods-AwesomeTSProject-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Between/Pods-Between-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9FF96E8E587B675CA1ED8208 /* [CP] Check Pods Manifest.lock */ = {
@@ -598,7 +598,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AwesomeTSProject-tvOS-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Between-tvOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -611,7 +611,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AwesomeTSProject-AwesomeTSProjectTests/Pods-AwesomeTSProject-AwesomeTSProjectTests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Between-BetweenTests/Pods-Between-BetweenTests-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -620,7 +620,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AwesomeTSProject-AwesomeTSProjectTests/Pods-AwesomeTSProject-AwesomeTSProjectTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Between-BetweenTests/Pods-Between-BetweenTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C2BB38345BC3FE8F8A6C3C69 /* [CP] Copy Pods Resources */ = {
@@ -629,7 +629,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AwesomeTSProject-AwesomeTSProjectTests/Pods-AwesomeTSProject-AwesomeTSProjectTests-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Between-BetweenTests/Pods-Between-BetweenTests-resources.sh",
 				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
@@ -674,7 +674,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AwesomeTSProject-AwesomeTSProjectTests/Pods-AwesomeTSProject-AwesomeTSProjectTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Between-BetweenTests/Pods-Between-BetweenTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C2CDB619546BA66FE9BC1327 /* [CP] Check Pods Manifest.lock */ = {
@@ -692,7 +692,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AwesomeTSProject-tvOSTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Between-tvOSTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -715,7 +715,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AwesomeTSProject/Pods-AwesomeTSProject-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Between/Pods-Between-resources.sh",
 				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
@@ -760,7 +760,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AwesomeTSProject/Pods-AwesomeTSProject-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Between/Pods-Between-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -808,7 +808,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* AwesomeTSProjectTests.m in Sources */,
+				00E356F31AD99517003FC87E /* BetweenTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,7 +834,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DCD954D1E0B4F2C00145EB5 /* AwesomeTSProjectTests.m in Sources */,
+				2DCD954D1E0B4F2C00145EB5 /* BetweenTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -843,12 +843,12 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* AwesomeTSProject */;
+			target = 13B07F861A680F5B00A75B9A /* Between */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2D02E47A1E0B4A5D006451C7 /* AwesomeTSProject-tvOS */;
+			target = 2D02E47A1E0B4A5D006451C7 /* Between-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -856,14 +856,14 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9E64AD7F6BF6AD315364AF51 /* Pods-AwesomeTSProject-AwesomeTSProjectTests.debug.xcconfig */;
+			baseConfigurationReference = 9E64AD7F6BF6AD315364AF51 /* Pods-Between-BetweenTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = AwesomeTSProjectTests/Info.plist;
+				INFOPLIST_FILE = BetweenTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -873,17 +873,17 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AwesomeTSProject.app/AwesomeTSProject";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Between.app/Between";
 			};
 			name = Debug;
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5CAC5E8775400E3DAF594536 /* Pods-AwesomeTSProject-AwesomeTSProjectTests.release.xcconfig */;
+			baseConfigurationReference = 5CAC5E8775400E3DAF594536 /* Pods-Between-BetweenTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				INFOPLIST_FILE = AwesomeTSProjectTests/Info.plist;
+				INFOPLIST_FILE = BetweenTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -893,22 +893,22 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AwesomeTSProject.app/AwesomeTSProject";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Between.app/Between";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9ACEF1EAC38948E6AB05616D /* Pods-AwesomeTSProject.debug.xcconfig */;
+			baseConfigurationReference = 9ACEF1EAC38948E6AB05616D /* Pods-Between.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = AwesomeTSProject/AwesomeTSProject.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Between/Between.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = GF6S5B8S5F;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = "";
-				INFOPLIST_FILE = AwesomeTSProject/Info.plist;
+				INFOPLIST_FILE = Between/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -916,7 +916,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.inBetween;
-				PRODUCT_NAME = AwesomeTSProject;
+				PRODUCT_NAME = Between;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -925,15 +925,15 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 815F9E7EFAFE9A5B9A50E04B /* Pods-AwesomeTSProject.release.xcconfig */;
+			baseConfigurationReference = 815F9E7EFAFE9A5B9A50E04B /* Pods-Between.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = AwesomeTSProject/AwesomeTSProject.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Between/Between.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = GF6S5B8S5F;
 				EXCLUDED_ARCHS = "";
-				INFOPLIST_FILE = AwesomeTSProject/Info.plist;
+				INFOPLIST_FILE = Between/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -941,7 +941,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.inBetween;
-				PRODUCT_NAME = AwesomeTSProject;
+				PRODUCT_NAME = Between;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -949,7 +949,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 786E2B0DFFBE82076B7E9A42 /* Pods-AwesomeTSProject-tvOS.debug.xcconfig */;
+			baseConfigurationReference = 786E2B0DFFBE82076B7E9A42 /* Pods-Between-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -960,14 +960,14 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "AwesomeTSProject-tvOS/Info.plist";
+				INFOPLIST_FILE = "Between-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.AwesomeTSProject-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.Between-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -977,7 +977,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C7CFB2CB5B858C810769B29 /* Pods-AwesomeTSProject-tvOS.release.xcconfig */;
+			baseConfigurationReference = 9C7CFB2CB5B858C810769B29 /* Pods-Between-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -988,14 +988,14 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "AwesomeTSProject-tvOS/Info.plist";
+				INFOPLIST_FILE = "Between-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.AwesomeTSProject-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.Between-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -1005,7 +1005,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 15A2ECF3C5B14D9BB793400C /* Pods-AwesomeTSProject-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = 15A2ECF3C5B14D9BB793400C /* Pods-Between-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1015,24 +1015,24 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "AwesomeTSProject-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "Between-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.AwesomeTSProject-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.Between-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AwesomeTSProject-tvOS.app/AwesomeTSProject-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Between-tvOS.app/Between-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Debug;
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 182A2F05B326D08845314EBB /* Pods-AwesomeTSProject-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = 182A2F05B326D08845314EBB /* Pods-Between-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1042,17 +1042,17 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "AwesomeTSProject-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "Between-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.AwesomeTSProject-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.Between-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AwesomeTSProject-tvOS.app/AwesomeTSProject-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Between-tvOS.app/Between-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Release;
@@ -1175,7 +1175,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "AwesomeTSProjectTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "BetweenTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -1184,7 +1184,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "AwesomeTSProject" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Between" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -1193,7 +1193,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "AwesomeTSProject-tvOS" */ = {
+		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Between-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4971E0B4A5E006451C7 /* Debug */,
@@ -1202,7 +1202,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "AwesomeTSProject-tvOSTests" */ = {
+		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Between-tvOSTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4991E0B4A5E006451C7 /* Debug */,
@@ -1211,7 +1211,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "AwesomeTSProject" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Between" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,

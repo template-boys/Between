@@ -3,7 +3,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '11.0'
 
-target 'AwesomeTSProject' do
+target 'Between' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
@@ -14,7 +14,7 @@ target 'AwesomeTSProject' do
   pod 'react-native-google-maps', path: rn_maps_path  # Remove this line if you don't want to support GoogleMaps on iOS
   pod 'GoogleSignIn', '~> 5.0.2'
 
-  target 'AwesomeTSProjectTests' do
+  target 'BetweenTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -29,10 +29,10 @@ target 'AwesomeTSProject' do
   end
 end
 
-target 'AwesomeTSProject-tvOS' do
-  # Pods for AwesomeTSProject-tvOS
+target 'Between-tvOS' do
+  # Pods for Between-tvOS
 
-  target 'AwesomeTSProject-tvOSTests' do
+  target 'Between-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
