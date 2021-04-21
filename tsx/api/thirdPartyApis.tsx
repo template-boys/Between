@@ -47,11 +47,14 @@ export const mapBoxAutoComplete = async (query) => {
   return await axios.get(url);
 };
 
-export const tomTomAutoComplete = async (query) => {
+export const tomTomAutoComplete = async (query, userLocation) => {
   const key = getTomTomKey();
   const encodeUrl = require("encodeurl");
+  const latLonBias = !!userLocation
+    ? `lon=${userLocation.longitude}&lat=${userLocation.latitude}`
+    : "lon=-87.9806&lat=42.0884";
   const url = encodeUrl(
-    `https://api.tomtom.com/search/2/search/${query}.json?key=${key}&lon=-87.9806&lat=42.0884&typeahead=true&minFuzzyLevel=2&maxFuzzyLevel=4`
+    `https://api.tomtom.com/search/2/search/${query}.json?key=${key}&${latLonBias}&typeahead=true&minFuzzyLevel=2&maxFuzzyLevel=4`
   );
   return await axios.get(url);
 };

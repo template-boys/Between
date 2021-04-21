@@ -106,16 +106,30 @@ export function LoginScreen() {
       >
         <View style={styles.logoContainer}>
           <Logo width={60} height={60} />
-          <Text
-            style={[
-              style.semiBold,
-              {
-                marginTop: 10,
-              },
-            ]}
-          >
-            Between
-          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text
+              style={[
+                style.semiBold,
+                {
+                  marginTop: 10,
+                },
+              ]}
+            >
+              lin
+            </Text>
+            <Text
+              style={[
+                style.semiBold,
+                {
+                  marginTop: 10,
+                  color: theme.darkPurple,
+                  fontWeight: "700",
+                },
+              ]}
+            >
+              q
+            </Text>
+          </View>
         </View>
 
         {/* Form Container */}
@@ -153,6 +167,7 @@ export function LoginScreen() {
             autoCompleteType={"email"}
             iconName={"mail-outline"}
             hasError={!!error}
+            keyboardType="email-address"
             inputContainerStyle={{ marginTop: 15 }}
             onChangeText={(value) => {
               setError(null);

@@ -13,21 +13,37 @@ const DestinationSearchResult = ({
   searchResult,
   containerStyle,
 }: DestinationSearchResultProps) => {
-    
+  const getGeographyTypeHeader = (searchResult) => {
+    switch (searchResult.entityType) {
+      case "Country":
+        return (
+          searchResult.address?.country ?? searchResult.address?.freeformAddress
+        );
+      case "PostalCodeArea":
+        return searchResult.address?.postalCode;
+      case "Municipality":
+        return searchResult.address?.municipality;
+      default:
+        return searchResult.address?.freeformAddress;
+    }
+  };
+
   const getHeader = () => {
-    if (searchResult.type == "POI") {
-      return searchResult.poi?.name;
-    } else if (
-      searchResult.type == "Street" ||
-      searchResult.type == "Cross Street"
-    ) {
-      return (
-        searchResult.address?.streetName +
-        ", " +
-        searchResult.address?.municipality
-      );
-    } else if (searchResult.type == "Geography") {
-      return searchResult.address?.municipality;
+    switch (searchResult.type) {
+      case "POI":
+        return searchResult.poi?.name;
+      case "Street":
+      case "Cross Street":
+        return !!searchResult.address?.streetName
+          ? searchResult.address?.streetName
+          : searchResult.address?.freeformAddress;
+      case "Geography":
+        return getGeographyTypeHeader(searchResult);
+      case "Point Address":
+      case "Address Range":
+        return `${searchResult.address?.streetNumber} ${searchResult.address?.streetName}`;
+      default:
+        break;
     }
   };
 
@@ -37,8 +53,8 @@ const DestinationSearchResult = ({
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Icon name={"location-sharp"} size={30} color={theme.darkPurple} />
-      <View style={{ marginLeft: 20, marginRight: 20 }}>
+      <Icon name={"location-outline"} size={30} color={theme.darkPurple} />
+      <View style={{ marginLeft: 10, marginRight: 25 }}>
         <Text style={[style.medium, styles.header]}>{getHeader()}</Text>
         <Text style={[style.regular, styles.subText]}>{getSubText()}</Text>
       </View>
@@ -50,11 +66,12 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: theme.purple,
-    padding: 20,
+    padding: 25,
+    paddingTop: 18,
+    paddingBottom: 18,
+    backgroundColor: "white",
   },
-  header: { color: theme.darkestGrey },
+  header: { color: theme.darkestGrey, fontSize: 17 },
   subText: {},
 });
 

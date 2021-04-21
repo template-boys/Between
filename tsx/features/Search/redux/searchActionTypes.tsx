@@ -26,4 +26,7 @@ export default keyMirror({
 
   //Clear data
   LOGOUT_USER: null,
+
+  //User location
+  SET_USER_LOCATION: null,
 });

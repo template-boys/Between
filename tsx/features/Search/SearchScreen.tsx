@@ -40,7 +40,9 @@ export default function SearchScreen({ navigation }): ReactElement {
   const dispatch = useDispatch();
   const insets = useSafeAreaInsets();
   const [autoCompleteValues, setAutoCompleteValues] = useState([]);
-  const [autoCompleteFocus, setAutoCompleteFocus] = useState<boolean>(false);
+  const [isAutoCompleteFocus, setIsAutoCompleteFocus] = useState<boolean>(
+    false
+  );
   const searchBottomSheetRef = useRef<any | null>(null);
   const autoCompleteRef = useRef<any | null>(null);
   const openPagesheet = () => {
@@ -56,6 +58,7 @@ export default function SearchScreen({ navigation }): ReactElement {
   const searchResult = useSelector(
     (state) => state.searchReducer.searchResult?.businesses ?? []
   );
+  const userLocation = useSelector((state) => state.searchReducer.userLocation);
   const searchType = useSelector((state) => state.searchReducer.searchType);
   const searchLoading = useSelector(
     (state) => state.searchReducer.searchLoading
@@ -89,6 +92,8 @@ export default function SearchScreen({ navigation }): ReactElement {
     dispatch(getPlaceSearchActon(query, middlePoint));
   };
 
+  const autoInputRef = useRef<any | null>(null);
+
   useEffect(() => {
     if (searchLocations.length > 1) {
       getPlaceSearch(searchType);
@@ -103,51 +108,58 @@ export default function SearchScreen({ navigation }): ReactElement {
     }
   }, [searchLocations, searchType]);
 
-  const getAutoCompleteResults = debounce(async (query) => {
+  const debouncedAutoCompleteCall = debounce(async (query) => {
     if (!query) {
       setAutoCompleteValues([]);
       return;
     }
-    const result = await tomTomAutoComplete(query);
+    const result = await tomTomAutoComplete(query, userLocation);
     setAutoCompleteValues(result?.data?.results ?? []);
   }, 1000);
 
-  console.log(searchLocations);
+  const getAutoCompleteResults = (query) => {
+    if (!query) {
+      setAutoCompleteValues([]);
+      return;
+    }
+    debouncedAutoCompleteCall(query);
+  };
 
   return (
     <>
+      {isAutoCompleteFocus ? (
+        <View
+          style={{
+            position: "absolute",
+            height: SCREEN_HEIGHT,
+            width: SCREEN_WIDTH,
+            backgroundColor: "white",
+          }}
+        />
+      ) : null}
       <View style={[styles.container, { marginTop: insets.top }]}>
         <AutoCompleteInputField
-          containerStyle={styles.autoCompleteStyle}
-          inputRef={autoCompleteRef}
+          inputRef={autoInputRef}
+          leftIcon={isAutoCompleteFocus ? "return-up-back-outline" : "search"}
+          onLeftIconPress={() => {
+            if (!isAutoCompleteFocus) {
+              autoInputRef?.current?.focus();
+            } else {
+              Keyboard.dismiss();
+              setAutoCompleteValues([]);
+              setIsAutoCompleteFocus(false);
+            }
+          }}
           inputProps={{
             onChange: (value) => {
               getAutoCompleteResults(value);
             },
             onFocus: () => {
-              setAutoCompleteFocus(true);
+              setIsAutoCompleteFocus(true);
             },
           }}
         />
-        {/* <View
-          style={{
-            marginTop: 15,
-            marginBottom: 5,
-            backgroundColor: "white",
-          }}
-        >
-          <DestinationSearchResult
-            searchResult={{
-              type: "Street",
-              address: {
-                streetName: "Choose from",
-                municipality: "Favorites",
-                freeformAddress: "Favorites",
-              },
-            }}
-          />
-        </View> */}
-        {autoCompleteFocus && (
+        {isAutoCompleteFocus ? (
           <FlatList
             data={autoCompleteValues}
             style={styles.flatListContainer}
@@ -158,15 +170,17 @@ export default function SearchScreen({ navigation }): ReactElement {
               <TouchableOpacity
                 onPress={() => {
                   addSearchLocation(item);
-                  setAutoCompleteFocus(false);
+                  setIsAutoCompleteFocus(false);
                   Keyboard.dismiss();
+                  setAutoCompleteValues([]);
+                  autoInputRef.current?.clear();
                 }}
               >
                 <DestinationSearchResult searchResult={item} />
               </TouchableOpacity>
             )}
           />
-        )}
+        ) : null}
       </View>
       <FullMapView
         onIconPress={() => {
@@ -176,38 +190,38 @@ export default function SearchScreen({ navigation }): ReactElement {
         onRemovePress={removeSearchLocation}
         searchResult={searchResult}
       />
+      {/* <View style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: 0.75,
+          }}
+        >
+          <FullMapView
+            onIconPress={() => {
+              openPagesheet();
+            }}
+            searchLocations={searchLocations}
+            onRemovePress={removeSearchLocation}
+            searchResult={searchResult}
+          />
+        </View>
+        {searchLocations.length > 1 && (
+          <PlaceList
+            searchResult={searchResult}
+            searchLoading={searchLoading}
+            navigation={navigation}
+          />
+        )}
+        <SearchBottomSheet ref={searchBottomSheetRef}>
+          <SearchBottomSheetView
+            addSearchLocation={(location) => {
+              addSearchLocation(location);
+              closePagesheet();
+            }}
+          />
+        </SearchBottomSheet>
+      </View> */}
     </>
-    // <View style={{ flex: 1 }}>
-    //   <View
-    //     style={{
-    //       flex: 0.75,
-    //     }}
-    //   >
-    //     <FullMapView
-    //       onIconPress={() => {
-    //         openPagesheet();
-    //       }}
-    //       searchLocations={searchLocations}
-    //       onRemovePress={removeSearchLocation}
-    //       searchResult={searchResult}
-    //     />
-    //   </View>
-    //   {searchLocations.length > 1 && (
-    //     <PlaceList
-    //       searchResult={searchResult}
-    //       searchLoading={searchLoading}
-    //       navigation={navigation}
-    //     />
-    //   )}
-    //   <SearchBottomSheet ref={searchBottomSheetRef}>
-    //     <SearchBottomSheetView
-    //       addSearchLocation={(location) => {
-    //         addSearchLocation(location);
-    //         closePagesheet();
-    //       }}
-    //     />
-    //   </SearchBottomSheet>
-    // </View>
   );
 }
 
@@ -224,9 +238,9 @@ const styles = StyleSheet.create({
   flatListContainer: {
     zIndex: -5,
     width: SCREEN_WIDTH,
-    backgroundColor: "white",
     flex: 1,
     marginTop: 10,
+    backgroundColor: "white",
   },
   listContainer: {
     backgroundColor: "white",

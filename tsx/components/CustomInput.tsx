@@ -21,6 +21,7 @@ export interface CustomInputProps extends TextInputProps {
   inputStyle?: TextStyle;
   iconName?: string;
   hasError?: boolean;
+  onLeftIconPress?: () => void | null | undefined;
 }
 
 const CustomInput = ({
@@ -41,11 +42,18 @@ const CustomInput = ({
     <View style={[styles.container, containerStyle]}>
       <View style={[styles.inputContainer, inputContainerStyle]}>
         {iconName && (
-          <Icon
-            name={iconName}
-            size={24}
-            color={!!hasError ? theme.errorRed : theme.darkPurple}
-          />
+          <TouchableOpacity
+            onPress={() => {
+              !!props.onLeftIconPress && props.onLeftIconPress();
+            }}
+            activeOpacity={!!props.onLeftIconPress ? 0.2 : 1}
+          >
+            <Icon
+              name={iconName}
+              size={24}
+              color={!!hasError ? theme.errorRed : theme.darkPurple}
+            />
+          </TouchableOpacity>
         )}
         <TextInput
           ref={ref}

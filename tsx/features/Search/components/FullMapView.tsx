@@ -1,14 +1,12 @@
 import React, { ReactElement } from "react";
+import RNLocation from "react-native-location";
 import { PixelRatio, Platform, StyleSheet } from "react-native";
-import { View, Dimensions } from "react-native";
-import { TouchableOpacity } from "react-native";
-import { useSelector } from "react-redux";
+import { Dimensions } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 import MapView, { Marker } from "react-native-maps";
-import Icon from "react-native-vector-icons/Ionicons";
 import theme from "../../../themes/theme";
 import mapTheme from "./mapStyle";
-import Button from "../../../components/Button";
-import AutoCompleteInputField from "../../../components/AutoCompleteInputField";
+import { setUserLocation } from "../redux/searchActions";
 
 interface Props {
   showShadow?: boolean;
@@ -20,27 +18,28 @@ interface Props {
 }
 
 export default function FullMapView({
-  onIconPress,
   searchLocations,
-  onRemovePress,
   searchResult,
 }: Props): ReactElement {
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get(
     "window"
   );
+
+  const dispatch = useDispatch();
   const [pressedMarker, setPressedMarker] = React.useState(-1);
   const mapRef = React.useRef<any | null>(null);
   const placeMarker = React.useRef<any | null>(null);
 
   const placeIndex = useSelector((state) => state.searchReducer.placeIndex);
+  const userLocation = useSelector((state) => state.searchReducer.userLocation);
+
   const searchLoading = useSelector(
     (state) => state.searchReducer.searchLoading
   );
 
-  //hardcoded, should be users location
   const region = {
-    latitude: 42.65847,
-    longitude: 21.1607,
+    latitude: userLocation?.latitude || 42.65847,
+    longitude: userLocation?.longitude || 21.1607,
     latitudeDelta: 0.5,
     longitudeDelta: 0.5,
   };
@@ -87,6 +86,38 @@ export default function FullMapView({
     searchResult[placeIndex]?.coordinates &&
     !searchLoading &&
     searchLocations.length > 1;
+
+  React.useEffect(() => {
+    const getLocationPermission = async () => {
+      const permission = await RNLocation.requestPermission({
+        ios: "whenInUse",
+        android: {
+          detail: "coarse",
+          rationale: {
+            title: "We need to access your location",
+            message: "We use your location to show where you are on the map",
+            buttonPositive: "OK",
+            buttonNegative: "Cancel",
+          },
+        },
+      });
+      if (permission) {
+        const location = await RNLocation.getLatestLocation({ timeout: 100 });
+        dispatch(setUserLocation(location));
+      }
+    };
+    getLocationPermission();
+  }, []);
+
+  React.useEffect(() => {
+    if (!!userLocation?.longitude && !!userLocation?.latitude) {
+      mapRef.current?.animateToRegion({
+        ...userLocation,
+        latitudeDelta: 1,
+        longitudeDelta: 1,
+      });
+    }
+  }, [userLocation]);
 
   return (
     <MapView
