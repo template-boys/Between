@@ -56,7 +56,7 @@ const DestinationSearchResult = ({
       <Icon name={"location-outline"} size={30} color={theme.darkPurple} />
       <View style={{ marginLeft: 10, marginRight: 25 }}>
         <Text style={[style.medium, styles.header]}>{getHeader()}</Text>
-        <Text style={[style.regular, styles.subText]}>{getSubText()}</Text>
+        <Text style={style.regular}>{getSubText()}</Text>
       </View>
     </View>
   );
@@ -71,8 +71,7 @@ const styles = StyleSheet.create({
     paddingBottom: 18,
     backgroundColor: "white",
   },
-  header: { color: theme.darkestGrey, fontSize: 17 },
-  subText: {},
+  header: { color: theme.darkestGrey, fontSize: 16 },
 });
 
 export default DestinationSearchResult;

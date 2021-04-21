@@ -127,16 +127,7 @@ export default function SearchScreen({ navigation }): ReactElement {
 
   return (
     <>
-      {isAutoCompleteFocus ? (
-        <View
-          style={{
-            position: "absolute",
-            height: SCREEN_HEIGHT,
-            width: SCREEN_WIDTH,
-            backgroundColor: "white",
-          }}
-        />
-      ) : null}
+      {isAutoCompleteFocus ? <View style={styles.searchBackground} /> : null}
       <View style={[styles.container, { marginTop: insets.top }]}>
         <AutoCompleteInputField
           inputRef={autoInputRef}
@@ -229,6 +220,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     // backgroundColor: "coral",
+  },
+  searchBackground: {
+    position: "absolute",
+    height: SCREEN_HEIGHT,
+    width: SCREEN_WIDTH,
+    backgroundColor: "white",
   },
   autoCompleteStyle: {
     marginTop: 10,

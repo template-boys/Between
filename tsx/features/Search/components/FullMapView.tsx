@@ -5,8 +5,10 @@ import { Dimensions } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import MapView, { Marker } from "react-native-maps";
 import theme from "../../../themes/theme";
-import mapTheme from "./mapStyle";
+import mapTheme from "./mapTheme";
 import { setUserLocation } from "../redux/searchActions";
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 interface Props {
   showShadow?: boolean;
@@ -21,10 +23,6 @@ export default function FullMapView({
   searchLocations,
   searchResult,
 }: Props): ReactElement {
-  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get(
-    "window"
-  );
-
   const dispatch = useDispatch();
   const [pressedMarker, setPressedMarker] = React.useState(-1);
   const mapRef = React.useRef<any | null>(null);
@@ -125,13 +123,7 @@ export default function FullMapView({
       onPress={() => {
         setPressedMarker(-1);
       }}
-      style={[
-        styles.mapStyles,
-        {
-          width: SCREEN_WIDTH,
-          height: SCREEN_HEIGHT,
-        },
-      ]}
+      style={styles.mapStyles}
       initialRegion={region}
       provider={"google"}
       customMapStyle={mapTheme}
@@ -166,9 +158,10 @@ export default function FullMapView({
 }
 
 const styles = StyleSheet.create({
-  container: {},
   mapStyles: {
     position: "absolute",
     zIndex: -10,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
   },
 });
