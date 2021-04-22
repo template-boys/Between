@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet } from "react-native";
 import { View } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import theme from "../../../themes/theme";
-import mapTheme from "./mapStyle";
+import mapTheme from "./mapTheme";
 
 interface Props {
   location: { longitude: number; latitude: number };
@@ -38,16 +38,7 @@ export default function MapLocationView({
     <View style={{ backgroundColor: "white" }}>
       <MapView
         ref={mapRef}
-        style={[
-          styles.mapStyles,
-          {
-            height: SCREEN_HEIGHT / 3,
-            width: SCREEN_WIDTH,
-            borderRadius: 26,
-            alignSelf: "center",
-            backgroundColor: "white",
-          },
-        ]}
+        style={styles.mapStyles}
         initialRegion={{
           latitude: location.latitude,
           longitude: location.longitude,
@@ -98,5 +89,10 @@ const styles = StyleSheet.create({
     zIndex: -10,
     borderWidth: 15,
     borderColor: "white",
+    height: SCREEN_HEIGHT / 3,
+    width: SCREEN_WIDTH,
+    borderRadius: 26,
+    alignSelf: "center",
+    backgroundColor: "white",
   },
 });

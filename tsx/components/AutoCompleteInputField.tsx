@@ -1,57 +1,59 @@
-import React, { useState } from "react";
-import theme from "../themes/theme";
-import { tomTomAutoComplete } from "../api/thirdPartyApis";
-import Input from "./Input";
-import { debounce } from "lodash";
-import { FlatList, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-interface Props {
-  setLocation: (any) => void;
+import React from "react";
+import {
+  Dimensions,
+  StyleSheet,
+  TextInputProps,
+  View,
+  ViewStyle,
+} from "react-native";
+import CustomInput from "./CustomInput";
+
+interface AutoCompleteInputProps {
+  onLeftIconPress?: () => void;
+  inputProps?: TextInputProps;
+  leftIcon?: string;
+  inputRef?: any;
 }
 
-function AutoCompleteInputField(props: Props) {
-  const [autoCompleteValues, setAutoCompleteValues] = useState([]);
-
-  const getAutoCompleteResults = debounce(async (query) => {
-    if (query.length === 0) {
-      setAutoCompleteValues([]);
-      return;
-    }
-    const result = await tomTomAutoComplete(query);
-    setAutoCompleteValues(result?.data?.results ?? []);
-  }, 1000);
-
+function AutoCompleteInputField(props: AutoCompleteInputProps) {
   return (
-    <View style={{ marginBottom: 15 }}>
-      <Input
-        onChangeText={(q) => getAutoCompleteResults(q)}
+    <View style={styles.container}>
+      <CustomInput
+        inputRef={props.inputRef}
         placeholder="Search city, address, or place"
-      />
-      <FlatList
-        data={autoCompleteValues}
-        style={{ height: 150 }}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity
-            style={{
-              marginLeft: 35,
-              marginRight: 15,
-              paddingTop: 14,
-              borderBottomWidth: 1,
-              borderBottomColor: theme.purple,
-              paddingBottom: 14,
-            }}
-            onPress={() => {
-              props.setLocation(item);
-            }}
-          >
-            <Text style={{ color: theme.purple }} numberOfLines={1}>
-              {item?.address?.freeformAddress}
-            </Text>
-          </TouchableOpacity>
-        )}
+        inputContainerStyle={styles.inputContainer}
+        iconName={props.leftIcon}
+        clearButtonMode="always"
+        onLeftIconPress={
+          !!props.onLeftIconPress
+            ? () => {
+                !!props.onLeftIconPress && props.onLeftIconPress();
+                props.inputRef?.current?.clear();
+              }
+            : undefined
+        }
+        {...props.inputProps}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 10,
+    marginLeft: 15,
+    marginRight: 15,
+  },
+  inputContainer: {
+    borderRadius: 35,
+    backgroundColor: "white",
+    height: 50,
+    borderWidth: 0,
+    shadowColor: "black",
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 0 },
+  },
+});
 
 export default AutoCompleteInputField;

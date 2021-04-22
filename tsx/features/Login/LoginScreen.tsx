@@ -8,14 +8,15 @@ import {
   TouchableOpacity,
   Keyboard,
 } from "react-native";
-import Input from "../../components/Input";
 import Button from "../../components/Button";
 import Logo from "../../components/Logo.svg";
 import GoogleLogo from "../../components/GoogleLogo.svg";
-import FacebookLogo from "../../components/FacebookLogo.svg";
-import FirebaseAuth from "@react-native-firebase/auth";
+import AppleLogo from "../../components/AppleLogo.svg";
 import { StyleSheet } from "react-native";
 import style from "../../themes/style";
+import CustomInput from "../../components/CustomInput";
+import theme from "../../themes/theme";
+import { appleLogin, googleLogin, emailLogin } from "./loginUtils";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CONTAINER_WIDTH = SCREEN_WIDTH - 50;
@@ -23,9 +24,9 @@ const CONTAINER_WIDTH = SCREEN_WIDTH - 50;
 export function LoginScreen() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [error, setError] = React.useState("");
+  const [error, setError] = React.useState<string | null>("");
 
-  const inputRef = React.useRef<any | null>(null);
+  const passwordInputRef = React.useRef<any | null>(null);
 
   return (
     <SafeAreaView style={{ alignItems: "center" }}>
@@ -51,14 +52,7 @@ export function LoginScreen() {
         {/* Form Container */}
         <View style={styles.formContainer}>
           <Text style={style.bold}>Sign In</Text>
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <View style={styles.signUpContainer}>
             <Text
               style={[
                 style.regular,
@@ -77,68 +71,48 @@ export function LoginScreen() {
               <Text style={[style.medium]}>Sign Up</Text>
             </TouchableOpacity>
           </View>
-
-          <Input
-            placeholder="Email Address"
+          <CustomInput
+            placeholder={"Email Address"}
+            autoCompleteType={"email"}
+            iconName={"mail-outline"}
+            hasError={!!error}
+            keyboardType="email-address"
+            inputContainerStyle={{ marginTop: 15 }}
             onChangeText={(value) => {
-              setError("");
+              setError(null);
               setEmail(value);
             }}
-            containerStyle={{ marginTop: 30, marginBottom: 0 }}
-            email
-            errorMessage={!!error ? " " : undefined}
             onSubmitEditing={() => {
               if (!!email && !password) {
-                inputRef?.current?.focus();
+                passwordInputRef?.current?.focus();
               }
-              !!email &&
-                !!password &&
-                !error &&
-                FirebaseAuth()
-                  .signInWithEmailAndPassword(email, password)
-                  .then((user) => {
-                    console.log("Logged in.");
-                  })
-                  .catch((error) => {
-                    if (
-                      error.code === "auth/invalid-email" ||
-                      error.code === "auth/wrong-password"
-                    ) {
-                      console.log("Invalid username or password");
-                      setError("Invalid username or password");
-                    }
-                  });
+              if (!!email && !!password && !error) {
+                emailLogin(email, password, setError);
+              }
             }}
           />
-          <Input
-            placeholder="Password"
+          <CustomInput
+            inputRef={passwordInputRef}
+            placeholder={"Password"}
+            autoCompleteType={"password"}
+            iconName={"lock-closed-outline"}
+            returnKeyType={"go"}
+            secureTextEntry={true}
+            hasError={!!error}
+            inputContainerStyle={{ marginTop: 15 }}
             onChangeText={(value) => {
-              setError("");
+              setError(null);
               setPassword(value);
             }}
-            secureTextEntry
-            errorMessage={error}
             onSubmitEditing={() => {
-              !!email &&
-                !!password &&
-                !error &&
-                FirebaseAuth()
-                  .signInWithEmailAndPassword(email, password)
-                  .then((user) => {
-                    console.log("Logged in.");
-                  })
-                  .catch((error) => {
-                    if (
-                      error.code === "auth/invalid-email" ||
-                      error.code === "auth/wrong-password"
-                    ) {
-                      console.log("Invalid username or password");
-                      setError("Invalid username or password");
-                    }
-                  });
+              if (!!email && !!password && !error) {
+                emailLogin(email, password, setError);
+              }
             }}
-            inputRef={inputRef}
           />
+          <Text style={[style.regular, styles.errorMessage]}>
+            {!!error && error}
+          </Text>
         </View>
 
         {/* Login Container */}
@@ -146,29 +120,11 @@ export function LoginScreen() {
           <Button
             type="primary"
             title="Log In"
-            disabled={!email || !password || error !== ""}
-            onPress={(e) => {
-              Keyboard.dismiss();
-              FirebaseAuth()
-                .signInWithEmailAndPassword(email, password)
-                .then((user) => {
-                  console.log("Logged in.");
-                })
-                .catch((error) => {
-                  if (
-                    error.code === "auth/invalid-email" ||
-                    error.code === "auth/wrong-password"
-                  ) {
-                    console.log("Invalid username or password");
-                    setError("Invalid username or password");
-                  }
-                });
+            disabled={!email || !password || !!error}
+            onPress={() => {
+              emailLogin(email, password, setError);
             }}
-            buttonStyle={{
-              width: CONTAINER_WIDTH,
-              height: 50,
-              borderRadius: 10,
-            }}
+            buttonStyle={styles.loginButton}
           />
           <Text
             style={[
@@ -200,28 +156,29 @@ export function LoginScreen() {
 
         {/* ThirdParty Container */}
         <View style={styles.thirdPartyContainer}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
+          <View style={styles.signInWithContainer}>
             <Text style={[style.regular, styles.dividerText]}>
-              Sign Up with
+              Sign In with
             </Text>
             <View style={styles.divider} />
           </View>
           <View style={styles.thirdPartyButtonContainer}>
-            <TouchableOpacity style={styles.thirdPartyLoginSquare}>
-              <GoogleLogo height={21} width={21} />
+            <TouchableOpacity
+              style={styles.thirdPartyLoginSquare}
+              onPress={() => googleLogin()}
+            >
+              <GoogleLogo height={30} width={30} />
               <Text style={[style.regular, styles.thirdPartyLoginText]}>
                 Google
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.thirdPartyLoginSquare}>
-              <FacebookLogo height={21} width={21} />
+            <TouchableOpacity
+              style={styles.thirdPartyLoginSquare}
+              onPress={() => appleLogin()}
+            >
+              <AppleLogo height={30} width={30} />
               <Text style={[style.regular, styles.thirdPartyLoginText]}>
-                Facebook
+                Apple
               </Text>
             </TouchableOpacity>
           </View>
@@ -237,12 +194,16 @@ const styles = StyleSheet.create({
     height: "100%",
     width: CONTAINER_WIDTH,
   },
+  signUpContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   logoContainer: {
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
     paddingTop: 20,
-    // backgroundColor: "violet",
   },
   formContainer: {
     alignItems: "flex-start",
@@ -251,21 +212,27 @@ const styles = StyleSheet.create({
     flex: 2,
     paddingTop: 20,
     paddingBottom: 20,
-    // backgroundColor: "skyblue",
     zIndex: 100,
   },
   loginContainer: {
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
-    // backgroundColor: "aqua",
+  },
+  loginButton: {
+    width: CONTAINER_WIDTH,
+    height: 50,
+    borderRadius: 10,
   },
   thirdPartyContainer: {
     justifyContent: "flex-end",
     alignItems: "center",
     flex: 1,
-    // backgroundColor: "blue",
     paddingBottom: 10,
+  },
+  signInWithContainer: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   thirdPartyButtonContainer: {
     flexDirection: "row",
@@ -289,6 +256,11 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 12,
     color: "#132335",
+  },
+  errorMessage: {
+    margin: 5,
+    color: theme.errorRed,
+    fontSize: 11,
   },
   dividerText: {
     fontSize: 12,

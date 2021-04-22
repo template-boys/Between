@@ -1,13 +1,14 @@
 import React, { ReactElement } from "react";
+import RNLocation from "react-native-location";
 import { PixelRatio, Platform, StyleSheet } from "react-native";
-import { View, Dimensions } from "react-native";
-import { TouchableOpacity } from "react-native";
-import { useSelector } from "react-redux";
+import { Dimensions } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 import MapView, { Marker } from "react-native-maps";
-import Icon from "react-native-vector-icons/Ionicons";
 import theme from "../../../themes/theme";
-import mapTheme from "./mapStyle";
-import Button from "../../../components/Button";
+import mapTheme from "./mapTheme";
+import { setUserLocation } from "../redux/searchActions";
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 interface Props {
   showShadow?: boolean;
@@ -19,27 +20,24 @@ interface Props {
 }
 
 export default function FullMapView({
-  onIconPress,
   searchLocations,
-  onRemovePress,
   searchResult,
 }: Props): ReactElement {
-  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get(
-    "window"
-  );
+  const dispatch = useDispatch();
   const [pressedMarker, setPressedMarker] = React.useState(-1);
   const mapRef = React.useRef<any | null>(null);
   const placeMarker = React.useRef<any | null>(null);
 
   const placeIndex = useSelector((state) => state.searchReducer.placeIndex);
+  const userLocation = useSelector((state) => state.searchReducer.userLocation);
+
   const searchLoading = useSelector(
     (state) => state.searchReducer.searchLoading
   );
 
-  //hardcoded, should be users location
   const region = {
-    latitude: 42.65847,
-    longitude: 21.1607,
+    latitude: userLocation?.latitude || 42.65847,
+    longitude: userLocation?.longitude || 21.1607,
     latitudeDelta: 0.5,
     longitudeDelta: 0.5,
   };
@@ -87,114 +85,83 @@ export default function FullMapView({
     !searchLoading &&
     searchLocations.length > 1;
 
-  return (
-    <View style={[styles.container, {}]}>
-      {pressedMarker >= 0 && (
-        <TouchableOpacity
-          style={{
-            position: "absolute",
-
-            marginTop: SCREEN_HEIGHT / 11,
-            alignSelf: "flex-start",
-          }}
-        >
-          <Button
-            title="Remove"
-            type="primary"
-            onPress={() => {
-              onRemovePress(pressedMarker);
-              setPressedMarker(-1);
-            }}
-          />
-        </TouchableOpacity>
-      )}
-
-      <TouchableOpacity
-        onPress={() => {
-          !!onIconPress && onIconPress();
-        }}
-        style={{
-          flexDirection: "row",
-          // marginRight: 30,
-          position: "absolute",
-          alignSelf: "flex-end",
-          marginTop: SCREEN_HEIGHT / 12,
-        }}
-      >
-        {searchLocations.length === 0 ? (
-          <Button
-            title="Add a Location"
-            type="primary"
-            icon={<Icon name="add-outline" size={30} color={"white"} />}
-            buttonStyle={{
-              paddingLeft: 25,
-              padingRight: 30,
-              justifyContent: "space-between",
-              width: SCREEN_WIDTH / 2,
-            }}
-            onPress={() => {
-              !!onIconPress && onIconPress();
-            }}
-          />
-        ) : (
-          <Icon
-            name="add-circle"
-            size={50}
-            color={theme.darkPurple}
-            style={{ marginRight: 30 }}
-          />
-        )}
-      </TouchableOpacity>
-
-      <MapView
-        ref={mapRef}
-        onPress={() => {
-          setPressedMarker(-1);
-        }}
-        style={[
-          styles.mapStyles,
-          {
-            width: SCREEN_WIDTH,
-            height: SCREEN_HEIGHT,
+  React.useEffect(() => {
+    const getLocationPermission = async () => {
+      const permission = await RNLocation.requestPermission({
+        ios: "whenInUse",
+        android: {
+          detail: "coarse",
+          rationale: {
+            title: "We need to access your location",
+            message: "We use your location to show where you are on the map",
+            buttonPositive: "OK",
+            buttonNegative: "Cancel",
           },
-        ]}
-        initialRegion={region}
-        provider={"google"}
-        customMapStyle={mapTheme}
-        pitchEnabled={false}
-        rotateEnabled={false}
-        zoomEnabled={false}
-        scrollEnabled={false}
-      >
-        {markers.map((marker, i) => (
-          <Marker
-            key={marker?.latitude}
-            identifier={`id${i}`}
-            coordinate={marker}
-            description={marker.description}
-            pinColor={pressedMarker === i ? theme.errorRed : theme.darkPurple}
-            onPress={(e) => {
-              e.stopPropagation();
-              setPressedMarker(i);
-            }}
-          ></Marker>
-        ))}
-        {showPlaceMarker && (
-          <Marker
-            description={searchResult[placeIndex]?.name}
-            coordinate={searchResult[placeIndex]?.coordinates}
-            key={searchResult[placeIndex]?.name}
-            pinColor={theme.blue}
-          ></Marker>
-        )}
-      </MapView>
-    </View>
+        },
+      });
+      if (permission) {
+        const location = await RNLocation.getLatestLocation({ timeout: 100 });
+        dispatch(setUserLocation(location));
+      }
+    };
+    getLocationPermission();
+  }, []);
+
+  React.useEffect(() => {
+    if (!!userLocation?.longitude && !!userLocation?.latitude) {
+      mapRef.current?.animateToRegion({
+        ...userLocation,
+        latitudeDelta: 1,
+        longitudeDelta: 1,
+      });
+    }
+  }, [userLocation]);
+
+  return (
+    <MapView
+      ref={mapRef}
+      onPress={() => {
+        setPressedMarker(-1);
+      }}
+      style={styles.mapStyles}
+      initialRegion={region}
+      provider={"google"}
+      customMapStyle={mapTheme}
+      pitchEnabled={false}
+      rotateEnabled={false}
+      zoomEnabled={false}
+      scrollEnabled={false}
+    >
+      {markers.map((marker, i) => (
+        <Marker
+          key={marker?.latitude}
+          identifier={`id${i}`}
+          coordinate={marker}
+          description={marker.description}
+          pinColor={pressedMarker === i ? theme.errorRed : theme.darkPurple}
+          onPress={(e) => {
+            e.stopPropagation();
+            setPressedMarker(i);
+          }}
+        ></Marker>
+      ))}
+      {showPlaceMarker && (
+        <Marker
+          description={searchResult[placeIndex]?.name}
+          coordinate={searchResult[placeIndex]?.coordinates}
+          key={searchResult[placeIndex]?.name}
+          pinColor={theme.blue}
+        ></Marker>
+      )}
+    </MapView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {},
   mapStyles: {
+    position: "absolute",
     zIndex: -10,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
   },
 });

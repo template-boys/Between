@@ -1,8 +1,17 @@
 import { getCenterOfBounds } from "geolib";
-import React, { ReactElement, useEffect, useRef } from "react";
-import { View } from "react-native";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
+import {
+  Dimensions,
+  FlatList,
+  Keyboard,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { showMessage } from "react-native-flash-message";
+import { debounce } from "lodash";
 
 import FullMapView from "./components/FullMapView";
 import PlaceList from "./components/PlaceList";
@@ -14,10 +23,28 @@ import {
   removeSearchLocation as removeSearchLocationAction,
   getPlaceSearch as getPlaceSearchActon,
 } from "./redux/searchActions";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import AutoCompleteInputField from "../../components/AutoCompleteInputField";
+import theme from "../../themes/theme";
+import { tomTomAutoComplete } from "../../api/thirdPartyApis";
+import Icon from "react-native-vector-icons/Ionicons";
+import style from "../../themes/style";
+import DestinationSearchResult from "./components/DestinationSearchResult";
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function SearchScreen({ navigation }): ReactElement {
   const dispatch = useDispatch();
+  const insets = useSafeAreaInsets();
+  const [autoCompleteValues, setAutoCompleteValues] = useState([]);
+  const [isAutoCompleteFocus, setIsAutoCompleteFocus] = useState<boolean>(
+    false
+  );
   const searchBottomSheetRef = useRef<any | null>(null);
+  const autoCompleteRef = useRef<any | null>(null);
   const openPagesheet = () => {
     searchBottomSheetRef.current?.open();
   };
@@ -31,6 +58,7 @@ export default function SearchScreen({ navigation }): ReactElement {
   const searchResult = useSelector(
     (state) => state.searchReducer.searchResult?.businesses ?? []
   );
+  const userLocation = useSelector((state) => state.searchReducer.userLocation);
   const searchType = useSelector((state) => state.searchReducer.searchType);
   const searchLoading = useSelector(
     (state) => state.searchReducer.searchLoading
@@ -64,6 +92,8 @@ export default function SearchScreen({ navigation }): ReactElement {
     dispatch(getPlaceSearchActon(query, middlePoint));
   };
 
+  const autoInputRef = useRef<any | null>(null);
+
   useEffect(() => {
     if (searchLocations.length > 1) {
       getPlaceSearch(searchType);
@@ -78,37 +108,138 @@ export default function SearchScreen({ navigation }): ReactElement {
     }
   }, [searchLocations, searchType]);
 
+  const debouncedAutoCompleteCall = debounce(async (query) => {
+    if (!query) {
+      setAutoCompleteValues([]);
+      return;
+    }
+    const result = await tomTomAutoComplete(query, userLocation);
+    setAutoCompleteValues(result?.data?.results ?? []);
+  }, 1000);
+
+  const getAutoCompleteResults = (query) => {
+    if (!query) {
+      setAutoCompleteValues([]);
+      return;
+    }
+    debouncedAutoCompleteCall(query);
+  };
+
   return (
-    <View style={{ flex: 1 }}>
-      <View
-        style={{
-          flex: 0.75,
-        }}
-      >
-        <FullMapView
-          onIconPress={() => {
-            openPagesheet();
+    <>
+      {isAutoCompleteFocus ? <View style={styles.searchBackground} /> : null}
+      <View style={[styles.container, { marginTop: insets.top }]}>
+        <AutoCompleteInputField
+          inputRef={autoInputRef}
+          leftIcon={isAutoCompleteFocus ? "return-up-back-outline" : "search"}
+          onLeftIconPress={() => {
+            if (!isAutoCompleteFocus) {
+              autoInputRef?.current?.focus();
+            } else {
+              Keyboard.dismiss();
+              setAutoCompleteValues([]);
+              setIsAutoCompleteFocus(false);
+            }
           }}
-          searchLocations={searchLocations}
-          onRemovePress={removeSearchLocation}
-          searchResult={searchResult}
+          inputProps={{
+            onChange: (value) => {
+              getAutoCompleteResults(value);
+            },
+            onFocus: () => {
+              setIsAutoCompleteFocus(true);
+            },
+          }}
         />
+        {isAutoCompleteFocus ? (
+          <FlatList
+            data={autoCompleteValues}
+            style={styles.flatListContainer}
+            contentContainerStyle={styles.listContainer}
+            keyboardDismissMode="on-drag"
+            keyboardShouldPersistTaps="always"
+            renderItem={({ item, index }) => (
+              <TouchableOpacity
+                onPress={() => {
+                  addSearchLocation(item);
+                  setIsAutoCompleteFocus(false);
+                  Keyboard.dismiss();
+                  setAutoCompleteValues([]);
+                  autoInputRef.current?.clear();
+                }}
+              >
+                <DestinationSearchResult searchResult={item} />
+              </TouchableOpacity>
+            )}
+          />
+        ) : null}
       </View>
-      {searchLocations.length > 1 && (
-        <PlaceList
-          searchResult={searchResult}
-          searchLoading={searchLoading}
-          navigation={navigation}
-        />
-      )}
-      <SearchBottomSheet ref={searchBottomSheetRef}>
-        <SearchBottomSheetView
-          addSearchLocation={(location) => {
-            addSearchLocation(location);
-            closePagesheet();
+      <FullMapView
+        onIconPress={() => {
+          openPagesheet();
+        }}
+        searchLocations={searchLocations}
+        onRemovePress={removeSearchLocation}
+        searchResult={searchResult}
+      />
+      {/* <View style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: 0.75,
           }}
-        />
-      </SearchBottomSheet>
-    </View>
+        >
+          <FullMapView
+            onIconPress={() => {
+              openPagesheet();
+            }}
+            searchLocations={searchLocations}
+            onRemovePress={removeSearchLocation}
+            searchResult={searchResult}
+          />
+        </View>
+        {searchLocations.length > 1 && (
+          <PlaceList
+            searchResult={searchResult}
+            searchLoading={searchLoading}
+            navigation={navigation}
+          />
+        )}
+        <SearchBottomSheet ref={searchBottomSheetRef}>
+          <SearchBottomSheetView
+            addSearchLocation={(location) => {
+              addSearchLocation(location);
+              closePagesheet();
+            }}
+          />
+        </SearchBottomSheet>
+      </View> */}
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // backgroundColor: "coral",
+  },
+  searchBackground: {
+    position: "absolute",
+    height: SCREEN_HEIGHT,
+    width: SCREEN_WIDTH,
+    backgroundColor: "white",
+  },
+  autoCompleteStyle: {
+    marginTop: 10,
+    marginLeft: 15,
+    marginRight: 15,
+  },
+  flatListContainer: {
+    zIndex: -5,
+    width: SCREEN_WIDTH,
+    flex: 1,
+    marginTop: 10,
+    backgroundColor: "white",
+  },
+  listContainer: {
+    backgroundColor: "white",
+  },
+});

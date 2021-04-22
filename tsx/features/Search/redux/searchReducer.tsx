@@ -12,6 +12,7 @@ const INITIAL_STATE = {
   cacheSearchResults: [],
   directionsLoading: false,
   cachedDirections: [],
+  userLocation: undefined,
 };
 
 const searchReducer = (state = INITIAL_STATE, action) => {
@@ -67,6 +68,11 @@ const searchReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         cachedDirections: [...state.cachedDirections.slice(1)],
+      };
+    case actionTypes.SET_USER_LOCATION:
+      return {
+        ...state,
+        userLocation: action.location,
       };
     case actionTypes.SET_DIRECTIONS_LOADING:
       return {

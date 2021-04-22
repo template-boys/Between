@@ -62,6 +62,13 @@ export const setDirectionsLoading = (isLoading) => {
   };
 };
 
+export const setUserLocation = (location) => {
+  return {
+    type: actionTypes.SET_USER_LOCATION,
+    location,
+  };
+};
+
 //Sets the current directions (whatever place is selected)
 export const setDirections = (directions) => {
   return {
