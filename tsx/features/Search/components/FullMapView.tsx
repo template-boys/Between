@@ -17,11 +17,13 @@ interface Props {
   onRemovePress: (index: number) => void;
   searchLocations: any;
   searchResult: any;
+  mapHeight: number;
 }
 
 export default function FullMapView({
   searchLocations,
   searchResult,
+  mapHeight,
 }: Props): ReactElement {
   const dispatch = useDispatch();
   const [pressedMarker, setPressedMarker] = React.useState(-1);
@@ -63,7 +65,7 @@ export default function FullMapView({
         top: Platform.OS === "ios" ? 200 : PixelRatio.get() * 100 - 50,
         right: 100,
         left: 100,
-        bottom: Platform.OS === "ios" ? 400 : PixelRatio.get() * 350 - 50,
+        bottom: Platform.OS === "ios" ? 200 : PixelRatio.get() * 350 - 50,
       },
     });
     return () => {};
@@ -123,14 +125,19 @@ export default function FullMapView({
       onPress={() => {
         setPressedMarker(-1);
       }}
-      style={styles.mapStyles}
+      style={[
+        styles.mapStyles,
+        {
+          height: mapHeight,
+        },
+      ]}
       initialRegion={region}
       provider={"google"}
       customMapStyle={mapTheme}
-      pitchEnabled={false}
-      rotateEnabled={false}
-      zoomEnabled={false}
-      scrollEnabled={false}
+      // pitchEnabled={false}
+      // rotateEnabled={false}
+      // zoomEnabled={false}
+      // scrollEnabled={false}
     >
       {markers.map((marker, i) => (
         <Marker
@@ -162,6 +169,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: -10,
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
+    height: SCREEN_HEIGHT / 1.5,
+    flex: 1,
   },
 });

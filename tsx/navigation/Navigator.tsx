@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import theme from "../themes/theme";
 import FirebaseAuth from "@react-native-firebase/auth";
 import { loginUser, logoutUser } from "../features/Login/redux/loginActions";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const BottomTab = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
@@ -29,20 +30,35 @@ function Auth() {
   );
 }
 
+function bottomIcon(iconName, color, focused) {
+  return (
+    <TouchableOpacity
+      style={{
+        backgroundColor: focused ? theme.darkPurple : "transparent",
+        borderRadius: 12,
+        height: 38,
+        width: 38,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Icon name={iconName} size={25} color={color} />
+    </TouchableOpacity>
+  );
+}
+
 function App() {
   return (
     <BottomTab.Navigator
       tabBarOptions={{
-        tabStyle: {
-          paddingTop: 10,
-        },
+        showLabel: false,
         inactiveBackgroundColor: "white",
         activeBackgroundColor: "white",
-        activeTintColor: theme.darkPurple,
+        activeTintColor: "white",
         inactiveTintColor: theme.purple,
         style: {
           backgroundColor: "white",
-          height: 90,
+          // height: 90,
         },
       }}
     >
@@ -51,8 +67,8 @@ function App() {
         options={{
           tabBarLabel: "",
           tabBarIcon: ({ color, focused }) => {
-            const iconName = focused ? "search" : "search-outline";
-            return <Icon name={iconName} size={30} color={color} />;
+            const iconName = focused ? "location" : "location-outline";
+            return bottomIcon(iconName, color, focused);
           },
         }}
         component={SearchNavigator}
@@ -63,7 +79,7 @@ function App() {
           tabBarLabel: "",
           tabBarIcon: ({ color, focused }) => {
             const iconName = focused ? "list" : "list-outline";
-            return <Icon name={iconName} size={30} color={color} />;
+            return bottomIcon(iconName, color, focused);
           },
         }}
         component={ActivityNavigator}
@@ -74,7 +90,7 @@ function App() {
           tabBarLabel: "",
           tabBarIcon: ({ color, focused }) => {
             const iconName = focused ? "heart" : "heart-outline";
-            return <Icon name={iconName} size={30} color={color} />;
+            return bottomIcon(iconName, color, focused);
           },
         }}
         component={FavoritesNavigator}
@@ -85,7 +101,7 @@ function App() {
           tabBarLabel: "",
           tabBarIcon: ({ color, focused }) => {
             const iconName = focused ? "person" : "person-outline";
-            return <Icon name={iconName} size={30} color={color} />;
+            return bottomIcon(iconName, color, focused);
           },
         }}
         component={ProfileNavigator}

@@ -1,76 +1,22 @@
 export default [
   {
-    featureType: "all",
-    elementType: "labels.text.fill",
+    featureType: "poi.park",
+    elementType: "geometry",
     stylers: [
       {
-        saturation: 36,
+        hue: "#83cead",
       },
-      {
-        color: "#333333",
-      },
-      {
-        lightness: 40,
-      },
-    ],
-  },
-  {
-    featureType: "all",
-    elementType: "labels.text.stroke",
-    stylers: [
       {
         visibility: "on",
       },
-      {
-        color: "#ffffff",
-      },
-      {
-        lightness: 16,
-      },
-    ],
-  },
-  {
-    featureType: "all",
-    elementType: "labels.icon",
-    stylers: [
-      {
-        visibility: "off",
-      },
     ],
   },
   {
     featureType: "administrative",
-    elementType: "geometry.fill",
+    elementType: "all",
     stylers: [
       {
-        color: "#fefefe",
-      },
-      {
-        lightness: 20,
-      },
-    ],
-  },
-  {
-    featureType: "administrative",
-    elementType: "geometry.stroke",
-    stylers: [
-      {
-        color: "#fefefe",
-      },
-      {
-        lightness: 17,
-      },
-      {
-        weight: 1.2,
-      },
-    ],
-  },
-  {
-    featureType: "administrative.locality",
-    elementType: "labels.icon",
-    stylers: [
-      {
-        color: "#bd081c",
+        visibility: "simplified",
       },
     ],
   },
@@ -79,61 +25,34 @@ export default [
     elementType: "geometry",
     stylers: [
       {
-        color: "#f5f5f5",
+        visibility: "simplified",
       },
       {
-        lightness: 20,
+        color: "#fcfcfc",
       },
     ],
   },
+  // {
+  //   featureType: "poi",
+  //   elementType: "geometry",
+  //   stylers: [
+  //     {
+  //       visibility: "simplified",
+  //     },
+  //     {
+  //       color: "#fcfcfc",
+  //     },
+  //   ],
+  // },
   {
-    featureType: "poi",
+    featureType: "road.highway",
     elementType: "geometry",
     stylers: [
       {
-        color: "#f5f5f5",
+        visibility: "simplified",
       },
       {
-        lightness: 21,
-      },
-    ],
-  },
-  {
-    featureType: "poi.park",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#dedede",
-      },
-      {
-        lightness: 21,
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "geometry.fill",
-    stylers: [
-      {
-        color: "#ffffff",
-      },
-      {
-        lightness: 17,
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "geometry.stroke",
-    stylers: [
-      {
-        color: "#ffffff",
-      },
-      {
-        lightness: 29,
-      },
-      {
-        weight: 0.2,
+        color: "#dddddd",
       },
     ],
   },
@@ -142,10 +61,10 @@ export default [
     elementType: "geometry",
     stylers: [
       {
-        color: "#ffffff",
+        visibility: "simplified",
       },
       {
-        lightness: 18,
+        color: "#dddddd",
       },
     ],
   },
@@ -154,22 +73,10 @@ export default [
     elementType: "geometry",
     stylers: [
       {
-        color: "#ffffff",
+        visibility: "simplified",
       },
       {
-        lightness: 16,
-      },
-    ],
-  },
-  {
-    featureType: "transit",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#f2f2f2",
-      },
-      {
-        lightness: 19,
+        color: "#eeeeee",
       },
     ],
   },
@@ -178,10 +85,10 @@ export default [
     elementType: "geometry",
     stylers: [
       {
-        color: "#e9e9e9",
+        visibility: "simplified",
       },
       {
-        lightness: 17,
+        color: "#a2d1f5",
       },
     ],
   },

@@ -108,6 +108,12 @@ export default function SearchScreen({ navigation }): ReactElement {
     }
   }, [searchLocations, searchType]);
 
+  useEffect(() => {
+    if (searchLocations.length >= 2) {
+      openPagesheet();
+    }
+  }, [searchLocations]);
+
   const debouncedAutoCompleteCall = debounce(async (query) => {
     if (!query) {
       setAutoCompleteValues([]);
@@ -125,13 +131,21 @@ export default function SearchScreen({ navigation }): ReactElement {
     debouncedAutoCompleteCall(query);
   };
 
+  const [mapHeight, setMapHeight] = useState(SCREEN_HEIGHT);
+
+  // const setMapHeight = (bottomSheetHeight) => {
+  //   setMapHeight(SCREEN_HEIGHT - bottomSheetHeight);
+  // };
+
   return (
     <>
       {isAutoCompleteFocus ? <View style={styles.searchBackground} /> : null}
       <View style={[styles.container, { marginTop: insets.top }]}>
         <AutoCompleteInputField
           inputRef={autoInputRef}
-          leftIcon={isAutoCompleteFocus ? "return-up-back-outline" : "search"}
+          leftIcon={
+            isAutoCompleteFocus ? "return-up-back-outline" : "location-outline"
+          }
           onLeftIconPress={() => {
             if (!isAutoCompleteFocus) {
               autoInputRef?.current?.focus();
@@ -150,6 +164,15 @@ export default function SearchScreen({ navigation }): ReactElement {
             },
           }}
         />
+        {searchLocations.length > 1 && !isAutoCompleteFocus && (
+          <PlaceList
+            searchResult={searchResult}
+            searchLoading={searchLoading}
+            navigation={navigation}
+            bottomSheetRef={searchBottomSheetRef}
+            setMapHeight={setMapHeight}
+          />
+        )}
         {isAutoCompleteFocus ? (
           <FlatList
             data={autoCompleteValues}
@@ -180,7 +203,9 @@ export default function SearchScreen({ navigation }): ReactElement {
         searchLocations={searchLocations}
         onRemovePress={removeSearchLocation}
         searchResult={searchResult}
+        mapHeight={mapHeight}
       />
+
       {/* <View style={{ flex: 1 }}>
         <View
           style={{
