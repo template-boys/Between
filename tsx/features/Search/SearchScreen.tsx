@@ -132,7 +132,7 @@ export default function SearchScreen({ navigation }): ReactElement {
         <AutoCompleteInputField
           inputRef={autoInputRef}
           leftIcon={
-            isAutoCompleteFocus ? "return-up-back-outline" : "location-outline"
+            isAutoCompleteFocus ? "return-up-back-outline" : "search-outline"
           }
           onLeftIconPress={() => {
             if (!isAutoCompleteFocus) {
@@ -193,38 +193,6 @@ export default function SearchScreen({ navigation }): ReactElement {
         searchResult={searchResult}
         mapHeight={mapHeight}
       />
-
-      {/* <View style={{ flex: 1 }}>
-        <View
-          style={{
-            flex: 0.75,
-          }}
-        >
-          <FullMapView
-            onIconPress={() => {
-              openPagesheet();
-            }}
-            searchLocations={searchLocations}
-            onRemovePress={removeSearchLocation}
-            searchResult={searchResult}
-          />
-        </View>
-        {searchLocations.length > 1 && (
-          <PlaceList
-            searchResult={searchResult}
-            searchLoading={searchLoading}
-            navigation={navigation}
-          />
-        )}
-        <SearchBottomSheet ref={searchBottomSheetRef}>
-          <SearchBottomSheetView
-            addSearchLocation={(location) => {
-              addSearchLocation(location);
-              closePagesheet();
-            }}
-          />
-        </SearchBottomSheet>
-      </View> */}
     </>
   );
 }

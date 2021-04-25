@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import SearchResultsScreen from "../features/Search/SearchResultsScreen";
 import theme from "../themes/theme";
 import SearchScreen from "../features/Search/SearchScreen";
-import PlaceDetailsScreen from "../features/Search/PlaceDetailsScreen";
+import DestinationDetailsScreen from "../features/Search/DestinationDetailsScreen";
 
 interface Props {}
 
@@ -42,10 +42,11 @@ export default function SearchNavigator({}: Props): ReactElement {
         component={SearchResultsScreen}
       />
       <SearchStack.Screen
-        name="PlaceDetailsScreen"
-        component={PlaceDetailsScreen}
+        name="DestinationDetailsScreen"
+        component={DestinationDetailsScreen}
         options={{
           title: "Details",
+          headerShown: false,
         }}
       />
     </SearchStack.Navigator>

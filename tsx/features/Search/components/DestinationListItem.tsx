@@ -18,7 +18,7 @@ export default function DestinationListItem({
     <TouchableOpacity
       style={styles.container}
       onPress={() => {
-        navigation.navigate("PlaceDetailsScreen");
+        navigation.navigate("DestinationDetailsScreen");
       }}
       delayPressIn={50}
       activeOpacity={0.5}
@@ -73,7 +73,7 @@ export default function DestinationListItem({
 
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("PlaceDetailsScreen");
+          navigation.navigate("DestinationDetailsScreen");
         }}
         style={{ flexDirection: "row", marginTop: 5 }}
       >

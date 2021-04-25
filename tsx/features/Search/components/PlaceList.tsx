@@ -124,6 +124,7 @@ export default function PlaceList({
                 backgroundColor:
                   placeIndex === index ? theme.darkPurple : theme.lightGrey,
                 opacity: placeIndex === index ? 1 : 0.4,
+                width: placeIndex === index ? 10 : 5,
               },
             ]}
           ></View>

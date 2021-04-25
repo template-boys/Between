@@ -7,7 +7,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 import theme from "../../themes/theme";
 import { ScrollView } from "react-native-gesture-handler";
-import MapLocationView from "./components/MapView";
+import MapLocationView from "./components/DestinationMapView";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;

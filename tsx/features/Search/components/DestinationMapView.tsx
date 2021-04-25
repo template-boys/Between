@@ -35,7 +35,13 @@ export default function MapLocationView({
   }, [polylineArray]);
 
   return (
-    <View style={{ backgroundColor: "white" }}>
+    <View
+      style={{
+        backgroundColor: "white",
+        borderBottomRightRadius: 100,
+        borderBottomLeftRadius: 100,
+      }}
+    >
       <MapView
         ref={mapRef}
         style={styles.mapStyles}
@@ -87,12 +93,7 @@ export default function MapLocationView({
 const styles = StyleSheet.create({
   mapStyles: {
     zIndex: -10,
-    borderWidth: 15,
-    borderColor: "white",
     height: SCREEN_HEIGHT / 3,
     width: SCREEN_WIDTH,
-    borderRadius: 26,
-    alignSelf: "center",
-    backgroundColor: "white",
   },
 });

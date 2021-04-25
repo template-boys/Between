@@ -29,7 +29,7 @@ export const yelpSearch = async (term: string, location) => {
       latitude: location.latitude,
       term,
       sort_by: "distance",
-      limit: 10,
+      limit: 15,
     },
   };
   return await axios.get(BASE_YELP_SEARCH, config);
