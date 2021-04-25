@@ -59,3 +59,12 @@ export const tomTomAutoComplete = async (query, userLocation) => {
   );
   return await axios.get(url);
 };
+
+export const reverseGeocode = async (userLocation) => {
+  const key = getTomTomKey();
+  const encodeUrl = require("encodeurl");
+  const url = encodeUrl(
+    `https://api.tomtom.com/search/2/reverseGeocode/${userLocation.latitude}%2C${userLocation.longitude}.json?key=${key}`
+  );
+  return await axios.get(url);
+};

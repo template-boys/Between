@@ -143,7 +143,7 @@ export default function FullMapView({
     >
       {markers.map((marker, i) => (
         <Marker
-          key={marker?.latitude}
+          key={`${marker?.latitude},${marker?.latitude},${i}`}
           identifier={`id${i}`}
           coordinate={marker}
           description={marker.description}
