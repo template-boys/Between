@@ -32,7 +32,7 @@ import theme from "../../themes/theme";
 import { tomTomAutoComplete } from "../../api/thirdPartyApis";
 import Icon from "react-native-vector-icons/Ionicons";
 import style from "../../themes/style";
-import DestinationSearchResult from "./components/DestinationSearchResult";
+import AutoCompleteSearchResult from "./components/AutoCompleteSearchResult";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -97,14 +97,6 @@ export default function SearchScreen({ navigation }): ReactElement {
   useEffect(() => {
     if (searchLocations.length > 1) {
       getPlaceSearch(searchType);
-    } else if (searchLocations.length === 1) {
-      showMessage({
-        message: "Add more locations to find your between spot.",
-        type: "info",
-        onPress: () => {
-          openPagesheet();
-        },
-      });
     }
   }, [searchLocations, searchType]);
 
@@ -132,10 +124,6 @@ export default function SearchScreen({ navigation }): ReactElement {
   };
 
   const [mapHeight, setMapHeight] = useState(SCREEN_HEIGHT);
-
-  // const setMapHeight = (bottomSheetHeight) => {
-  //   setMapHeight(SCREEN_HEIGHT - bottomSheetHeight);
-  // };
 
   return (
     <>
@@ -190,7 +178,7 @@ export default function SearchScreen({ navigation }): ReactElement {
                   autoInputRef.current?.clear();
                 }}
               >
-                <DestinationSearchResult searchResult={item} />
+                <AutoCompleteSearchResult searchResult={item} />
               </TouchableOpacity>
             )}
           />

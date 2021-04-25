@@ -59,15 +59,17 @@ export default function FullMapView({
     }
 
     //used if there are multiple locations set
-    mapRef.current.fitToCoordinates(markers, {
-      animated: true,
-      edgePadding: {
-        top: Platform.OS === "ios" ? 200 : PixelRatio.get() * 100 - 50,
-        right: 100,
-        left: 100,
-        bottom: Platform.OS === "ios" ? 200 : PixelRatio.get() * 350 - 50,
-      },
-    });
+    setTimeout(() => {
+      mapRef.current.fitToCoordinates(markers, {
+        animated: true,
+        edgePadding: {
+          top: Platform.OS === "ios" ? 150 : PixelRatio.get() * 100 - 50,
+          right: 100,
+          left: 100,
+          bottom: Platform.OS === "ios" ? 100 : PixelRatio.get() * 350 - 50,
+        },
+      });
+    }, 100);
     return () => {};
   }, [searchLocations]);
 
