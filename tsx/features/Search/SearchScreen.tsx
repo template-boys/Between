@@ -1,4 +1,4 @@
-import { getCenterOfBounds, getDistance } from "geolib";
+import { getCenter, getCenterOfBounds, getDistance } from "geolib";
 import React, { ReactElement, useEffect, useRef, useState } from "react";
 import {
   Dimensions,
@@ -34,7 +34,7 @@ import { tomTomAutoComplete } from "../../api/thirdPartyApis";
 import Icon from "react-native-vector-icons/Ionicons";
 import style from "../../themes/style";
 import AutoCompleteSearchResult from "./components/AutoCompleteSearchResult";
-import { getMiddlePointAlongRoute } from "./utils/directionsUtils";
+import { getMiddlePoint } from "./utils/directionsUtils";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -99,11 +99,11 @@ export default function SearchScreen({ navigation }): ReactElement {
       const distance = getDistance(locationCoords[0], locationCoords[1]);
       console.log(distance);
 
-      if (distance < 30000) {
+      if (distance < 15000) {
         middlePoint = getCenterOfBounds(locationCoords);
       } else {
         dispatch(getDirections(locationCoords[0], locationCoords[1]));
-        middlePoint = await getMiddlePointAlongRoute(
+        middlePoint = await getMiddlePoint(
           locationCoords[0],
           locationCoords[1]
         );

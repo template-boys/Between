@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import RNLocation from "react-native-location";
 import { PixelRatio, Platform, StyleSheet } from "react-native";
 import { Dimensions } from "react-native";
@@ -33,6 +33,7 @@ export default function FullMapView({
 
   const placeIndex = useSelector((state) => state.searchReducer.placeIndex);
   const userLocation = useSelector((state) => state.searchReducer.userLocation);
+  const searchType = useSelector((state) => state.searchReducer.searchType);
 
   const searchLoading = useSelector(
     (state) => state.searchReducer.searchLoading
@@ -47,70 +48,35 @@ export default function FullMapView({
     latitudeDelta: 0.5,
     longitudeDelta: 0.5,
   };
-
-  let markers: any[] = [];
+  const [originMarkers, setOriginMarkers] = useState<any>([]);
+  const [destinationMarkers, setDestinationMarkers] = useState<any>([]);
 
   React.useEffect(() => {
-    //used if there are 1 or 0 locations set.
-    const setToRegion = markers.length === 1 ? markers[0] : region;
-    if (markers.length < 2) {
-      mapRef.current.animateToRegion({
-        ...setToRegion,
-        latitudeDelta: 0.4,
-        longitudeDelta: 0.4,
-      });
-      return;
-    }
-
-    //used if there are multiple locations set
-    setTimeout(() => {
-      mapRef.current.fitToCoordinates(markers, {
-        animated: true,
-        edgePadding: {
-          top: Platform.OS === "ios" ? 150 : PixelRatio.get() * 100 - 50,
-          right: 100,
-          left: 100,
-          bottom: Platform.OS === "ios" ? 100 : PixelRatio.get() * 350 - 50,
-        },
-      });
-    }, 100);
-    return () => {};
-  }, [searchLocations, placeIndex]);
-
-  searchLocations.forEach((location) => {
-    markers.push({
-      latitude: location?.position?.lat,
-      longitude: location?.position?.lon,
-      description: location?.poi?.name ?? location?.address?.freeformAddress,
-      latitudeDelta: 5,
-      longitudeDelta: 5,
-      pinColor: theme.darkPurple,
+    let markers = searchLocations.map((location) => {
+      return {
+        latitude: location?.position?.lat,
+        longitude: location?.position?.lon,
+        description: location?.poi?.name ?? location?.address?.freeformAddress,
+        latitudeDelta: 5,
+        longitudeDelta: 5,
+        pinColor: theme.darkPurple,
+      };
     });
-  });
+    setOriginMarkers(markers);
+  }, [searchLocations]);
 
-  const showPlaceMarker =
-    searchResult[placeIndex]?.coordinates &&
-    !searchLoading &&
-    searchLocations.length > 1;
-
-  if (showPlaceMarker) {
-    searchResult.forEach((result) => {
-      markers.push({
+  React.useEffect(() => {
+    let markers = searchResult.map((result) => {
+      return {
         latitude: result?.coordinates?.latitude,
         longitude: result?.coordinates?.longitude,
         latitudeDelta: 5,
         longitudeDelta: 5,
         pinColor: theme.secondary,
-      });
+      };
     });
-    // markers.push({
-    //   latitude: searchResult[placeIndex]?.coordinates?.latitude,
-    //   longitude: searchResult[placeIndex]?.coordinates?.longitude,
-    //   latitudeDelta: 5,
-    //   longitudeDelta: 5,
-    //   pinColor: theme.secondary,
-    // });
-  }
+    setDestinationMarkers(markers);
+  }, [searchResult]);
 
   React.useEffect(() => {
     const getLocationPermission = async () => {
@@ -144,6 +110,37 @@ export default function FullMapView({
     }
   }, [userLocation]);
 
+  React.useEffect(() => {
+    //used if there are 1 or 0 locations set.
+    const setToRegion = originMarkers.length === 1 ? originMarkers[0] : region;
+    if (searchLocations.length < 2) {
+      mapRef.current.animateToRegion({
+        ...setToRegion,
+        latitudeDelta: 0.4,
+        longitudeDelta: 0.4,
+      });
+      return;
+    }
+
+    //used if there are multiple locations set
+    console.log("Destination Markers: ", destinationMarkers);
+    setTimeout(() => {
+      mapRef.current.fitToCoordinates(
+        [...destinationMarkers, ...originMarkers],
+        {
+          animated: true,
+          edgePadding: {
+            top: Platform.OS === "ios" ? 150 : PixelRatio.get() * 100 - 50,
+            right: 100,
+            left: 100,
+            bottom: Platform.OS === "ios" ? 100 : PixelRatio.get() * 350 - 50,
+          },
+        }
+      );
+    }, 250);
+    return () => {};
+  }, [originMarkers, destinationMarkers, searchType, placeIndex]);
+
   let polylineArray;
 
   if (!!currentRouteDirections) {
@@ -166,14 +163,17 @@ export default function FullMapView({
       provider={"google"}
       customMapStyle={mapTheme}
     >
-      <Polyline
-        coordinates={polylineArray}
-        strokeWidth={5}
-        strokeColor="#02C39A"
-        // strokeColors={[theme.darkPurple, theme.secondary]}
-        fillColor="#02C39A"
-      />
-      {markers.map((marker, i) => (
+      {searchLocations.length === 2 && (
+        <Polyline
+          coordinates={polylineArray}
+          strokeWidth={5}
+          strokeColor="#02C39A"
+          // strokeColors={[theme.darkPurple, theme.secondary]}
+          fillColor="#02C39A"
+        />
+      )}
+
+      {originMarkers.map((marker, i) => (
         <Marker
           key={`${marker?.latitude},${marker?.latitude},${i}`}
           identifier={`id${i}`}
@@ -186,6 +186,26 @@ export default function FullMapView({
           }}
         ></Marker>
       ))}
+      {destinationMarkers.map((marker, i) => {
+        const markerStyle =
+          placeIndex === i
+            ? { zIndex: 10, opacity: 1 }
+            : { zIndex: 0, opacity: 0.5 };
+        return (
+          <Marker
+            key={`${marker?.latitude},${marker?.longitude},${i}`}
+            identifier={`id${i}`}
+            coordinate={marker}
+            description={marker.description}
+            pinColor={placeIndex === i ? marker.pinColor : theme.lightGrey}
+            style={markerStyle}
+            onPress={(e) => {
+              e.stopPropagation();
+              setPressedMarker(i);
+            }}
+          ></Marker>
+        );
+      })}
     </MapView>
   );
 }
