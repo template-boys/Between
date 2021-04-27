@@ -163,16 +163,6 @@ export default function FullMapView({
       provider={"google"}
       customMapStyle={mapTheme}
     >
-      {searchLocations.length === 2 && (
-        <Polyline
-          coordinates={polylineArray}
-          strokeWidth={5}
-          strokeColor="#02C39A"
-          // strokeColors={[theme.darkPurple, theme.secondary]}
-          fillColor="#02C39A"
-        />
-      )}
-
       {originMarkers.map((marker, i) => (
         <Marker
           key={`${marker?.latitude},${marker?.latitude},${i}`}
