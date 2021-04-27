@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from "react";
 import RNLocation from "react-native-location";
-import { PixelRatio, Platform, StyleSheet } from "react-native";
+import { PixelRatio, Platform, StyleSheet, Text } from "react-native";
 import { Dimensions } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import MapView, { Marker, Polyline } from "react-native-maps";
@@ -180,6 +180,7 @@ export default function FullMapView({
           coordinate={marker}
           description={marker.description}
           pinColor={marker.pinColor}
+          style={{ zIndex: 5 }}
           onPress={(e) => {
             e.stopPropagation();
             setPressedMarker(i);
@@ -190,7 +191,7 @@ export default function FullMapView({
         const markerStyle =
           placeIndex === i
             ? { zIndex: 10, opacity: 1 }
-            : { zIndex: 0, opacity: 0.5 };
+            : { zIndex: 0, opacity: 0.5, height: 10, width: 10 };
         return (
           <Marker
             key={`${marker?.latitude},${marker?.longitude},${i}`}
