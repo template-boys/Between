@@ -53,7 +53,7 @@ export default function DestinationListItem({
         <Icon
           name="location-outline"
           size={18}
-          color={theme.darkPurple}
+          color={theme.secondary}
           style={{ paddingRight: 5 }}
         />
         <View style={{ justifyContent: "center", flex: 1 }}>

@@ -1,4 +1,4 @@
-import { getCenterOfBounds } from "geolib";
+import { getCenterOfBounds, getDistance } from "geolib";
 import React, { ReactElement, useEffect, useRef, useState } from "react";
 import {
   Dimensions,
@@ -22,6 +22,7 @@ import {
   setSearchType as setSearchTypeAction,
   removeSearchLocation as removeSearchLocationAction,
   getPlaceSearch as getPlaceSearchActon,
+  getDirections,
 } from "./redux/searchActions";
 import {
   SafeAreaView,
@@ -33,6 +34,7 @@ import { tomTomAutoComplete } from "../../api/thirdPartyApis";
 import Icon from "react-native-vector-icons/Ionicons";
 import style from "../../themes/style";
 import AutoCompleteSearchResult from "./components/AutoCompleteSearchResult";
+import { getMiddlePointAlongRoute } from "./utils/directionsUtils";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -63,6 +65,9 @@ export default function SearchScreen({ navigation }): ReactElement {
   const searchLoading = useSelector(
     (state) => state.searchReducer.searchLoading
   );
+  const directions = useSelector(
+    (state) => state.searchReducer.cachedDirections
+  );
 
   //Search Actions
   const addSearchLocation = (location) => {
@@ -80,7 +85,7 @@ export default function SearchScreen({ navigation }): ReactElement {
   const setPlaceIndex = (index: number) => {
     dispatch(setPlaceIndex(index));
   };
-  const getPlaceSearch = (query) => {
+  const getPlaceSearch = async (query) => {
     let locationCoords: any[] = [];
     searchLocations.forEach((location) => {
       locationCoords.push({
@@ -88,7 +93,24 @@ export default function SearchScreen({ navigation }): ReactElement {
         longitude: location?.position?.lon,
       });
     });
-    const middlePoint = getCenterOfBounds(locationCoords);
+    let middlePoint;
+
+    if (locationCoords.length === 2) {
+      const distance = getDistance(locationCoords[0], locationCoords[1]);
+      console.log(distance);
+
+      if (distance < 30000) {
+        middlePoint = getCenterOfBounds(locationCoords);
+      } else {
+        dispatch(getDirections(locationCoords[0], locationCoords[1]));
+        middlePoint = await getMiddlePointAlongRoute(
+          locationCoords[0],
+          locationCoords[1]
+        );
+      }
+    } else {
+      middlePoint = getCenterOfBounds(locationCoords);
+    }
     dispatch(getPlaceSearchActon(query, middlePoint));
   };
 

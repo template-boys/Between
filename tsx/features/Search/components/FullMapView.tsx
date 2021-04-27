@@ -3,10 +3,11 @@ import RNLocation from "react-native-location";
 import { PixelRatio, Platform, StyleSheet } from "react-native";
 import { Dimensions } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Polyline } from "react-native-maps";
 import theme from "../../../themes/theme";
 import mapTheme from "./mapTheme";
 import { setUserLocation } from "../redux/searchActions";
+import { getPolylineArray } from "../utils/directionsUtils";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -37,6 +38,9 @@ export default function FullMapView({
     (state) => state.searchReducer.searchLoading
   );
 
+  const currentRouteDirections = useSelector(
+    (state) => state.searchReducer.currentRouteDirections
+  );
   const region = {
     latitude: userLocation?.latitude || 42.65847,
     longitude: userLocation?.longitude || 21.1607,
@@ -71,7 +75,7 @@ export default function FullMapView({
       });
     }, 100);
     return () => {};
-  }, [searchLocations]);
+  }, [searchLocations, placeIndex]);
 
   searchLocations.forEach((location) => {
     markers.push({
@@ -88,6 +92,25 @@ export default function FullMapView({
     searchResult[placeIndex]?.coordinates &&
     !searchLoading &&
     searchLocations.length > 1;
+
+  if (showPlaceMarker) {
+    searchResult.forEach((result) => {
+      markers.push({
+        latitude: result?.coordinates?.latitude,
+        longitude: result?.coordinates?.longitude,
+        latitudeDelta: 5,
+        longitudeDelta: 5,
+        pinColor: theme.secondary,
+      });
+    });
+    // markers.push({
+    //   latitude: searchResult[placeIndex]?.coordinates?.latitude,
+    //   longitude: searchResult[placeIndex]?.coordinates?.longitude,
+    //   latitudeDelta: 5,
+    //   longitudeDelta: 5,
+    //   pinColor: theme.secondary,
+    // });
+  }
 
   React.useEffect(() => {
     const getLocationPermission = async () => {
@@ -121,6 +144,12 @@ export default function FullMapView({
     }
   }, [userLocation]);
 
+  let polylineArray;
+
+  if (!!currentRouteDirections) {
+    polylineArray = getPolylineArray(currentRouteDirections);
+  }
+
   return (
     <MapView
       ref={mapRef}
@@ -136,32 +165,27 @@ export default function FullMapView({
       initialRegion={region}
       provider={"google"}
       customMapStyle={mapTheme}
-      // pitchEnabled={false}
-      // rotateEnabled={false}
-      // zoomEnabled={false}
-      // scrollEnabled={false}
     >
+      <Polyline
+        coordinates={polylineArray}
+        strokeWidth={5}
+        strokeColor="#02C39A"
+        // strokeColors={[theme.darkPurple, theme.secondary]}
+        fillColor="#02C39A"
+      />
       {markers.map((marker, i) => (
         <Marker
           key={`${marker?.latitude},${marker?.latitude},${i}`}
           identifier={`id${i}`}
           coordinate={marker}
           description={marker.description}
-          pinColor={pressedMarker === i ? theme.errorRed : theme.darkPurple}
+          pinColor={marker.pinColor}
           onPress={(e) => {
             e.stopPropagation();
             setPressedMarker(i);
           }}
         ></Marker>
       ))}
-      {showPlaceMarker && (
-        <Marker
-          description={searchResult[placeIndex]?.name}
-          coordinate={searchResult[placeIndex]?.coordinates}
-          key={searchResult[placeIndex]?.name}
-          pinColor={theme.blue}
-        ></Marker>
-      )}
     </MapView>
   );
 }
