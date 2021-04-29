@@ -5,9 +5,10 @@ import { Dimensions } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import theme from "../../../themes/theme";
-import mapTheme from "./mapTheme";
+import mapTheme from "../../../../assets/mapThemes/mapTheme";
 import { setUserLocation } from "../redux/searchActions";
-import { getPolylineArray } from "../utils/directionsUtils";
+import { getPolylineArray } from "../../../utils/directionsUtils";
+import { State } from "../../../../rootReducer";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -31,16 +32,16 @@ export default function FullMapView({
   const mapRef = React.useRef<any | null>(null);
   const placeMarker = React.useRef<any | null>(null);
 
-  const placeIndex = useSelector((state) => state.searchReducer.placeIndex);
-  const userLocation = useSelector((state) => state.searchReducer.userLocation);
-  const searchType = useSelector((state) => state.searchReducer.searchType);
+  const placeIndex = useSelector((state: State) => state.searchReducer.placeIndex);
+  const userLocation = useSelector((state: State) => state.searchReducer.userLocation);
+  const searchType = useSelector((state: State) => state.searchReducer.searchType);
 
   const searchLoading = useSelector(
-    (state) => state.searchReducer.searchLoading
+    (state: State) => state.searchReducer.searchLoading
   );
 
   const currentRouteDirections = useSelector(
-    (state) => state.searchReducer.currentRouteDirections
+    (state: State) => state.searchReducer.currentRouteDirections
   );
   const region = {
     latitude: userLocation?.latitude || 42.65847,

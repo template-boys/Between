@@ -1,7 +1,6 @@
 import React, { ReactElement } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
-import SearchResultsScreen from "../features/Search/SearchResultsScreen";
 import theme from "../themes/theme";
 import SearchScreen from "../features/Search/SearchScreen";
 import DestinationDetailsScreen from "../features/Search/DestinationDetailsScreen";
@@ -36,10 +35,6 @@ export default function SearchNavigator({}: Props): ReactElement {
         options={{
           headerShown: false,
         }}
-      />
-      <SearchStack.Screen
-        name="Search Screen 2"
-        component={SearchResultsScreen}
       />
       <SearchStack.Screen
         name="DestinationDetailsScreen"

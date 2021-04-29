@@ -1,12 +1,12 @@
-const one = require("../static/1.png");
-const oneHalf = require("../static/1.5.png");
-const two = require("../static/2.png");
-const twoHalf = require("../static/2.5.png");
-const three = require("../static/3.png");
-const threeHalf = require("../static/3.5.png");
-const four = require("../static/4.png");
-const fourHalf = require("../static/4.5.png");
-const five = require("../static/5.png");
+const one = require("../../assets/static/1.png");
+const oneHalf = require("../../assets/static/1.5.png");
+const two = require("../../assets/static/2.png");
+const twoHalf = require("../../assets/static/2.5.png");
+const three = require("../../assets/static/3.png");
+const threeHalf = require("../../assets/static/3.5.png");
+const four = require("../../assets/static/4.png");
+const fourHalf = require("../../assets/static/4.5.png");
+const five = require("../../assets/static/5.png");
 
 export const getRatingImage = (rating) => {
   let imageSource;

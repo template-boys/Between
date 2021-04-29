@@ -13,12 +13,12 @@ import style from "../../themes/style";
 import DestinationMapView from "./components/DestinationMapView";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { getDirections } from "./redux/searchActions";
-import { getPolylineArray } from "./utils/directionsUtils";
-import { getRatingImage } from "./utils/searchUtils";
-import Carousel from "react-native-snap-carousel";
+import { getPolylineArray } from "../../utils/directionsUtils";
+import { getRatingImage } from "../../utils/searchUtils";
 import theme from "../../themes/theme";
 import Icon from "react-native-vector-icons/Ionicons";
 import FAIcon from "react-native-vector-icons/FontAwesome";
+import { State } from "../../../rootReducer";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -30,13 +30,17 @@ const DestinationDetailsScreen = (props: Props) => {
   const carouselRef = useRef<any | null>(null);
   const dispatch = useDispatch();
   const [selectedLocationIndex, setSelectedLocationIndex] = useState(0);
-  const searchResult = useSelector((state) => state.searchReducer.searchResult);
-  const placeIndex = useSelector((state) => state.searchReducer.placeIndex);
+  const searchResult = useSelector(
+    (state: State) => state.searchReducer.searchResult
+  );
+  const placeIndex = useSelector(
+    (state: State) => state.searchReducer.placeIndex
+  );
   const currentRouteDirections = useSelector(
-    (state) => state.searchReducer.currentRouteDirections
+    (state: State) => state.searchReducer.currentRouteDirections
   );
   const searchLocations = useSelector(
-    (state) => state.searchReducer.searchLocations
+    (state: State) => state.searchReducer.searchLocations
   );
   const place = searchResult?.businesses[placeIndex] ?? null;
   const latitude = place?.coordinates?.latitude;
@@ -202,12 +206,12 @@ const DestinationDetailsScreen = (props: Props) => {
             }}
           >
             <Image
-              source={require("./static/lyft.png")}
+              source={require("../../../assets/static/lyft.png")}
               style={{ width: 45, height: 45 }}
             />
           </TouchableOpacity>
         </View>
-        <Text style={[style.title1, { marginTop: 6 }]}>{place?.name}</Text>
+        <Text style={{ marginTop: 6 }}>{place?.name}</Text>
         <Text style={{ fontWeight: "200" }}>
           {place?.location?.display_address[0]}
         </Text>

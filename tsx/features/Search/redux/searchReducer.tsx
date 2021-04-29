@@ -13,9 +13,10 @@ const INITIAL_STATE = {
   directionsLoading: false,
   cachedDirections: [],
   userLocation: undefined,
+  currentRouteDirections: undefined,
 };
 
-const searchReducer = (state = INITIAL_STATE, action) => {
+const searchReducer = (state: SearchReducer = INITIAL_STATE, action): SearchReducer => {
   switch (action.type) {
     case actionTypes.SET_AUTO_COMPLETE_SESSION_ID:
       return {

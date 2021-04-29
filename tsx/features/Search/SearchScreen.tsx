@@ -1,22 +1,18 @@
-import { getCenter, getCenterOfBounds, getDistance } from "geolib";
+import { getCenterOfBounds, getDistance } from "geolib";
 import React, { ReactElement, useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
   Keyboard,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { showMessage } from "react-native-flash-message";
 import { debounce } from "lodash";
 
 import FullMapView from "./components/FullMapView";
 import PlaceList from "./components/PlaceList";
-import SearchBottomSheet from "./components/SearchBottomSheet";
-import SearchBottomSheetView from "./components/SearchBottomSheetView";
 import {
   addSearchLocation as addSearchLocationAction,
   setSearchType as setSearchTypeAction,
@@ -25,16 +21,13 @@ import {
   getDirections,
 } from "./redux/searchActions";
 import {
-  SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import AutoCompleteInputField from "../../components/AutoCompleteInputField";
-import theme from "../../themes/theme";
 import { tomTomAutoComplete } from "../../api/thirdPartyApis";
-import Icon from "react-native-vector-icons/Ionicons";
-import style from "../../themes/style";
 import AutoCompleteSearchResult from "./components/AutoCompleteSearchResult";
-import { getMiddlePoint } from "./utils/directionsUtils";
+import { getMiddlePoint } from "../../utils/directionsUtils";
+import { State } from "../../../rootReducer";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -55,18 +48,18 @@ export default function SearchScreen({ navigation }): ReactElement {
   };
 
   const searchLocations = useSelector(
-    (state) => state.searchReducer.searchLocations
+    (state: State) => state.searchReducer.searchLocations
   );
   const searchResult = useSelector(
-    (state) => state.searchReducer.searchResult?.businesses ?? []
+    (state: State) => state.searchReducer.searchResult?.businesses ?? []
   );
-  const userLocation = useSelector((state) => state.searchReducer.userLocation);
-  const searchType = useSelector((state) => state.searchReducer.searchType);
+  const userLocation = useSelector((state: State) => state.searchReducer.userLocation);
+  const searchType = useSelector((state: State) => state.searchReducer.searchType);
   const searchLoading = useSelector(
-    (state) => state.searchReducer.searchLoading
+    (state: State) => state.searchReducer.searchLoading
   );
   const directions = useSelector(
-    (state) => state.searchReducer.cachedDirections
+    (state: State) => state.searchReducer.cachedDirections
   );
 
   //Search Actions
@@ -222,7 +215,6 @@ export default function SearchScreen({ navigation }): ReactElement {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "coral",
   },
   searchBackground: {
     position: "absolute",

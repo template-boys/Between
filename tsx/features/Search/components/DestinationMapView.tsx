@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet } from "react-native";
 import { View } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import theme from "../../../themes/theme";
-import mapTheme from "./mapTheme";
+import mapTheme from "../../../../assets/mapThemes/mapTheme";
 
 interface Props {
   location: { longitude: number; latitude: number };

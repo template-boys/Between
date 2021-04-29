@@ -5,7 +5,7 @@ import {
   getRhumbLineBearing,
   getPathLength,
 } from "geolib";
-import { mapBoxDirectionsSearch } from "../../../api/thirdPartyApis";
+import { mapBoxDirectionsSearch } from "../api/thirdPartyApis";
 
 /*
  * Convert a polyline string (returned from mapbox API) into

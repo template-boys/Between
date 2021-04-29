@@ -1,27 +1,19 @@
-import React, { ReactElement, useEffect, useRef, useState } from "react";
+import React, { ReactElement, useEffect, useRef } from "react";
 import {
   ActivityIndicator,
   Dimensions,
   StyleSheet,
-  Text,
   View,
-  Image,
-  Modal,
   FlatList,
 } from "react-native";
-import Carousel, { Pagination } from "react-native-snap-carousel";
+import Carousel from "react-native-snap-carousel";
 import { useDispatch, useSelector } from "react-redux";
-import { setPlaceIndex, setSearchType } from "../../Search/redux/searchActions";
+import { setPlaceIndex } from "../../Search/redux/searchActions";
 import theme from "../../../themes/theme";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import Icon from "react-native-vector-icons/Ionicons";
-import style from "../../../themes/style";
-import Animated from "react-native-reanimated";
-import BottomSheet from "reanimated-bottom-sheet";
 import DestinationListItem from "./DestinationListItem";
 import { types } from "../constants/searchConstants";
 import DestinationTypeListItem from "./DestinationTypeListItem";
-
+import { State } from "../../../../rootReducer";
 interface Props {
   searchResult: any;
   searchLoading: boolean;
@@ -41,8 +33,8 @@ export default function PlaceList({
 }: Props): ReactElement {
   const dispatch = useDispatch();
 
-  const searchType = useSelector((state) => state.searchReducer.searchType);
-  const placeIndex = useSelector((state) => state.searchReducer.placeIndex);
+  const searchType = useSelector((state: State) => state.searchReducer.searchType);
+  const placeIndex = useSelector((state: State) => state.searchReducer.placeIndex);
 
   const [typeIndex, setTypeIndex] = React.useState<number>(
     types.indexOf(searchType)

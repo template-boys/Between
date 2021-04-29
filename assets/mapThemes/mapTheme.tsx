@@ -32,18 +32,18 @@ export default [
       },
     ],
   },
-  // {
-  //   featureType: "poi",
-  //   elementType: "geometry",
-  //   stylers: [
-  //     {
-  //       visibility: "simplified",
-  //     },
-  //     {
-  //       color: "#fcfcfc",
-  //     },
-  //   ],
-  // },
+  {
+    featureType: "poi",
+    elementType: "geometry",
+    stylers: [
+      {
+        visibility: "simplified",
+      },
+      {
+        color: "#fcfcfc",
+      },
+    ],
+  },
   {
     featureType: "road.highway",
     elementType: "geometry",
