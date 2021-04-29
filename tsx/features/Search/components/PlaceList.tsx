@@ -1,206 +1,165 @@
-import React, { ReactElement, useEffect, useRef } from "react";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
   StyleSheet,
   Text,
   View,
+  Image,
+  Modal,
+  FlatList,
 } from "react-native";
-import { Badge } from "react-native-elements";
-import Carousel from "react-native-snap-carousel";
+import Carousel, { Pagination } from "react-native-snap-carousel";
 import { useDispatch, useSelector } from "react-redux";
 import { setPlaceIndex, setSearchType } from "../../Search/redux/searchActions";
 import theme from "../../../themes/theme";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/Ionicons";
+import style from "../../../themes/style";
+import Animated from "react-native-reanimated";
+import BottomSheet from "reanimated-bottom-sheet";
+import DestinationListItem from "./DestinationListItem";
+import { types } from "../constants/searchConstants";
+import DestinationTypeListItem from "./DestinationTypeListItem";
 
 interface Props {
   searchResult: any;
   searchLoading: boolean;
   navigation: any;
+  bottomSheetRef: any;
+  setMapHeight: any;
 }
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function PlaceList({
   searchResult,
   searchLoading,
   navigation,
+  setMapHeight,
+  bottomSheetRef,
 }: Props): ReactElement {
   const dispatch = useDispatch();
 
-  const types = [
-    <Icon
-      style={{ alignSelf: "center" }}
-      name="search-outline"
-      size={30}
-      color={theme.purple}
-    />,
-    "Coffee",
-    "Pizza",
-    "Mexican",
-    "Italian",
-    "Chinese",
-    "Bar",
-    "Fast Food",
-  ];
-
   const searchType = useSelector((state) => state.searchReducer.searchType);
+  const placeIndex = useSelector((state) => state.searchReducer.placeIndex);
 
-  const [typeIndex, setTypeIndex] = React.useState(types.indexOf(searchType));
-  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get(
-    "window"
+  const [typeIndex, setTypeIndex] = React.useState<number>(
+    types.indexOf(searchType)
   );
 
   const carouselRef = useRef<any | null>(null);
   const typeCarouselRef = useRef<any | null>(null);
 
   const _renderType = ({ item, index }) => {
-    const borderStyle =
-      typeIndex === index
-        ? { borderColor: theme.darkPurple, borderWidth: 2 }
-        : {};
+    const isSelected = typeIndex === index;
     return searchResult.length === 0 ? null : (
-      <TouchableOpacity
-        onPress={() => {
-          typeCarouselRef.current?.snapToItem(index);
-          setTypeIndex(index);
-          dispatch(setSearchType(types[index]));
-        }}
-      >
-        <View
-          style={[
-            styles.shadow,
-            {
-              justifyContent: "center",
-              alignItems: "center",
-              height: 40,
-              minWidth: SCREEN_WIDTH / 4.5,
-              padding: 5,
-              marginRight: 10,
-              marginLeft: 10,
-              borderRadius: 15,
-              backgroundColor: "white",
-            },
-            borderStyle,
-          ]}
-        >
-          <Text
-            style={{
-              color: theme.charcoalGrey,
-              fontWeight: "500",
-              justifyContent: "center",
-            }}
-          >
-            {item}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <DestinationTypeListItem
+        isSelected={isSelected}
+        destinationItem={item}
+        index={index}
+        setCurrentTypeIndex={setTypeIndex}
+        carouselRef={carouselRef}
+        typeCarouselRef={typeCarouselRef}
+      />
     );
   };
 
-  const _renderPlace = ({ item, index }) => {
-    return (
-      <View
-        style={[
-          styles.shadow,
-          {
-            height: SCREEN_HEIGHT / 5,
-            padding: 30,
-            marginRight: 10,
-            marginLeft: 10,
-            borderRadius: 26,
-            backgroundColor: "white",
-          },
-        ]}
-      >
-        <Badge
-          value={index + 1}
-          containerStyle={{ position: "absolute", top: 1, left: 1 }}
-          badgeStyle={{
-            backgroundColor: theme.blue,
-            height: 20,
-            width: 20,
-          }}
-        />
-        <Text style={{ color: theme.charcoalGrey, fontWeight: "500" }}>
-          {searchLoading ? "" : item.name}
-        </Text>
-        <Text style={{ color: theme.charcoalGrey, fontWeight: "200" }}>
-          {!searchLoading && item?.location?.display_address[0]}
-        </Text>
-        <Text style={{ color: theme.charcoalGrey, fontWeight: "200" }}>
-          {!searchLoading && item?.location?.display_address[1]}
-        </Text>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("PlaceDetailsScreen");
-          }}
-        >
-          <Text style={{ color: theme.purple, marginTop: 15 }}>
-            {!searchLoading ? "View more information" : ""}
-          </Text>
-        </TouchableOpacity>
-        {searchLoading && (
+  const _renderDestinationListItem = ({ item }) => {
+    return <DestinationListItem destinationItem={item} />;
+  };
+
+  useEffect(() => {
+    carouselRef.current?.snapToItem(0);
+  }, [searchLoading]);
+
+  return (
+    <View
+      style={styles.container}
+      onLayout={(e) => {
+        const { height } = e.nativeEvent.layout;
+        setMapHeight(SCREEN_HEIGHT - height - 40);
+      }}
+    >
+      <FlatList
+        horizontal
+        ref={typeCarouselRef}
+        data={types}
+        renderItem={_renderType}
+        showsHorizontalScrollIndicator={false}
+        scrollEnabled={!searchLoading}
+        contentContainerStyle={{
+          alignItems: "center",
+          height: 80,
+          paddingHorizontal: 20,
+        }}
+      />
+      {!!searchLoading ? (
+        <View style={{ height: 180, width: SCREEN_WIDTH }}>
           <ActivityIndicator
             style={styles.loading}
             size={"large"}
             color={theme.darkPurple}
           />
-        )}
-      </View>
-    );
-  };
-
-  useEffect(() => {
-    if (searchLoading) {
-      carouselRef.current?.snapToItem(0);
-    }
-  }, [searchLoading]);
-
-  const shouldShowGlobalSpinner = !!searchLoading && searchResult.length === 0;
-
-  return (
-    <View style={{ flex: 0.35 }}>
-      {shouldShowGlobalSpinner ? (
-        <ActivityIndicator
-          style={styles.loading}
-          size={"large"}
-          color={theme.darkPurple}
-        />
+        </View>
       ) : (
-        <>
-          <Carousel
-            ref={typeCarouselRef}
-            data={types}
-            renderItem={_renderType}
-            sliderWidth={SCREEN_WIDTH}
-            itemWidth={SCREEN_WIDTH / 4.5}
-            enableSnap={false}
-            scrollEnabled={!searchLoading}
-            firstItem={1}
-          />
-          <Carousel
-            ref={carouselRef}
-            data={searchResult}
-            renderItem={_renderPlace}
-            sliderWidth={SCREEN_WIDTH}
-            itemWidth={SCREEN_WIDTH - 100}
-            onSnapToItem={(i) => {
-              dispatch(setPlaceIndex(i));
-            }}
-          />
-        </>
+        <Carousel
+          containerCustomStyle={{}}
+          ref={carouselRef}
+          data={searchResult}
+          renderItem={_renderDestinationListItem}
+          sliderWidth={SCREEN_WIDTH}
+          itemWidth={300}
+          onBeforeSnapToItem={(i) => {
+            dispatch(setPlaceIndex(i));
+          }}
+        />
       )}
+      <View style={styles.paginationContainer}>
+        {searchResult.map((_, index) => (
+          <View
+            style={[
+              styles.paginationDot,
+              {
+                backgroundColor:
+                  placeIndex === index ? theme.darkPurple : theme.lightGrey,
+                opacity: placeIndex === index ? 1 : 0.4,
+                width: placeIndex === index ? 10 : 5,
+              },
+            ]}
+          ></View>
+        ))}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  shadow: {
-    shadowColor: theme.lightGrey,
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
     elevation: 1,
+    position: "absolute",
+    bottom: 0,
+    backgroundColor: "white",
+  },
+  paginationContainer: {
+    height: 50,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  paginationDot: {
+    marginHorizontal: 5,
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
   },
   loading: {
     position: "absolute",

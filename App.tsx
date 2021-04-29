@@ -47,7 +47,6 @@ export default class App extends Component<Props, State> {
           />
           {this.state.didCatch ? <Text>Error</Text> : <Navigator />}
         </SafeAreaProvider>
-        <FlashMessage position={"center"} style={styles.flashMessageBanner} />
       </Provider>
     );
   }

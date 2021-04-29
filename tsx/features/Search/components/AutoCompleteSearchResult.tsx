@@ -9,7 +9,7 @@ interface DestinationSearchResultProps {
   searchResult: any;
 }
 
-const DestinationSearchResult = ({
+const AutoCompleteSearchResult = ({
   searchResult,
   containerStyle,
 }: DestinationSearchResultProps) => {
@@ -74,4 +74,4 @@ const styles = StyleSheet.create({
   header: { color: theme.darkestGrey, fontSize: 16 },
 });
 
-export default DestinationSearchResult;
+export default AutoCompleteSearchResult;

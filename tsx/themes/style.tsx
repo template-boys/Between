@@ -25,6 +25,7 @@ export default StyleSheet.create({
     fontWeight: "600",
     fontSize: 20,
     color: "#313131",
+    lineHeight: 22,
   },
   bold: {
     fontFamily: "Poppins-Regular",

@@ -1,5 +1,6 @@
 import {
   mapBoxDirectionsSearch,
+  reverseGeocode,
   yelpSearch,
 } from "../../../api/thirdPartyApis";
 import actionTypes from "./searchActionTypes";
@@ -18,10 +19,26 @@ export const setSearchLoading = (isLoading) => ({
   payload: isLoading,
 });
 
-export const addSearchLocation = (newLocation) => ({
-  type: actionTypes.ADD_LOCATION,
-  newLocation,
-});
+export const addSearchLocation = (newLocation) => {
+  let returnLocation;
+  if (typeof newLocation?.position === "string") {
+    const splitPosition = newLocation?.position.split(",");
+    const locationObject = {
+      address: newLocation?.address ?? {},
+      position: {
+        lat: parseFloat(splitPosition[0]),
+        lon: parseFloat(splitPosition[1]),
+      },
+    };
+    returnLocation = locationObject;
+  } else {
+    returnLocation = newLocation;
+  }
+  return {
+    type: actionTypes.ADD_LOCATION,
+    newLocation: returnLocation,
+  };
+};
 
 export const setSearchResult = (searchResult) => ({
   type: actionTypes.SET_SEARCH_RESULT,
@@ -63,9 +80,17 @@ export const setDirectionsLoading = (isLoading) => {
 };
 
 export const setUserLocation = (location) => {
-  return {
-    type: actionTypes.SET_USER_LOCATION,
-    location,
+  return async (dispatch, getState) => {
+    dispatch(setUserGeocodeLocation(location));
+    dispatch({ type: actionTypes.SET_USER_LOCATION, location });
+  };
+};
+
+export const setUserGeocodeLocation = (location) => {
+  return async (dispatch, getState) => {
+    const res = await reverseGeocode(location);
+    res?.data?.addresses[0] &&
+      dispatch(addSearchLocation(res?.data?.addresses[0]));
   };
 };
 

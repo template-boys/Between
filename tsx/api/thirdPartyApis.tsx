@@ -29,6 +29,7 @@ export const yelpSearch = async (term: string, location) => {
       latitude: location.latitude,
       term,
       sort_by: "distance",
+      limit: 15,
     },
   };
   return await axios.get(BASE_YELP_SEARCH, config);
@@ -55,6 +56,15 @@ export const tomTomAutoComplete = async (query, userLocation) => {
     : "lon=-87.9806&lat=42.0884";
   const url = encodeUrl(
     `https://api.tomtom.com/search/2/search/${query}.json?key=${key}&${latLonBias}&typeahead=true&minFuzzyLevel=2&maxFuzzyLevel=4`
+  );
+  return await axios.get(url);
+};
+
+export const reverseGeocode = async (userLocation) => {
+  const key = getTomTomKey();
+  const encodeUrl = require("encodeurl");
+  const url = encodeUrl(
+    `https://api.tomtom.com/search/2/reverseGeocode/${userLocation.latitude}%2C${userLocation.longitude}.json?key=${key}`
   );
   return await axios.get(url);
 };
