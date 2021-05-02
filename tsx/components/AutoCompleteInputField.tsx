@@ -1,10 +1,8 @@
 import React from "react";
 import {
-  Dimensions,
   StyleSheet,
   TextInputProps,
   View,
-  ViewStyle,
 } from "react-native";
 import CustomInput from "./CustomInput";
 

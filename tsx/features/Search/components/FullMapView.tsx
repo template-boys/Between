@@ -3,7 +3,7 @@ import RNLocation from "react-native-location";
 import { PixelRatio, Platform, StyleSheet } from "react-native";
 import { Dimensions } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import MapView, { Callout, Marker, Polyline } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import theme from "../../../themes/theme";
 import mapTheme from "../../../../assets/mapThemes/mapTheme";
 import { getPolylineArray } from "../../../utils/directionsUtils";

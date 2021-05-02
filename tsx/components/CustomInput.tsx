@@ -1,7 +1,6 @@
-import React, { ReactElement, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   TextInput,
   ViewStyle,

@@ -1,14 +1,18 @@
 import { createSelector } from "reselect";
+import { State } from "../../../../rootReducer";
 import { getPolylineArray } from "../../../utils/directionsUtils";
+import { Coordinate } from "./searchReducerTypes";
 
-const getCurrentRouteDirections = (state: any) =>
-  state.searchReducer?.currentRouteDirections;
+const getCurrentRouteGeometry = (state: State) =>
+  state.searchReducer?.currentRouteGeometry;
 
-export const currentPolyLineArray: (state: any) => Array<any> = createSelector(
-  [getCurrentRouteDirections],
-  (currentRouteDirections) => {
-    if (!!currentRouteDirections) {
-      return getPolylineArray(currentRouteDirections);
+export const currentPolyLineArray: (
+  state: State
+) => Array<Coordinate> = createSelector(
+  [getCurrentRouteGeometry],
+  (currentRouteGeometry) => {
+    if (!!currentRouteGeometry) {
+      return getPolylineArray(currentRouteGeometry);
     } else {
       return [];
     }

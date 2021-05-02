@@ -1,7 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import {
   MapBoxDirectionsResponse,
-  TomTomOriginResult,
   TomTomSearchResponse,
   YelpDestinationsResult,
 } from "../features/Search/redux/searchReducerTypes";

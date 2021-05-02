@@ -3,7 +3,6 @@ import searchReducer from "./tsx/features/Search/redux/searchReducer";
 import loginReducer, {
   LoginReducer,
 } from "./tsx/features/Login/redux/loginReducer";
-import { DefaultRootState } from "react-redux";
 import { SearchReducer } from "./tsx/features/Search/redux/searchReducerTypes";
 
 export interface State {
