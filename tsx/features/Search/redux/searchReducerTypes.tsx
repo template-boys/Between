@@ -1,13 +1,20 @@
 export interface SearchReducer {
-  originLocations: Array<TomTomOriginResult> | [];
-  searchResult: YelpDestinationsResult | undefined;
-  searchType: string;
-  searchLoading: boolean;
-  placeIndex: number;
-  typeIndex: number;
-  cacheSearchResults: Array<YelpDestinationsResult> | [];
-  directionsLoading: boolean;
-  cachedDirections: Array<MapBoxRoute> | [];
+  origins: Array<TomTomOriginResult> | [];
+  destinations: Array<YelpBusiness> | [];
+  destinationType: string;
+  destinationSearchLoading: boolean;
+  destinationIndex: number;
+  cachedDestinations:
+    | Array<{
+        middlePoint: Coordinate;
+        query: string;
+        result: Array<YelpBusiness>;
+      }>
+    | [];
+  routeLoading: boolean;
+  cachedRouteGeometries:
+    | Array<{ origin: Coordinate; destination: Coordinate; geometry: string }>
+    | [];
   userLocation?: any;
   currentRouteGeometry?: string;
 }
@@ -37,6 +44,11 @@ export interface MapBoxRoute {
 }
 
 /* TomTom */
+
+export interface TomTomSearchResponse {
+  summary: any;
+  results: Array<TomTomOriginResult>;
+}
 export interface TomTomOriginResult {
   type: TomTomLocationTypes;
   id: string;

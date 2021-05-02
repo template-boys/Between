@@ -14,11 +14,11 @@ import { debounce } from "lodash";
 import FullMapView from "./components/FullMapView";
 import PlaceList from "./components/PlaceList";
 import {
-  addOriginLocation as addOriginLocationAction,
-  setSearchType as setSearchTypeAction,
+  addOrigin as addOriginLocationAction,
+  setDestinationType as setDestinationTypeAction,
   removeOriginLocation as removeOriginLocationAction,
-  getPlaceSearch as getPlaceSearchAction,
-  getDirections,
+  getDestinationSearch as getDestinationSearchAction,
+  getRouteGeometries,
 } from "./redux/searchActions";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AutoCompleteInputField from "../../components/AutoCompleteInputField";
@@ -26,32 +26,33 @@ import { tomTomAutoComplete } from "../../api/thirdPartyApis";
 import AutoCompleteSearchResult from "./components/AutoCompleteSearchResult";
 import { getMiddlePoint } from "../../utils/directionsUtils";
 import { State } from "../../../rootReducer";
+import { Coordinate, TomTomOriginResult } from "./redux/searchReducerTypes";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function SearchScreen({ navigation }): ReactElement {
   const dispatch = useDispatch();
   const insets = useSafeAreaInsets();
-  const [autoCompleteValues, setAutoCompleteValues] = useState([]);
+  const [autoCompleteValues, setAutoCompleteValues] = useState<
+    Array<TomTomOriginResult>
+  >([]);
   const [isAutoCompleteFocus, setIsAutoCompleteFocus] = useState<boolean>(
     false
   );
   const searchBottomSheetRef = useRef<any | null>(null);
 
-  const originLocations = useSelector(
-    (state: State) => state.searchReducer.originLocations
-  );
-  const searchResult = useSelector(
-    (state: State) => state.searchReducer.searchResult?.businesses ?? []
+  const origins = useSelector((state: State) => state.searchReducer.origins);
+  const destinations = useSelector(
+    (state: State) => state.searchReducer.destinations
   );
   const userLocation = useSelector(
     (state: State) => state.searchReducer.userLocation
   );
-  const searchType = useSelector(
-    (state: State) => state.searchReducer.searchType
+  const destinationType = useSelector(
+    (state: State) => state.searchReducer.destinationType
   );
-  const searchLoading = useSelector(
-    (state: State) => state.searchReducer.searchLoading
+  const destinationSearchLoading = useSelector(
+    (state: State) => state.searchReducer.destinationSearchLoading
   );
 
   //Search Actions
@@ -64,12 +65,12 @@ export default function SearchScreen({ navigation }): ReactElement {
   const removeOriginLocation = (index: number) => {
     dispatch(removeOriginLocationAction(index));
   };
-  const setPlaceIndex = (index: number) => {
-    dispatch(setPlaceIndex(index));
+  const setDestinationIndex = (index: number) => {
+    dispatch(setDestinationIndex(index));
   };
   const getPlaceSearch = async (query) => {
-    let locationCoords: any[] = [];
-    originLocations.forEach((location) => {
+    let locationCoords: Coordinate[] = [];
+    origins.forEach((location) => {
       locationCoords.push({
         latitude: location?.position?.lat,
         longitude: location?.position?.lon,
@@ -79,12 +80,11 @@ export default function SearchScreen({ navigation }): ReactElement {
 
     if (locationCoords.length === 2) {
       const distance = getDistance(locationCoords[0], locationCoords[1]);
-      console.log(distance);
 
       if (distance < 15000) {
         middlePoint = getCenterOfBounds(locationCoords);
       } else {
-        dispatch(getDirections(locationCoords[0], locationCoords[1]));
+        dispatch(getRouteGeometries(locationCoords[0], locationCoords[1]));
         middlePoint = await getMiddlePoint(
           locationCoords[0],
           locationCoords[1]
@@ -93,16 +93,16 @@ export default function SearchScreen({ navigation }): ReactElement {
     } else {
       middlePoint = getCenterOfBounds(locationCoords);
     }
-    dispatch(getPlaceSearchAction(query, middlePoint));
+    dispatch(getDestinationSearchAction(query, middlePoint));
   };
 
   const autoInputRef = useRef<any | null>(null);
 
   useEffect(() => {
-    if (originLocations.length > 1) {
-      getPlaceSearch(searchType);
+    if (origins.length > 1) {
+      getPlaceSearch(destinationType);
     }
-  }, [originLocations, searchType]);
+  }, [origins, destinationType]);
 
   const debouncedAutoCompleteCall = debounce(async (query) => {
     if (!query) {
@@ -150,10 +150,10 @@ export default function SearchScreen({ navigation }): ReactElement {
             },
           }}
         />
-        {originLocations.length > 1 && !isAutoCompleteFocus && (
+        {origins.length > 1 && !isAutoCompleteFocus && (
           <PlaceList
-            searchResult={searchResult}
-            searchLoading={searchLoading}
+            destinations={destinations}
+            destinationSearchLoading={destinationSearchLoading}
             navigation={navigation}
             bottomSheetRef={searchBottomSheetRef}
             setMapHeight={setMapHeight}
@@ -176,16 +176,16 @@ export default function SearchScreen({ navigation }): ReactElement {
                   autoInputRef.current?.clear();
                 }}
               >
-                <AutoCompleteSearchResult searchResult={item} />
+                <AutoCompleteSearchResult origin={item} />
               </TouchableOpacity>
             )}
           />
         ) : null}
       </View>
       <FullMapView
-        originLocations={originLocations}
+        originLocations={origins}
         onRemovePress={removeOriginLocation}
-        searchResult={searchResult}
+        yelpDestinations={destinations}
         mapHeight={mapHeight}
       />
     </>

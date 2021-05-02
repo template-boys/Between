@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch } from "react-redux";
-import { setPlaceIndex, setSearchType } from "../redux/searchActions";
+import { setDestinationIndex, setDestinationType } from "../redux/searchActions";
 import { types } from "../constants/searchConstants";
 import theme from "../../../themes/theme";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -39,14 +39,14 @@ export default function DestinationTypeListItem({
   ) : (
     <TouchableOpacity
       onPress={() => {
-        dispatch(setPlaceIndex(0));
+        dispatch(setDestinationIndex(0));
         setCurrentTypeIndex(index);
         typeCarouselRef.current?.scrollToIndex({
           index: index,
           viewPosition: 0.5,
         });
         carouselRef.current?.snapToItem(0);
-        dispatch(setSearchType(types[index]));
+        dispatch(setDestinationType(types[index]));
       }}
       style={[styles.typeButton, isSelected && styles.selectedTypeButton]}
     >

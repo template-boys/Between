@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import style from "../../themes/style";
 import DestinationMapView from "./components/DestinationMapView";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { getDirections } from "./redux/searchActions";
+import { getRouteGeometries } from "./redux/searchActions";
 import { getRatingImage } from "../../utils/searchUtils";
 import theme from "../../themes/theme";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -19,27 +19,26 @@ interface Props {
 const DestinationDetailsScreen = (props: Props) => {
   const dispatch = useDispatch();
   const [selectedLocationIndex, setSelectedLocationIndex] = useState(0);
-  const searchResult = useSelector(
-    (state: State) => state.searchReducer.searchResult
+  const destinations = useSelector(
+    (state: State) => state.searchReducer.destinations ?? []
   );
-  const placeIndex = useSelector(
-    (state: State) => state.searchReducer.placeIndex
+  const destinationIndex = useSelector(
+    (state: State) => state.searchReducer.destinationIndex
   );
-  const originLocations = useSelector(
-    (state: State) => state.searchReducer.originLocations
+  const origins = useSelector(
+    (state: State) => state.searchReducer.origins
   );
   const polylineArray = useSelector((state: State) =>
     currentPolyLineArray(state)
   );
-  const place = searchResult?.businesses[placeIndex];
-  const latitude = place?.coordinates?.latitude;
-  const longitude = place?.coordinates?.longitude;
-  console.log(latitude, longitude);
+  const selectedDestination = destinations[destinationIndex];
+  const latitude = selectedDestination?.coordinates?.latitude;
+  const longitude = selectedDestination?.coordinates?.longitude;
 
   //dynamic in the future (whatever location user wants to see from)
   const pickup = {
-    latitude: originLocations[selectedLocationIndex]?.position?.lat,
-    longitude: originLocations[selectedLocationIndex]?.position?.lon,
+    latitude: origins[selectedLocationIndex]?.position?.lat,
+    longitude: origins[selectedLocationIndex]?.position?.lon,
   };
 
   const lyftURL = `https://lyft.com/ride?id=lyft&pickup[latitude]=${pickup.latitude}&pickup[longitude]=${pickup.longitude}&destination[latitude]=${latitude}&destination[longitude]=${longitude}&partner=lL5keX91WP4D`;
@@ -49,24 +48,24 @@ const DestinationDetailsScreen = (props: Props) => {
   //And allow user to change where they want to see location from
   React.useEffect(() => {
     props.navigation.setOptions({
-      title: place?.name || "Details",
+      title: selectedDestination?.name || "Details",
     });
 
     dispatch(
-      getDirections(
+      getRouteGeometries(
         {
-          longitude: originLocations[selectedLocationIndex]?.position?.lon,
-          latitude: originLocations[selectedLocationIndex]?.position?.lat,
+          longitude: origins[selectedLocationIndex]?.position?.lon,
+          latitude: origins[selectedLocationIndex]?.position?.lat,
         },
         {
-          longitude: place?.coordinates?.longitude,
-          latitude: place?.coordinates?.latitude,
+          longitude: selectedDestination?.coordinates?.longitude,
+          latitude: selectedDestination?.coordinates?.latitude,
         }
       )
     );
   }, []);
 
-  const imageSource = getRatingImage(place?.rating);
+  const imageSource = getRatingImage(selectedDestination?.rating);
 
   const _renderOriginLocation = ({ item, index }) => {
     const isSelected = selectedLocationIndex === index;
@@ -75,15 +74,15 @@ const DestinationDetailsScreen = (props: Props) => {
         style={styles.originLocationContainer}
         onPress={() => {
           dispatch(
-            getDirections(
+            getRouteGeometries(
               {
                 longitude:
-                  originLocations[selectedLocationIndex]?.position?.lon,
-                latitude: originLocations[selectedLocationIndex]?.position?.lat,
+                  origins[selectedLocationIndex]?.position?.lon,
+                latitude: origins[selectedLocationIndex]?.position?.lat,
               },
               {
-                longitude: place?.coordinates?.longitude,
-                latitude: place?.coordinates?.latitude,
+                longitude: selectedDestination?.coordinates?.longitude,
+                latitude: selectedDestination?.coordinates?.latitude,
               }
             )
           );
@@ -153,7 +152,7 @@ const DestinationDetailsScreen = (props: Props) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         keyboardShouldPersistTaps="always"
-        data={originLocations}
+        data={origins}
         renderItem={_renderOriginLocation}
         style={{ maxHeight: 250, backgroundColor: "white" }}
       />
@@ -190,7 +189,7 @@ const DestinationDetailsScreen = (props: Props) => {
                 },
               ]}
             >
-              {place?.rating.toFixed(1)}
+              {selectedDestination?.rating.toFixed(1)}
             </Text>
           </View>
 
@@ -199,13 +198,13 @@ const DestinationDetailsScreen = (props: Props) => {
               fontWeight: "200",
               fontSize: 14,
             }}
-          >{`(${place?.review_count} reviews)`}</Text>
+          >{`(${selectedDestination?.review_count} reviews)`}</Text>
           <TouchableOpacity
             style={{ marginHorizontal: 10 }}
             onPress={() => {
               {
-                if (!!place?.url) {
-                  Linking.openURL(place.url).catch((err) =>
+                if (!!selectedDestination?.url) {
+                  Linking.openURL(selectedDestination.url).catch((err) =>
                     console.error("Couldn't load page", err)
                   );
                 }
@@ -227,15 +226,17 @@ const DestinationDetailsScreen = (props: Props) => {
             />
           </TouchableOpacity>
         </View>
-        <Text style={{ marginTop: 6 }}>{place?.name}</Text>
+        <Text style={{ marginTop: 6 }}>{selectedDestination?.name}</Text>
         <Text style={{ fontWeight: "200" }}>
-          {place?.location?.display_address[0]}
+          {selectedDestination?.location?.display_address[0]}
         </Text>
         <Text style={{ fontWeight: "200" }}>
-          {place?.location?.display_address[1]}
+          {selectedDestination?.location?.display_address[1]}
         </Text>
 
-        <Text style={{ fontWeight: "200" }}>{place?.display_phone}</Text>
+        <Text style={{ fontWeight: "200" }}>
+          {selectedDestination?.display_phone}
+        </Text>
       </View>
     </View>
   );

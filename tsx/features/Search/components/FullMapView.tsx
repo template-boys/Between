@@ -8,7 +8,7 @@ import theme from "../../../themes/theme";
 import mapTheme from "../../../../assets/mapThemes/mapTheme";
 import { getPolylineArray } from "../../../utils/directionsUtils";
 import { State } from "../../../../rootReducer";
-import { setPlaceIndex, setUserLocation } from "../redux/searchActions";
+import { setDestinationIndex, setUserLocation } from "../redux/searchActions";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -18,31 +18,31 @@ interface Props {
   onIconPress?: () => void;
   onRemovePress: (index: number) => void;
   originLocations: any;
-  searchResult: any;
+  yelpDestinations: any;
   mapHeight: number;
 }
 
 export default function FullMapView({
   originLocations,
-  searchResult,
+  yelpDestinations,
   mapHeight,
 }: Props): ReactElement {
   const dispatch = useDispatch();
   const [pressedMarker, setPressedMarker] = React.useState(-1);
   const mapRef = React.useRef<any | null>(null);
 
-  const placeIndex = useSelector(
-    (state: State) => state.searchReducer.placeIndex
+  const destinationIndex = useSelector(
+    (state: State) => state.searchReducer.destinationIndex
   );
   const userLocation = useSelector(
     (state: State) => state.searchReducer.userLocation
   );
-  const searchType = useSelector(
-    (state: State) => state.searchReducer.searchType
+  const destinationType = useSelector(
+    (state: State) => state.searchReducer.destinationType
   );
 
-  const searchLoading = useSelector(
-    (state: State) => state.searchReducer.searchLoading
+  const destinationSearchLoading = useSelector(
+    (state: State) => state.searchReducer.destinationSearchLoading
   );
 
   const currentRouteGeometry = useSelector(
@@ -72,7 +72,7 @@ export default function FullMapView({
   }, [originLocations]);
 
   React.useEffect(() => {
-    let markers = searchResult.map((result) => {
+    let markers = yelpDestinations.map((result) => {
       return {
         latitude: result?.coordinates?.latitude,
         longitude: result?.coordinates?.longitude,
@@ -82,7 +82,7 @@ export default function FullMapView({
       };
     });
     setDestinationMarkers(markers);
-  }, [searchResult]);
+  }, [yelpDestinations]);
 
   React.useEffect(() => {
     const getLocationPermission = async () => {
@@ -129,7 +129,6 @@ export default function FullMapView({
     }
 
     //used if there are multiple locations set
-    console.log("Destination Markers: ", destinationMarkers);
     setTimeout(() => {
       mapRef.current.fitToCoordinates(
         [...destinationMarkers, ...originMarkers],
@@ -145,7 +144,13 @@ export default function FullMapView({
       );
     }, 250);
     return () => {};
-  }, [originMarkers, destinationMarkers, searchType, placeIndex, mapHeight]);
+  }, [
+    originMarkers,
+    destinationMarkers,
+    destinationType,
+    destinationIndex,
+    mapHeight,
+  ]);
 
   let polylineArray;
 
@@ -180,13 +185,13 @@ export default function FullMapView({
           onPress={(e) => {
             e.stopPropagation();
             setPressedMarker(i);
-            dispatch(setPlaceIndex(i));
+            dispatch(setDestinationIndex(i));
           }}
         ></Marker>
       ))}
       {destinationMarkers.map((marker, i) => {
         const markerStyle =
-          placeIndex === i
+          destinationIndex === i
             ? { zIndex: 10, height: 100, width: 100 }
             : { zIndex: 0 };
         return (
@@ -195,8 +200,10 @@ export default function FullMapView({
             identifier={`id${i}`}
             coordinate={marker}
             description={marker.description}
-            opacity={placeIndex === i ? 1 : 0.3}
-            pinColor={placeIndex === i ? marker.pinColor : theme.lightGrey}
+            opacity={destinationIndex === i ? 1 : 0.3}
+            pinColor={
+              destinationIndex === i ? marker.pinColor : theme.lightGrey
+            }
             style={markerStyle}
           ></Marker>
         );

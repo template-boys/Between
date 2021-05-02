@@ -5,10 +5,11 @@ import MapView, { Marker, Polyline } from "react-native-maps";
 import Icon from "react-native-vector-icons/Ionicons";
 import theme from "../../../themes/theme";
 import mapTheme from "../../../../assets/mapThemes/mapTheme";
+import { Coordinate } from "../redux/searchReducerTypes";
 
 interface Props {
   location: { longitude: number; latitude: number };
-  polylineArray: any[];
+  polylineArray: Coordinate[];
 }
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");

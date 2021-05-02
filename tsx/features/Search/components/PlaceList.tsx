@@ -5,22 +5,25 @@ import {
   StyleSheet,
   View,
   FlatList,
-  KeyboardAvoidingView,
   Keyboard,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { useDispatch, useSelector } from "react-redux";
-import { setPlaceIndex, setSearchType } from "../../Search/redux/searchActions";
+import {
+  setDestinationIndex,
+  setDestinationType,
+} from "../../Search/redux/searchActions";
 import theme from "../../../themes/theme";
 import DestinationListItem from "./DestinationListItem";
 import { types } from "../constants/searchConstants";
 import DestinationTypeListItem from "./DestinationTypeListItem";
 import { State } from "../../../../rootReducer";
 import CustomInput from "../../../components/CustomInput";
+import { YelpBusiness } from "../redux/searchReducerTypes";
 
 interface Props {
-  searchResult: any;
-  searchLoading: boolean;
+  destinations: Array<YelpBusiness>;
+  destinationSearchLoading: boolean;
   navigation: any;
   bottomSheetRef: any;
   setMapHeight: any;
@@ -29,21 +32,21 @@ interface Props {
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function PlaceList({
-  searchResult,
-  searchLoading,
+  destinations,
+  destinationSearchLoading,
   setMapHeight,
 }: Props): ReactElement {
   const dispatch = useDispatch();
 
-  const searchType = useSelector(
-    (state: State) => state.searchReducer.searchType
+  const destinationType = useSelector(
+    (state: State) => state.searchReducer.destinationType
   );
-  const placeIndex = useSelector(
-    (state: State) => state.searchReducer.placeIndex
+  const destinationIndex = useSelector(
+    (state: State) => state.searchReducer.destinationIndex
   );
 
   const [typeIndex, setTypeIndex] = useState<number>(
-    types.indexOf(searchType) === -1 ? 0 : types.indexOf(searchType)
+    types.indexOf(destinationType) === -1 ? 0 : types.indexOf(destinationType)
   );
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,11 +55,11 @@ export default function PlaceList({
 
   const carouselRef = useRef<any | null>(null);
   const typeCarouselRef = useRef<any | null>(null);
-  const searchTypeInputRef = useRef<any | null>(null);
+  const destinationTypeInputRef = useRef<any | null>(null);
 
   const _renderType = ({ item, index }) => {
     const isSelected = typeIndex === index;
-    return searchResult.length === 0 ? null : (
+    return destinations.length === 0 ? null : (
       <DestinationTypeListItem
         isSelected={isSelected}
         destinationItem={item}
@@ -74,7 +77,7 @@ export default function PlaceList({
 
   useEffect(() => {
     carouselRef.current?.snapToItem(0);
-  }, [searchLoading]);
+  }, [destinationSearchLoading]);
 
   useEffect(() => {
     Keyboard.addListener("keyboardWillShow", keyboardWillShow);
@@ -97,11 +100,9 @@ export default function PlaceList({
 
   useEffect(() => {
     if (typeIndex === 0) {
-      searchTypeInputRef?.current?.focus();
+      destinationTypeInputRef?.current?.focus();
     }
   }, [typeIndex]);
-
-  console.log(typeIndex);
 
   return (
     <View
@@ -117,11 +118,11 @@ export default function PlaceList({
     >
       {typeIndex === 0 ? (
         <CustomInput
-          inputRef={searchTypeInputRef}
+          inputRef={destinationTypeInputRef}
           onSubmitEditing={(q) => {
             if (!!q.nativeEvent.text) {
-              dispatch(setSearchType(q.nativeEvent.text));
-              dispatch(setPlaceIndex(0));
+              dispatch(setDestinationType(q.nativeEvent.text));
+              dispatch(setDestinationIndex(0));
             }
           }}
           onChangeText={(q) => {
@@ -143,13 +144,13 @@ export default function PlaceList({
           rightIconSize={20}
           leftIconSize={20}
           onRightIconPress={() => {
-            searchTypeInputRef?.current?.clear();
+            destinationTypeInputRef?.current?.clear();
             setSearchQuery("");
           }}
           onLeftIconPress={() => {
             setTypeIndex(1);
-            dispatch(setSearchType("coffee"));
-            dispatch(setPlaceIndex(0));
+            dispatch(setDestinationType("coffee"));
+            dispatch(setDestinationIndex(0));
             setSearchQuery("");
           }}
         />
@@ -160,11 +161,11 @@ export default function PlaceList({
           data={types}
           renderItem={_renderType}
           showsHorizontalScrollIndicator={false}
-          scrollEnabled={!searchLoading}
+          scrollEnabled={!destinationSearchLoading}
           contentContainerStyle={styles.typeContainerStyle}
         />
       )}
-      {!!searchLoading ? (
+      {!!destinationSearchLoading ? (
         <View style={{ height: 180, width: SCREEN_WIDTH }}>
           <ActivityIndicator
             style={styles.loading}
@@ -176,25 +177,27 @@ export default function PlaceList({
         <Carousel
           containerCustomStyle={{}}
           ref={carouselRef}
-          data={searchResult}
+          data={destinations}
           renderItem={_renderDestinationListItem}
           sliderWidth={SCREEN_WIDTH}
           itemWidth={300}
           onBeforeSnapToItem={(i) => {
-            dispatch(setPlaceIndex(i));
+            dispatch(setDestinationIndex(i));
           }}
         />
       )}
       <View style={styles.paginationContainer}>
-        {searchResult.map((_, index) => (
+        {destinations.map((_, index) => (
           <View
             style={[
               styles.paginationDot,
               {
                 backgroundColor:
-                  placeIndex === index ? theme.darkPurple : theme.lightGrey,
-                opacity: placeIndex === index ? 1 : 0.4,
-                width: placeIndex === index ? 10 : 5,
+                  destinationIndex === index
+                    ? theme.darkPurple
+                    : theme.lightGrey,
+                opacity: destinationIndex === index ? 1 : 0.4,
+                width: destinationIndex === index ? 10 : 5,
               },
             ]}
           ></View>
