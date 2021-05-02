@@ -20,8 +20,12 @@ export interface CustomInputProps extends TextInputProps {
   inputContainerStyle?: ViewStyle;
   inputStyle?: TextStyle;
   iconName?: string;
+  rightIconName?: string;
   hasError?: boolean;
   onLeftIconPress?: () => void | null | undefined;
+  onRightIconPress?: () => void | null | undefined;
+  rightIconSize?: number;
+  leftIconSize?: number;
 }
 
 const CustomInput = ({
@@ -31,6 +35,7 @@ const CustomInput = ({
   inputContainerStyle,
   iconName,
   hasError,
+  rightIconName,
   ...props
 }: CustomInputProps) => {
   const [text, setText] = useState<string>("");
@@ -50,7 +55,7 @@ const CustomInput = ({
           >
             <Icon
               name={iconName}
-              size={24}
+              size={props.leftIconSize}
               color={!!hasError ? theme.errorRed : theme.darkPurple}
             />
           </TouchableOpacity>
@@ -69,6 +74,20 @@ const CustomInput = ({
           autoCorrect={props.autoCorrect || false}
           {...props}
         />
+        {rightIconName && (
+          <TouchableOpacity
+            onPress={() => {
+              !!props.onRightIconPress && props.onRightIconPress();
+            }}
+            activeOpacity={!!props.onRightIconPress ? 0.2 : 1}
+          >
+            <Icon
+              name={rightIconName}
+              size={props.rightIconSize}
+              color={!!hasError ? theme.errorRed : theme.darkPurple}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -98,4 +117,8 @@ const styles = StyleSheet.create({
   },
 });
 
+CustomInput.defaultProps = {
+  rightIconSize: 24,
+  leftIconSize: 24,
+};
 export default CustomInput;

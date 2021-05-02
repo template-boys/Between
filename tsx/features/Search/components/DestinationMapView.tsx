@@ -2,12 +2,13 @@ import React, { ReactElement } from "react";
 import { Dimensions, StyleSheet } from "react-native";
 import { View } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
+import Icon from "react-native-vector-icons/Ionicons";
 import theme from "../../../themes/theme";
 import mapTheme from "./mapTheme";
 
 interface Props {
   location: { longitude: number; latitude: number };
-  polylineArray?: any[];
+  polylineArray: any[];
 }
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -34,6 +35,8 @@ export default function MapLocationView({
     }, 250);
   }, [polylineArray]);
 
+  const shouldShowPolyLines = polylineArray.length > 0;
+
   return (
     <View
       style={{
@@ -58,7 +61,7 @@ export default function MapLocationView({
         zoomEnabled={false}
         scrollEnabled={false}
       >
-        {polylineArray && polylineArray?.length > 0 && (
+        {shouldShowPolyLines && (
           <>
             <Polyline
               coordinates={polylineArray}
@@ -74,7 +77,9 @@ export default function MapLocationView({
               }}
               key={"origin"}
               pinColor={theme.darkPurple}
-            ></Marker>
+            >
+              <Icon name={"location"} color={theme.darkPurple} size={45} />
+            </Marker>
             <Marker
               coordinate={{
                 longitude: polylineArray[polylineArray?.length - 1]?.longitude,
@@ -82,7 +87,9 @@ export default function MapLocationView({
               }}
               key={"destination"}
               pinColor={theme.secondary}
-            ></Marker>
+            >
+              <Icon name={"location"} color={theme.secondary} size={45} />
+            </Marker>
           </>
         )}
       </MapView>

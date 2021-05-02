@@ -1,38 +1,27 @@
-import { getCenter, getCenterOfBounds, getDistance } from "geolib";
+import { getCenterOfBounds, getDistance } from "geolib";
 import React, { ReactElement, useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
   Keyboard,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { showMessage } from "react-native-flash-message";
 import { debounce } from "lodash";
 
 import FullMapView from "./components/FullMapView";
 import PlaceList from "./components/PlaceList";
-import SearchBottomSheet from "./components/SearchBottomSheet";
-import SearchBottomSheetView from "./components/SearchBottomSheetView";
 import {
   addSearchLocation as addSearchLocationAction,
-  setSearchType as setSearchTypeAction,
   removeSearchLocation as removeSearchLocationAction,
-  getPlaceSearch as getPlaceSearchActon,
+  getPlaceSearch as getPlaceSearchAction,
   getDirections,
 } from "./redux/searchActions";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AutoCompleteInputField from "../../components/AutoCompleteInputField";
-import theme from "../../themes/theme";
 import { tomTomAutoComplete } from "../../api/thirdPartyApis";
-import Icon from "react-native-vector-icons/Ionicons";
-import style from "../../themes/style";
 import AutoCompleteSearchResult from "./components/AutoCompleteSearchResult";
 import { getMiddlePoint } from "./utils/directionsUtils";
 
@@ -46,13 +35,6 @@ export default function SearchScreen({ navigation }): ReactElement {
     false
   );
   const searchBottomSheetRef = useRef<any | null>(null);
-  const autoCompleteRef = useRef<any | null>(null);
-  const openPagesheet = () => {
-    searchBottomSheetRef.current?.open();
-  };
-  const closePagesheet = () => {
-    searchBottomSheetRef.current?.close();
-  };
 
   const searchLocations = useSelector(
     (state) => state.searchReducer.searchLocations
@@ -65,16 +47,10 @@ export default function SearchScreen({ navigation }): ReactElement {
   const searchLoading = useSelector(
     (state) => state.searchReducer.searchLoading
   );
-  const directions = useSelector(
-    (state) => state.searchReducer.cachedDirections
-  );
 
   //Search Actions
   const addSearchLocation = (location) => {
     dispatch(addSearchLocationAction(location));
-  };
-  const setSearchType = (type) => {
-    dispatch(setSearchTypeAction(type));
   };
   const setSearchLoading = (isLoading: boolean) => {
     dispatch(setSearchLoading(isLoading));
@@ -111,7 +87,7 @@ export default function SearchScreen({ navigation }): ReactElement {
     } else {
       middlePoint = getCenterOfBounds(locationCoords);
     }
-    dispatch(getPlaceSearchActon(query, middlePoint));
+    dispatch(getPlaceSearchAction(query, middlePoint));
   };
 
   const autoInputRef = useRef<any | null>(null);
@@ -121,12 +97,6 @@ export default function SearchScreen({ navigation }): ReactElement {
       getPlaceSearch(searchType);
     }
   }, [searchLocations, searchType]);
-
-  useEffect(() => {
-    if (searchLocations.length >= 2) {
-      openPagesheet();
-    }
-  }, [searchLocations]);
 
   const debouncedAutoCompleteCall = debounce(async (query) => {
     if (!query) {
@@ -207,9 +177,6 @@ export default function SearchScreen({ navigation }): ReactElement {
         ) : null}
       </View>
       <FullMapView
-        onIconPress={() => {
-          openPagesheet();
-        }}
         searchLocations={searchLocations}
         onRemovePress={removeSearchLocation}
         searchResult={searchResult}
@@ -222,7 +189,6 @@ export default function SearchScreen({ navigation }): ReactElement {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "coral",
   },
   searchBackground: {
     position: "absolute",

@@ -1,40 +1,26 @@
-import React, { useRef, useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  Linking,
-  Dimensions,
-  FlatList,
-  StyleSheet,
-} from "react-native";
+import React, { useState } from "react";
+import { View, Text, Image, Linking, FlatList, StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import style from "../../themes/style";
 import DestinationMapView from "./components/DestinationMapView";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { getDirections } from "./redux/searchActions";
-import { getPolylineArray } from "./utils/directionsUtils";
 import { getRatingImage } from "./utils/searchUtils";
-import Carousel from "react-native-snap-carousel";
 import theme from "../../themes/theme";
 import Icon from "react-native-vector-icons/Ionicons";
 import FAIcon from "react-native-vector-icons/FontAwesome";
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
+import { currentPolyLineArray } from "./utils/searchSelector";
 
 interface Props {
   navigation: any;
 }
 
 const DestinationDetailsScreen = (props: Props) => {
-  const carouselRef = useRef<any | null>(null);
   const dispatch = useDispatch();
   const [selectedLocationIndex, setSelectedLocationIndex] = useState(0);
   const searchResult = useSelector((state) => state.searchReducer.searchResult);
   const placeIndex = useSelector((state) => state.searchReducer.placeIndex);
-  const currentRouteDirections = useSelector(
-    (state) => state.searchReducer.currentRouteDirections
-  );
+  const polylineArray = useSelector((state) => currentPolyLineArray(state));
   const searchLocations = useSelector(
     (state) => state.searchReducer.searchLocations
   );
@@ -74,15 +60,28 @@ const DestinationDetailsScreen = (props: Props) => {
 
   const imageSource = getRatingImage(place?.rating);
 
-  let polylineArray: any[] = [];
-
-  if (!!currentRouteDirections) {
-    polylineArray = getPolylineArray(currentRouteDirections);
-  }
-
   const _renderOriginLocation = ({ item, index }) => {
+    const isSelected = selectedLocationIndex === index;
     return (
-      <View style={styles.originLocationContainer}>
+      <TouchableOpacity
+        style={styles.originLocationContainer}
+        onPress={() => {
+          dispatch(
+            getDirections(
+              {
+                longitude:
+                  searchLocations[selectedLocationIndex]?.position?.lon,
+                latitude: searchLocations[selectedLocationIndex]?.position?.lat,
+              },
+              {
+                longitude: place?.coordinates?.longitude,
+                latitude: place?.coordinates?.latitude,
+              }
+            )
+          );
+          setSelectedLocationIndex(index);
+        }}
+      >
         <View
           style={{
             flexDirection: "row",
@@ -120,9 +119,15 @@ const DestinationDetailsScreen = (props: Props) => {
               </Text>
             </View>
           </View>
-          <Icon name={"checkmark-circle"} size={30} color={theme.darkPurple} />
+          {isSelected ? (
+            <Icon
+              name={"checkmark-circle"}
+              size={30}
+              color={theme.darkPurple}
+            />
+          ) : null}
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -136,11 +141,13 @@ const DestinationDetailsScreen = (props: Props) => {
       {/* Origins */}
       <View style={styles.originDivider} />
       <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyboardShouldPersistTaps="always"
         data={searchLocations}
         renderItem={_renderOriginLocation}
         style={{ maxHeight: 250, backgroundColor: "white" }}
       />
-      <View style={styles.originDivider} />
 
       {/* Reviews */}
       <View
@@ -240,6 +247,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: "#e3e3e3",
+    width: 300,
   },
   originDivider: {
     borderColor: "#e3e3e3",
