@@ -1,34 +1,22 @@
-import React, { useRef, useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  Linking,
-  Dimensions,
-  FlatList,
-  StyleSheet,
-} from "react-native";
+import React, { useState } from "react";
+import { View, Text, Image, Linking, FlatList, StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import style from "../../themes/style";
 import DestinationMapView from "./components/DestinationMapView";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { getDirections } from "./redux/searchActions";
-import { getPolylineArray } from "../../utils/directionsUtils";
 import { getRatingImage } from "../../utils/searchUtils";
 import theme from "../../themes/theme";
 import Icon from "react-native-vector-icons/Ionicons";
 import FAIcon from "react-native-vector-icons/FontAwesome";
+import { currentPolyLineArray } from "./redux/searchSelector";
 import { State } from "../../../rootReducer";
-import { TomTomOriginResult } from "./redux/searchReducerTypes";
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 interface Props {
   navigation: any;
 }
 
 const DestinationDetailsScreen = (props: Props) => {
-  const carouselRef = useRef<any | null>(null);
   const dispatch = useDispatch();
   const [selectedLocationIndex, setSelectedLocationIndex] = useState(0);
   const searchResult = useSelector(
@@ -37,15 +25,16 @@ const DestinationDetailsScreen = (props: Props) => {
   const placeIndex = useSelector(
     (state: State) => state.searchReducer.placeIndex
   );
-  const currentRouteGeometry = useSelector(
-    (state: State) => state.searchReducer.currentRouteGeometry
-  );
   const originLocations = useSelector(
     (state: State) => state.searchReducer.originLocations
   );
-  const place = searchResult?.businesses[placeIndex] ?? null;
+  const polylineArray = useSelector((state: State) =>
+    currentPolyLineArray(state)
+  );
+  const place = searchResult?.businesses[placeIndex];
   const latitude = place?.coordinates?.latitude;
   const longitude = place?.coordinates?.longitude;
+  console.log(latitude, longitude);
 
   //dynamic in the future (whatever location user wants to see from)
   const pickup = {
@@ -79,15 +68,28 @@ const DestinationDetailsScreen = (props: Props) => {
 
   const imageSource = getRatingImage(place?.rating);
 
-  let polylineArray: any[] = [];
-
-  if (!!currentRouteGeometry) {
-    polylineArray = getPolylineArray(currentRouteGeometry);
-  }
-
   const _renderOriginLocation = ({ item, index }) => {
+    const isSelected = selectedLocationIndex === index;
     return (
-      <View style={styles.originLocationContainer}>
+      <TouchableOpacity
+        style={styles.originLocationContainer}
+        onPress={() => {
+          dispatch(
+            getDirections(
+              {
+                longitude:
+                  originLocations[selectedLocationIndex]?.position?.lon,
+                latitude: originLocations[selectedLocationIndex]?.position?.lat,
+              },
+              {
+                longitude: place?.coordinates?.longitude,
+                latitude: place?.coordinates?.latitude,
+              }
+            )
+          );
+          setSelectedLocationIndex(index);
+        }}
+      >
         <View
           style={{
             flexDirection: "row",
@@ -125,27 +127,36 @@ const DestinationDetailsScreen = (props: Props) => {
               </Text>
             </View>
           </View>
-          <Icon name={"checkmark-circle"} size={30} color={theme.darkPurple} />
+          {isSelected ? (
+            <Icon
+              name={"checkmark-circle"}
+              size={30}
+              color={theme.darkPurple}
+            />
+          ) : null}
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <DestinationMapView
-        location={{ latitude, longitude }}
-        polylineArray={polylineArray}
-      />
-
+      {!!latitude && !!longitude && (
+        <DestinationMapView
+          location={{ latitude, longitude }}
+          polylineArray={polylineArray}
+        />
+      )}
       {/* Origins */}
       <View style={styles.originDivider} />
       <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyboardShouldPersistTaps="always"
         data={originLocations}
         renderItem={_renderOriginLocation}
         style={{ maxHeight: 250, backgroundColor: "white" }}
       />
-      <View style={styles.originDivider} />
 
       {/* Reviews */}
       <View
@@ -192,9 +203,13 @@ const DestinationDetailsScreen = (props: Props) => {
           <TouchableOpacity
             style={{ marginHorizontal: 10 }}
             onPress={() => {
-              Linking.openURL(place?.url).catch((err) =>
-                console.error("Couldn't load page", err)
-              );
+              {
+                if (!!place?.url) {
+                  Linking.openURL(place.url).catch((err) =>
+                    console.error("Couldn't load page", err)
+                  );
+                }
+              }
             }}
           >
             <FAIcon name="yelp" size={35} color={"#d32323"} />
@@ -221,11 +236,6 @@ const DestinationDetailsScreen = (props: Props) => {
         </Text>
 
         <Text style={{ fontWeight: "200" }}>{place?.display_phone}</Text>
-        {!place?.open_now && (
-          <Text style={[style.body4, { color: "green", marginTop: 4 }]}>
-            Open now
-          </Text>
-        )}
       </View>
     </View>
   );
@@ -245,6 +255,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: "#e3e3e3",
+    width: 300,
   },
   originDivider: {
     borderColor: "#e3e3e3",

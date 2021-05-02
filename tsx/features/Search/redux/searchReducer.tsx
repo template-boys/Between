@@ -5,6 +5,7 @@ import { SearchReducer } from "./searchReducerTypes";
 const INITIAL_STATE = {
   originLocations: [],
   searchType: "Coffee",
+  searchResult: undefined,
   searchLoading: false,
   placeIndex: 0,
   typeIndex: 1,

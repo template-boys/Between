@@ -1,6 +1,6 @@
 export interface SearchReducer {
   originLocations: Array<TomTomOriginResult> | [];
-  searchResult?: YelpDestinationsResult;
+  searchResult: YelpDestinationsResult | undefined;
   searchType: string;
   searchLoading: boolean;
   placeIndex: number;
@@ -141,6 +141,7 @@ export interface YelpBusiness {
   location: YelpLocation;
   distance: number;
   transactions: Array<YelpTransactionTypes>;
+  display_phone: string;
 }
 
 export interface YelpLocation {
@@ -151,6 +152,7 @@ export interface YelpLocation {
   state: string;
   zip_code: string;
   country: string;
+  display_address: Array<string>;
 }
 
 export interface YelpCategories {

@@ -1,14 +1,14 @@
 import React, { ReactElement, useState } from "react";
 import RNLocation from "react-native-location";
-import { PixelRatio, Platform, StyleSheet, Text } from "react-native";
+import { PixelRatio, Platform, StyleSheet } from "react-native";
 import { Dimensions } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import MapView, { Marker, Polyline } from "react-native-maps";
+import MapView, { Callout, Marker, Polyline } from "react-native-maps";
 import theme from "../../../themes/theme";
 import mapTheme from "../../../../assets/mapThemes/mapTheme";
-import { setUserLocation } from "../redux/searchActions";
 import { getPolylineArray } from "../../../utils/directionsUtils";
 import { State } from "../../../../rootReducer";
+import { setPlaceIndex, setUserLocation } from "../redux/searchActions";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -30,7 +30,6 @@ export default function FullMapView({
   const dispatch = useDispatch();
   const [pressedMarker, setPressedMarker] = React.useState(-1);
   const mapRef = React.useRef<any | null>(null);
-  const placeMarker = React.useRef<any | null>(null);
 
   const placeIndex = useSelector(
     (state: State) => state.searchReducer.placeIndex
@@ -50,10 +49,10 @@ export default function FullMapView({
     (state: State) => state.searchReducer.currentRouteGeometry
   );
   const region = {
-    latitude: userLocation?.latitude || 42.65847,
-    longitude: userLocation?.longitude || 21.1607,
-    latitudeDelta: 0.5,
-    longitudeDelta: 0.5,
+    latitude: userLocation?.latitude || 39.8283,
+    longitude: userLocation?.longitude || -98.5795,
+    latitudeDelta: 50,
+    longitudeDelta: 50,
   };
   const [originMarkers, setOriginMarkers] = useState<any>([]);
   const [destinationMarkers, setDestinationMarkers] = useState<any>([]);
@@ -146,7 +145,7 @@ export default function FullMapView({
       );
     }, 250);
     return () => {};
-  }, [originMarkers, destinationMarkers, searchType, placeIndex]);
+  }, [originMarkers, destinationMarkers, searchType, placeIndex, mapHeight]);
 
   let polylineArray;
 
@@ -181,26 +180,24 @@ export default function FullMapView({
           onPress={(e) => {
             e.stopPropagation();
             setPressedMarker(i);
+            dispatch(setPlaceIndex(i));
           }}
         ></Marker>
       ))}
       {destinationMarkers.map((marker, i) => {
         const markerStyle =
           placeIndex === i
-            ? { zIndex: 10, opacity: 1 }
-            : { zIndex: 0, opacity: 0.5, height: 10, width: 10 };
+            ? { zIndex: 10, height: 100, width: 100 }
+            : { zIndex: 0 };
         return (
           <Marker
-            key={`${marker?.latitude},${marker?.longitude},${i}`}
+            key={`${marker?.latitude},${marker?.longitude},${i} ${marker.description}`}
             identifier={`id${i}`}
             coordinate={marker}
             description={marker.description}
+            opacity={placeIndex === i ? 1 : 0.3}
             pinColor={placeIndex === i ? marker.pinColor : theme.lightGrey}
             style={markerStyle}
-            onPress={(e) => {
-              e.stopPropagation();
-              setPressedMarker(i);
-            }}
           ></Marker>
         );
       })}
@@ -211,7 +208,7 @@ export default function FullMapView({
 const styles = StyleSheet.create({
   mapStyles: {
     position: "absolute",
-    zIndex: -10,
+    zIndex: -2,
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT / 1.5,
     flex: 1,

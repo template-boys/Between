@@ -17,7 +17,7 @@ import {
   addOriginLocation as addOriginLocationAction,
   setSearchType as setSearchTypeAction,
   removeOriginLocation as removeOriginLocationAction,
-  getPlaceSearch as getPlaceSearchActon,
+  getPlaceSearch as getPlaceSearchAction,
   getDirections,
 } from "./redux/searchActions";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -37,13 +37,6 @@ export default function SearchScreen({ navigation }): ReactElement {
     false
   );
   const searchBottomSheetRef = useRef<any | null>(null);
-  const autoCompleteRef = useRef<any | null>(null);
-  const openPagesheet = () => {
-    searchBottomSheetRef.current?.open();
-  };
-  const closePagesheet = () => {
-    searchBottomSheetRef.current?.close();
-  };
 
   const originLocations = useSelector(
     (state: State) => state.searchReducer.originLocations
@@ -60,16 +53,10 @@ export default function SearchScreen({ navigation }): ReactElement {
   const searchLoading = useSelector(
     (state: State) => state.searchReducer.searchLoading
   );
-  const directions = useSelector(
-    (state: State) => state.searchReducer.cachedDirections
-  );
 
   //Search Actions
   const addOriginLocation = (location) => {
     dispatch(addOriginLocationAction(location));
-  };
-  const setSearchType = (type) => {
-    dispatch(setSearchTypeAction(type));
   };
   const setSearchLoading = (isLoading: boolean) => {
     dispatch(setSearchLoading(isLoading));
@@ -106,7 +93,7 @@ export default function SearchScreen({ navigation }): ReactElement {
     } else {
       middlePoint = getCenterOfBounds(locationCoords);
     }
-    dispatch(getPlaceSearchActon(query, middlePoint));
+    dispatch(getPlaceSearchAction(query, middlePoint));
   };
 
   const autoInputRef = useRef<any | null>(null);
@@ -116,12 +103,6 @@ export default function SearchScreen({ navigation }): ReactElement {
       getPlaceSearch(searchType);
     }
   }, [originLocations, searchType]);
-
-  useEffect(() => {
-    if (originLocations.length >= 2) {
-      openPagesheet();
-    }
-  }, [originLocations]);
 
   const debouncedAutoCompleteCall = debounce(async (query) => {
     if (!query) {
@@ -202,9 +183,6 @@ export default function SearchScreen({ navigation }): ReactElement {
         ) : null}
       </View>
       <FullMapView
-        onIconPress={() => {
-          openPagesheet();
-        }}
         originLocations={originLocations}
         onRemovePress={removeOriginLocation}
         searchResult={searchResult}

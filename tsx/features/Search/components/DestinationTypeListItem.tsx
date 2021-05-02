@@ -25,9 +25,15 @@ export default function DestinationTypeListItem({
 }: Props): ReactElement {
   const dispatch = useDispatch();
   return index === 0 ? (
-    <TouchableOpacity style={styles.searchButton} onPress={() => {
-        
-    }}>
+    <TouchableOpacity
+      style={[
+        styles.searchButton,
+        isSelected && { borderColor: theme.darkPurple },
+      ]}
+      onPress={() => {
+        setCurrentTypeIndex(0);
+      }}
+    >
       <Icon name={"search-outline"} size={20} color={"#a8a8a8"} />
     </TouchableOpacity>
   ) : (
