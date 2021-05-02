@@ -5,10 +5,6 @@ import {
 } from "../../../api/thirdPartyApis";
 import actionTypes from "./searchActionTypes";
 
-export const setSessionID = () => ({
-  type: actionTypes.SET_AUTO_COMPLETE_SESSION_ID,
-});
-
 export const setSearchType = (type) => ({
   type: actionTypes.SET_SEARCH_TYPE,
   payload: type,
@@ -19,7 +15,7 @@ export const setSearchLoading = (isLoading) => ({
   payload: isLoading,
 });
 
-export const addSearchLocation = (newLocation) => {
+export const addOriginLocation = (newLocation) => {
   let returnLocation;
   if (typeof newLocation?.position === "string") {
     const splitPosition = newLocation?.position.split(",");
@@ -45,7 +41,7 @@ export const setSearchResult = (searchResult) => ({
   searchResult,
 });
 
-export const removeSearchLocation = (index) => {
+export const removeOriginLocation = (index) => {
   return {
     type: actionTypes.REMOVE_LOCATION_INDEX,
     index,
@@ -90,7 +86,7 @@ export const setUserGeocodeLocation = (location) => {
   return async (dispatch, getState) => {
     const res = await reverseGeocode(location);
     res?.data?.addresses[0] &&
-      dispatch(addSearchLocation(res?.data?.addresses[0]));
+      dispatch(addOriginLocation(res?.data?.addresses[0]));
   };
 };
 
@@ -115,7 +111,8 @@ export const getDirections = (origin, destination) => {
     dispatch(setDirectionsLoading(true));
     const state = getState();
     const cachedDirections = state.searchReducer.cachedDirections;
-    let directions;
+    let res;
+    let geometry;
 
     cachedDirections.forEach((cacheItem: any) => {
       if (
@@ -125,20 +122,20 @@ export const getDirections = (origin, destination) => {
         cacheItem?.destination?.longitude === destination?.longitude
       ) {
         console.log("we have those directions cached");
-        directions = cacheItem.directions;
+        geometry = cacheItem.geometry;
       }
     });
 
-    if (!directions) {
-      directions = await mapBoxDirectionsSearch(origin, destination);
-      directions = directions?.data?.routes[0]?.geometry;
+    if (!geometry) {
+      res = await mapBoxDirectionsSearch(origin, destination);
+      geometry = res?.data?.routes[0]?.geometry;
       if (state.searchReducer.cachedDirections?.length >= 25) {
         dispatch(removeFirstCachedDirection());
       }
-      dispatch(addCacheDirections({ origin, destination, directions }));
+      dispatch(addCacheDirections({ origin, destination, geometry }));
     }
 
-    dispatch(setDirections(directions));
+    dispatch(setDirections(geometry));
     dispatch(setDirectionsLoading(false));
   };
 };

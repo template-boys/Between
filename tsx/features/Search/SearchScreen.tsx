@@ -14,15 +14,13 @@ import { debounce } from "lodash";
 import FullMapView from "./components/FullMapView";
 import PlaceList from "./components/PlaceList";
 import {
-  addSearchLocation as addSearchLocationAction,
+  addOriginLocation as addOriginLocationAction,
   setSearchType as setSearchTypeAction,
-  removeSearchLocation as removeSearchLocationAction,
+  removeOriginLocation as removeOriginLocationAction,
   getPlaceSearch as getPlaceSearchActon,
   getDirections,
 } from "./redux/searchActions";
-import {
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AutoCompleteInputField from "../../components/AutoCompleteInputField";
 import { tomTomAutoComplete } from "../../api/thirdPartyApis";
 import AutoCompleteSearchResult from "./components/AutoCompleteSearchResult";
@@ -47,14 +45,18 @@ export default function SearchScreen({ navigation }): ReactElement {
     searchBottomSheetRef.current?.close();
   };
 
-  const searchLocations = useSelector(
-    (state: State) => state.searchReducer.searchLocations
+  const originLocations = useSelector(
+    (state: State) => state.searchReducer.originLocations
   );
   const searchResult = useSelector(
     (state: State) => state.searchReducer.searchResult?.businesses ?? []
   );
-  const userLocation = useSelector((state: State) => state.searchReducer.userLocation);
-  const searchType = useSelector((state: State) => state.searchReducer.searchType);
+  const userLocation = useSelector(
+    (state: State) => state.searchReducer.userLocation
+  );
+  const searchType = useSelector(
+    (state: State) => state.searchReducer.searchType
+  );
   const searchLoading = useSelector(
     (state: State) => state.searchReducer.searchLoading
   );
@@ -63,8 +65,8 @@ export default function SearchScreen({ navigation }): ReactElement {
   );
 
   //Search Actions
-  const addSearchLocation = (location) => {
-    dispatch(addSearchLocationAction(location));
+  const addOriginLocation = (location) => {
+    dispatch(addOriginLocationAction(location));
   };
   const setSearchType = (type) => {
     dispatch(setSearchTypeAction(type));
@@ -72,15 +74,15 @@ export default function SearchScreen({ navigation }): ReactElement {
   const setSearchLoading = (isLoading: boolean) => {
     dispatch(setSearchLoading(isLoading));
   };
-  const removeSearchLocation = (index: number) => {
-    dispatch(removeSearchLocationAction(index));
+  const removeOriginLocation = (index: number) => {
+    dispatch(removeOriginLocationAction(index));
   };
   const setPlaceIndex = (index: number) => {
     dispatch(setPlaceIndex(index));
   };
   const getPlaceSearch = async (query) => {
     let locationCoords: any[] = [];
-    searchLocations.forEach((location) => {
+    originLocations.forEach((location) => {
       locationCoords.push({
         latitude: location?.position?.lat,
         longitude: location?.position?.lon,
@@ -110,16 +112,16 @@ export default function SearchScreen({ navigation }): ReactElement {
   const autoInputRef = useRef<any | null>(null);
 
   useEffect(() => {
-    if (searchLocations.length > 1) {
+    if (originLocations.length > 1) {
       getPlaceSearch(searchType);
     }
-  }, [searchLocations, searchType]);
+  }, [originLocations, searchType]);
 
   useEffect(() => {
-    if (searchLocations.length >= 2) {
+    if (originLocations.length >= 2) {
       openPagesheet();
     }
-  }, [searchLocations]);
+  }, [originLocations]);
 
   const debouncedAutoCompleteCall = debounce(async (query) => {
     if (!query) {
@@ -167,7 +169,7 @@ export default function SearchScreen({ navigation }): ReactElement {
             },
           }}
         />
-        {searchLocations.length > 1 && !isAutoCompleteFocus && (
+        {originLocations.length > 1 && !isAutoCompleteFocus && (
           <PlaceList
             searchResult={searchResult}
             searchLoading={searchLoading}
@@ -186,7 +188,7 @@ export default function SearchScreen({ navigation }): ReactElement {
             renderItem={({ item, index }) => (
               <TouchableOpacity
                 onPress={() => {
-                  addSearchLocation(item);
+                  addOriginLocation(item);
                   setIsAutoCompleteFocus(false);
                   Keyboard.dismiss();
                   setAutoCompleteValues([]);
@@ -203,8 +205,8 @@ export default function SearchScreen({ navigation }): ReactElement {
         onIconPress={() => {
           openPagesheet();
         }}
-        searchLocations={searchLocations}
-        onRemovePress={removeSearchLocation}
+        originLocations={originLocations}
+        onRemovePress={removeOriginLocation}
         searchResult={searchResult}
         mapHeight={mapHeight}
       />

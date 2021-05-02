@@ -19,6 +19,7 @@ import theme from "../../themes/theme";
 import Icon from "react-native-vector-icons/Ionicons";
 import FAIcon from "react-native-vector-icons/FontAwesome";
 import { State } from "../../../rootReducer";
+import { TomTomOriginResult } from "./redux/searchReducerTypes";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -36,11 +37,11 @@ const DestinationDetailsScreen = (props: Props) => {
   const placeIndex = useSelector(
     (state: State) => state.searchReducer.placeIndex
   );
-  const currentRouteDirections = useSelector(
-    (state: State) => state.searchReducer.currentRouteDirections
+  const currentRouteGeometry = useSelector(
+    (state: State) => state.searchReducer.currentRouteGeometry
   );
-  const searchLocations = useSelector(
-    (state: State) => state.searchReducer.searchLocations
+  const originLocations = useSelector(
+    (state: State) => state.searchReducer.originLocations
   );
   const place = searchResult?.businesses[placeIndex] ?? null;
   const latitude = place?.coordinates?.latitude;
@@ -48,8 +49,8 @@ const DestinationDetailsScreen = (props: Props) => {
 
   //dynamic in the future (whatever location user wants to see from)
   const pickup = {
-    latitude: searchLocations[selectedLocationIndex]?.position?.lat,
-    longitude: searchLocations[selectedLocationIndex]?.position?.lon,
+    latitude: originLocations[selectedLocationIndex]?.position?.lat,
+    longitude: originLocations[selectedLocationIndex]?.position?.lon,
   };
 
   const lyftURL = `https://lyft.com/ride?id=lyft&pickup[latitude]=${pickup.latitude}&pickup[longitude]=${pickup.longitude}&destination[latitude]=${latitude}&destination[longitude]=${longitude}&partner=lL5keX91WP4D`;
@@ -65,8 +66,8 @@ const DestinationDetailsScreen = (props: Props) => {
     dispatch(
       getDirections(
         {
-          longitude: searchLocations[selectedLocationIndex]?.position?.lon,
-          latitude: searchLocations[selectedLocationIndex]?.position?.lat,
+          longitude: originLocations[selectedLocationIndex]?.position?.lon,
+          latitude: originLocations[selectedLocationIndex]?.position?.lat,
         },
         {
           longitude: place?.coordinates?.longitude,
@@ -80,8 +81,8 @@ const DestinationDetailsScreen = (props: Props) => {
 
   let polylineArray: any[] = [];
 
-  if (!!currentRouteDirections) {
-    polylineArray = getPolylineArray(currentRouteDirections);
+  if (!!currentRouteGeometry) {
+    polylineArray = getPolylineArray(currentRouteGeometry);
   }
 
   const _renderOriginLocation = ({ item, index }) => {
@@ -140,7 +141,7 @@ const DestinationDetailsScreen = (props: Props) => {
       {/* Origins */}
       <View style={styles.originDivider} />
       <FlatList
-        data={searchLocations}
+        data={originLocations}
         renderItem={_renderOriginLocation}
         style={{ maxHeight: 250, backgroundColor: "white" }}
       />

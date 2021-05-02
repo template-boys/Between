@@ -17,13 +17,13 @@ interface Props {
   diameter?: number;
   onIconPress?: () => void;
   onRemovePress: (index: number) => void;
-  searchLocations: any;
+  originLocations: any;
   searchResult: any;
   mapHeight: number;
 }
 
 export default function FullMapView({
-  searchLocations,
+  originLocations,
   searchResult,
   mapHeight,
 }: Props): ReactElement {
@@ -32,16 +32,22 @@ export default function FullMapView({
   const mapRef = React.useRef<any | null>(null);
   const placeMarker = React.useRef<any | null>(null);
 
-  const placeIndex = useSelector((state: State) => state.searchReducer.placeIndex);
-  const userLocation = useSelector((state: State) => state.searchReducer.userLocation);
-  const searchType = useSelector((state: State) => state.searchReducer.searchType);
+  const placeIndex = useSelector(
+    (state: State) => state.searchReducer.placeIndex
+  );
+  const userLocation = useSelector(
+    (state: State) => state.searchReducer.userLocation
+  );
+  const searchType = useSelector(
+    (state: State) => state.searchReducer.searchType
+  );
 
   const searchLoading = useSelector(
     (state: State) => state.searchReducer.searchLoading
   );
 
-  const currentRouteDirections = useSelector(
-    (state: State) => state.searchReducer.currentRouteDirections
+  const currentRouteGeometry = useSelector(
+    (state: State) => state.searchReducer.currentRouteGeometry
   );
   const region = {
     latitude: userLocation?.latitude || 42.65847,
@@ -53,7 +59,7 @@ export default function FullMapView({
   const [destinationMarkers, setDestinationMarkers] = useState<any>([]);
 
   React.useEffect(() => {
-    let markers = searchLocations.map((location) => {
+    let markers = originLocations.map((location) => {
       return {
         latitude: location?.position?.lat,
         longitude: location?.position?.lon,
@@ -64,7 +70,7 @@ export default function FullMapView({
       };
     });
     setOriginMarkers(markers);
-  }, [searchLocations]);
+  }, [originLocations]);
 
   React.useEffect(() => {
     let markers = searchResult.map((result) => {
@@ -114,7 +120,7 @@ export default function FullMapView({
   React.useEffect(() => {
     //used if there are 1 or 0 locations set.
     const setToRegion = originMarkers.length === 1 ? originMarkers[0] : region;
-    if (searchLocations.length < 2) {
+    if (originLocations.length < 2) {
       mapRef.current.animateToRegion({
         ...setToRegion,
         latitudeDelta: 0.4,
@@ -144,8 +150,8 @@ export default function FullMapView({
 
   let polylineArray;
 
-  if (!!currentRouteDirections) {
-    polylineArray = getPolylineArray(currentRouteDirections);
+  if (!!currentRouteGeometry) {
+    polylineArray = getPolylineArray(currentRouteGeometry);
   }
 
   return (

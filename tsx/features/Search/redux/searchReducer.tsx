@@ -1,10 +1,9 @@
 import { v4 as UUIDGenerate } from "uuid";
 import actionTypes from "./searchActionTypes";
+import { SearchReducer } from "./searchReducerTypes";
 
 const INITIAL_STATE = {
-  sessionID: UUIDGenerate(),
-  searchLocations: [],
-  searchResult: null,
+  originLocations: [],
   searchType: "Coffee",
   searchLoading: false,
   placeIndex: 0,
@@ -12,17 +11,13 @@ const INITIAL_STATE = {
   cacheSearchResults: [],
   directionsLoading: false,
   cachedDirections: [],
-  userLocation: undefined,
-  currentRouteDirections: undefined,
 };
 
-const searchReducer = (state: SearchReducer = INITIAL_STATE, action): SearchReducer => {
+const searchReducer = (
+  state: SearchReducer = INITIAL_STATE,
+  action
+): SearchReducer => {
   switch (action.type) {
-    case actionTypes.SET_AUTO_COMPLETE_SESSION_ID:
-      return {
-        ...state,
-        sessionID: UUIDGenerate(),
-      };
     case actionTypes.SET_SEARCH_TYPE:
       return {
         ...state,
@@ -36,7 +31,7 @@ const searchReducer = (state: SearchReducer = INITIAL_STATE, action): SearchRedu
     case actionTypes.ADD_LOCATION:
       return {
         ...state,
-        searchLocations: [...state.searchLocations, action.newLocation],
+        originLocations: [...state.originLocations, action.newLocation],
       };
     case actionTypes.SET_SEARCH_RESULT:
       return {
@@ -49,11 +44,11 @@ const searchReducer = (state: SearchReducer = INITIAL_STATE, action): SearchRedu
         placeIndex: action.index,
       };
     case actionTypes.REMOVE_LOCATION_INDEX:
-      const tempArray = [...state.searchLocations];
+      const tempArray = [...state.originLocations];
       tempArray.splice(action.index, 1);
       return {
         ...state,
-        searchLocations: tempArray,
+        originLocations: tempArray,
       };
     case actionTypes.ADD_CACHED_SEARCH_RESULT:
       return {
@@ -83,7 +78,7 @@ const searchReducer = (state: SearchReducer = INITIAL_STATE, action): SearchRedu
     case actionTypes.SET_DIRECTIONS:
       return {
         ...state,
-        currentRouteDirections: action.directions,
+        currentRouteGeometry: action.directions,
       };
     case actionTypes.ADD_CACHED_DIRECTION:
       return {
