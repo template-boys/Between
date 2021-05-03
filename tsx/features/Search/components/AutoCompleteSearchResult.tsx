@@ -52,7 +52,7 @@ const AutoCompleteSearchResult = ({
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Icon name={"location-outline"} size={30} color={theme.darkPurple} />
+      <Icon name={"location-outline"} size={30} color={theme.secondary} />
       <View style={{ marginLeft: 10, marginRight: 25 }}>
         <Text style={[style.medium, styles.header]}>{getHeader()}</Text>
         <Text style={style.regular}>{getSubText()}</Text>

@@ -25,6 +25,7 @@ export interface CustomInputProps extends TextInputProps {
   onRightIconPress?: () => void | null | undefined;
   rightIconSize?: number;
   leftIconSize?: number;
+  leftIconColor?: string;
 }
 
 const CustomInput = ({
@@ -35,6 +36,7 @@ const CustomInput = ({
   iconName,
   hasError,
   rightIconName,
+  leftIconColor,
   ...props
 }: CustomInputProps) => {
   const [text, setText] = useState<string>("");
@@ -55,7 +57,7 @@ const CustomInput = ({
             <Icon
               name={iconName}
               size={props.leftIconSize}
-              color={!!hasError ? theme.errorRed : theme.darkPurple}
+              color={!!hasError ? theme.errorRed : leftIconColor}
             />
           </TouchableOpacity>
         )}
@@ -119,5 +121,6 @@ const styles = StyleSheet.create({
 CustomInput.defaultProps = {
   rightIconSize: 24,
   leftIconSize: 24,
+  leftIconColor: theme.darkPurple,
 };
 export default CustomInput;

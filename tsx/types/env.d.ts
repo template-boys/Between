@@ -6,4 +6,5 @@ declare module "@env" {
   export const MAP_BOX_API_KEY: string;
   export const HERE_API_KEY: string;
   export const TOM_TOM_KEY: string;
+  export const GOOGLE_SIGN_IN_WEB_KEY: string;
 }

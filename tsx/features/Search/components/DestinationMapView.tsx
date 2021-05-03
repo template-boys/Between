@@ -67,9 +67,7 @@ export default function MapLocationView({
             <Polyline
               coordinates={polylineArray}
               strokeWidth={5}
-              strokeColor="#02C39A"
-              // strokeColors={[theme.darkPurple, theme.secondary]}
-              fillColor="#02C39A"
+              strokeColors={[theme.secondary, theme.darkPurple]}
             />
             <Marker
               coordinate={{
@@ -77,20 +75,17 @@ export default function MapLocationView({
                 latitude: polylineArray[0]?.latitude,
               }}
               key={"origin"}
-              pinColor={theme.darkPurple}
-            >
-              <Icon name={"location"} color={theme.darkPurple} size={45} />
-            </Marker>
+              pinColor={theme.secondary}
+            />
+
             <Marker
               coordinate={{
                 longitude: polylineArray[polylineArray?.length - 1]?.longitude,
                 latitude: polylineArray[polylineArray?.length - 1]?.latitude,
               }}
               key={"destination"}
-              pinColor={theme.secondary}
-            >
-              <Icon name={"location"} color={theme.secondary} size={45} />
-            </Marker>
+              pinColor={theme.darkPurple}
+            />
           </>
         )}
       </MapView>

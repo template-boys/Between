@@ -1,7 +1,10 @@
 import React, { ReactElement } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
-import { setDestinationIndex, setDestinationType } from "../redux/searchActions";
+import {
+  setDestinationIndex,
+  setDestinationType,
+} from "../redux/searchActions";
 import { types } from "../constants/searchConstants";
 import theme from "../../../themes/theme";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -12,29 +15,32 @@ interface Props {
   destinationItem: any;
   typeCarouselRef: any;
   carouselRef: any;
-  setCurrentTypeIndex: (number) => void;
+  onIconPress: () => void;
+  setCurrentTypeIndex: (number: number) => void;
 }
 
-export default function DestinationTypeListItem({
+export default function DestinationType({
   isSelected,
   index,
   destinationItem,
   typeCarouselRef,
   carouselRef,
+  onIconPress,
   setCurrentTypeIndex,
 }: Props): ReactElement {
   const dispatch = useDispatch();
   return index === 0 ? (
     <TouchableOpacity
-      style={[
-        styles.searchButton,
-        isSelected && { borderColor: theme.darkPurple },
-      ]}
+      style={[styles.searchButton, isSelected && styles.selectedIcon]}
       onPress={() => {
-        setCurrentTypeIndex(0);
+        onIconPress();
       }}
     >
-      <Icon name={"search-outline"} size={20} color={"#a8a8a8"} />
+      <Icon
+        name={"search-outline"}
+        size={20}
+        color={isSelected ? "white" : theme.darkPurple}
+      />
     </TouchableOpacity>
   ) : (
     <TouchableOpacity
@@ -52,7 +58,7 @@ export default function DestinationTypeListItem({
     >
       <Text
         style={{
-          color: isSelected ? "white" : "#a8a8a8",
+          color: isSelected ? "white" : theme.darkPurple,
           fontWeight: "500",
           justifyContent: "center",
         }}
@@ -86,6 +92,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   searchButton: {
+    flexDirection: "row",
     backgroundColor: "white",
     borderColor: "#F2F2F2",
     borderWidth: 2,
@@ -95,5 +102,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 5,
+  },
+  selectedIcon: {
+    backgroundColor: theme.darkPurple,
+    borderColor: theme.darkPurple,
   },
 });

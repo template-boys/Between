@@ -1,3 +1,4 @@
+import { Dispatch } from "react";
 import { State } from "../../../../rootReducer";
 import {
   mapBoxDirectionsSearch,
@@ -5,14 +6,20 @@ import {
   yelpSearch,
 } from "../../../api/thirdPartyApis";
 import { SearchActionTypes } from "./searchActionTypes";
-import { Coordinate } from "./searchReducerTypes";
+import {
+  CachedDestinationsItem,
+  CachedGeometryItem,
+  Coordinate,
+  SearchAction,
+  YelpBusiness,
+} from "./searchReducerTypes";
 
-export const setDestinationType = (type) => ({
+export const setDestinationType = (type: string) => ({
   type: SearchActionTypes.SET_DESTINATION_TYPE,
   payload: type,
 });
 
-export const setDestinationSearchLoading = (isLoading) => ({
+export const setDestinationSearchLoading = (isLoading: boolean) => ({
   type: SearchActionTypes.SET_DESTINATION_SEARCH_LOADING,
   payload: isLoading,
 });
@@ -34,68 +41,71 @@ export const addOrigin = (origin) => {
   }
   return {
     type: SearchActionTypes.ADD_ORIGIN,
-    newOrigin: returnOrigin,
+    payload: returnOrigin,
   };
 };
 
-export const setDestinations = (destinations) => ({
+export const setDestinations = (destinations: Array<YelpBusiness>) => ({
   type: SearchActionTypes.SET_DESTINATIONS,
-  destinations,
+  payload: destinations,
 });
 
-export const removeOriginLocation = (index) => {
-  return {
-    type: SearchActionTypes.REMOVE_ORIGIN_INDEX,
-    index,
+export const removeOriginLocation = (index: number) => {
+  return (dispatch: Dispatch<SearchAction>, getState: () => State) => {
+    const state = getState();
+    const tempArray = [...state.searchReducer.origins];
+    tempArray.splice(index, 1);
+    dispatch({
+      type: SearchActionTypes.REMOVE_ORIGIN_INDEX,
+      payload: tempArray,
+    });
   };
 };
 
 export const setDestinationIndex = (index: number) => {
   return {
     type: SearchActionTypes.SET_DESTINATION_INDEX,
-    index,
+    payload: index,
   };
 };
 
-export const addCachedDestination = (input) => {
+export const addCachedDestination = (payload: CachedDestinationsItem) => {
   return {
     type: SearchActionTypes.ADD_CACHED_DESTINATION,
-    input,
+    payload,
   };
 };
 
-export const removeFirstCachedDestination = () => {
-  return {
-    type: SearchActionTypes.REMOVE_FIRST_CACHED_DESTINATION,
-  };
+export const removeFirstCachedDestination = {
+  type: SearchActionTypes.REMOVE_FIRST_CACHED_DESTINATION,
 };
 
-export const setRouteLoading = (isLoading) => {
+export const setRouteLoading = (isLoading: boolean) => {
   return {
     type: SearchActionTypes.SET_ROUTES_LOADING,
-    isLoading,
+    payload: isLoading,
   };
 };
 
 export const setUserLocation = (location) => {
-  return async (dispatch, getState) => {
+  return async (dispatch: Dispatch<SearchAction | any>) => {
     dispatch(setUserGeocodeLocation(location));
-    dispatch({ type: SearchActionTypes.SET_USER_LOCATION, location });
+    dispatch({ type: SearchActionTypes.SET_USER_LOCATION, payload: location });
   };
 };
 
 export const setUserGeocodeLocation = (location) => {
-  return async (dispatch, getState) => {
+  return async (dispatch: Dispatch<SearchAction>) => {
     const res = await reverseGeocode(location);
     res?.data?.addresses[0] && dispatch(addOrigin(res?.data?.addresses[0]));
   };
 };
 
 //Sets the current geometry (whatever place is selected)
-export const setRouteGeometry = (routeGeometry) => {
+export const setRouteGeometry = (routeGeometry: string) => {
   return {
     type: SearchActionTypes.SET_ROUTE_GEOMETRY,
-    routeGeometry,
+    payload: routeGeometry,
   };
 };
 
@@ -107,8 +117,11 @@ export const setRouteGeometry = (routeGeometry) => {
 // Checks cache before hitting API.
 // If we already searched for those locations
 // use that instead
-export const getRouteGeometries = (origin, destination) => {
-  return async (dispatch, getState) => {
+export const getRouteGeometries = (
+  origin: Coordinate,
+  destination: Coordinate
+) => {
+  return async (dispatch: Dispatch<SearchAction>, getState: () => State) => {
     dispatch(setRouteLoading(true));
     const state = getState();
     const cachedRouteGeometries = state.searchReducer.cachedRouteGeometries;
@@ -131,7 +144,7 @@ export const getRouteGeometries = (origin, destination) => {
       res = await mapBoxDirectionsSearch(origin, destination);
       geometry = res?.data?.routes[0]?.geometry;
       if (state.searchReducer.cachedRouteGeometries?.length >= 25) {
-        dispatch(removeFirstCachedDirection());
+        dispatch(removeFirstCachedDirection);
       }
       dispatch(addCachedRouteGeometry({ origin, destination, geometry }));
     }
@@ -156,7 +169,7 @@ export const getDestinationSearch = (
   query: string,
   middlePoint: Coordinate
 ) => {
-  return async (dispatch, getState) => {
+  return async (dispatch: Dispatch<SearchAction>, getState: () => State) => {
     dispatch(setDestinationSearchLoading(true));
     let result;
     const state: State = getState();
@@ -174,7 +187,7 @@ export const getDestinationSearch = (
       result = await yelpSearch(query, middlePoint);
       result = result?.data?.businesses ?? [];
       if (state.searchReducer.cachedDestinations.length >= 8) {
-        dispatch(removeFirstCachedDestination());
+        dispatch(removeFirstCachedDestination);
       }
       dispatch(addCachedDestination({ query, middlePoint, result }));
     }
@@ -184,16 +197,16 @@ export const getDestinationSearch = (
 };
 
 //Adds an encoded directions call to list of cached directions.
-export const addCachedRouteGeometry = (direction) => {
+export const addCachedRouteGeometry = (
+  geometryCacheItem: CachedGeometryItem
+) => {
   return {
     type: SearchActionTypes.ADD_CACHED_ROUTE_GEOMETRY,
-    direction,
+    payload: geometryCacheItem,
   };
 };
 
 //Removes first direction in cache array. Used to keep RAM smaller
-export const removeFirstCachedDirection = () => {
-  return {
-    type: SearchActionTypes.REMOVE_FIRST_CACHED_ROUTE_GEOMETRY,
-  };
+export const removeFirstCachedDirection = {
+  type: SearchActionTypes.REMOVE_FIRST_CACHED_ROUTE_GEOMETRY,
 };

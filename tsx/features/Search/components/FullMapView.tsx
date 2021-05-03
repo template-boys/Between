@@ -65,7 +65,7 @@ export default function FullMapView({
         description: location?.poi?.name ?? location?.address?.freeformAddress,
         latitudeDelta: 5,
         longitudeDelta: 5,
-        pinColor: theme.darkPurple,
+        pinColor: theme.secondary,
       };
     });
     setOriginMarkers(markers);
@@ -78,7 +78,7 @@ export default function FullMapView({
         longitude: result?.coordinates?.longitude,
         latitudeDelta: 5,
         longitudeDelta: 5,
-        pinColor: theme.secondary,
+        pinColor: theme.darkPurple,
       };
     });
     setDestinationMarkers(markers);

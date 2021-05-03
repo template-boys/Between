@@ -1,20 +1,14 @@
 import {
-  GOOGLE_API_KEY_1,
-  GOOGLE_API_KEY_2,
-  YELP_API_KEY,
-  MAP_BOX_API_KEY,
-  HERE_API_KEY,
-  TOM_TOM_KEY,
+  YELP_API_KEY as yelpKey,
+  MAP_BOX_API_KEY as mapBoxKey,
+  TOM_TOM_KEY as tomTomKey,
+  GOOGLE_SIGN_IN_WEB_KEY as googleSignInWebKey,
 } from "@env";
 
-export const getGoogleApiKey = () => {
-  return Math.random() < 0.5 ? GOOGLE_API_KEY_1 : GOOGLE_API_KEY_2;
-};
+export const YELP_API_KEY = yelpKey;
 
-export const getYelpApiKey = () => YELP_API_KEY;
+export const MAP_BOX_API_KEY = mapBoxKey;
 
-export const getMapBoxKey = () => MAP_BOX_API_KEY;
+export const TOM_TOM_KEY = tomTomKey;
 
-export const getHereApiKey = () => HERE_API_KEY;
-
-export const getTomTomKey = () => TOM_TOM_KEY;
+export const GOOGLE_SIGN_IN_WEB_KEY = googleSignInWebKey;

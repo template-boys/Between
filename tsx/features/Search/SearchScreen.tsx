@@ -4,7 +4,9 @@ import {
   Dimensions,
   FlatList,
   Keyboard,
+  NativeSyntheticEvent,
   StyleSheet,
+  TextInputChangeEventData,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -12,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
 
 import FullMapView from "./components/FullMapView";
-import PlaceList from "./components/PlaceList";
+import DestinationList from "./components/DestinationList";
 import {
   addOrigin as addOriginLocationAction,
   setDestinationType as setDestinationTypeAction,
@@ -56,7 +58,7 @@ export default function SearchScreen({ navigation }): ReactElement {
   );
 
   //Search Actions
-  const addOriginLocation = (location) => {
+  const addOriginLocation = (location: TomTomOriginResult) => {
     dispatch(addOriginLocationAction(location));
   };
   const setSearchLoading = (isLoading: boolean) => {
@@ -68,15 +70,15 @@ export default function SearchScreen({ navigation }): ReactElement {
   const setDestinationIndex = (index: number) => {
     dispatch(setDestinationIndex(index));
   };
-  const getPlaceSearch = async (query) => {
+  const getPlaceSearch = async (query: string) => {
     let locationCoords: Coordinate[] = [];
-    origins.forEach((location) => {
+    origins.forEach((location: TomTomOriginResult) => {
       locationCoords.push({
         latitude: location?.position?.lat,
         longitude: location?.position?.lon,
       });
     });
-    let middlePoint;
+    let middlePoint: Coordinate;
 
     if (locationCoords.length === 2) {
       const distance = getDistance(locationCoords[0], locationCoords[1]);
@@ -104,16 +106,21 @@ export default function SearchScreen({ navigation }): ReactElement {
     }
   }, [origins, destinationType]);
 
-  const debouncedAutoCompleteCall = debounce(async (query) => {
-    if (!query) {
-      setAutoCompleteValues([]);
-      return;
-    }
-    const result = await tomTomAutoComplete(query, userLocation);
-    setAutoCompleteValues(result?.data?.results ?? []);
-  }, 1000);
+  const debouncedAutoCompleteCall = debounce(
+    async (query: NativeSyntheticEvent<TextInputChangeEventData>) => {
+      if (!query) {
+        setAutoCompleteValues([]);
+        return;
+      }
+      const result = await tomTomAutoComplete(query, userLocation);
+      setAutoCompleteValues(result?.data?.results ?? []);
+    },
+    1000
+  );
 
-  const getAutoCompleteResults = (query) => {
+  const getAutoCompleteResults = (
+    query: NativeSyntheticEvent<TextInputChangeEventData>
+  ) => {
     if (!query) {
       setAutoCompleteValues([]);
       return;
@@ -130,7 +137,7 @@ export default function SearchScreen({ navigation }): ReactElement {
         <AutoCompleteInputField
           inputRef={autoInputRef}
           leftIcon={
-            isAutoCompleteFocus ? "return-up-back-outline" : "search-outline"
+            isAutoCompleteFocus ? "chevron-back-outline" : "search-outline"
           }
           onLeftIconPress={() => {
             if (!isAutoCompleteFocus) {
@@ -151,7 +158,7 @@ export default function SearchScreen({ navigation }): ReactElement {
           }}
         />
         {origins.length > 1 && !isAutoCompleteFocus && (
-          <PlaceList
+          <DestinationList
             destinations={destinations}
             destinationSearchLoading={destinationSearchLoading}
             navigation={navigation}

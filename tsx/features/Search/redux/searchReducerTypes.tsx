@@ -1,3 +1,6 @@
+import { SearchActionTypes } from "./searchActionTypes";
+import { Dispatch } from "react";
+
 export interface SearchReducer {
   origins: Array<TomTomOriginResult> | [];
   destinations: Array<YelpBusiness> | [];
@@ -18,6 +21,11 @@ export interface SearchReducer {
   userLocation?: any;
   currentRouteGeometry?: string;
 }
+
+export type SearchAction = {
+  payload?: any;
+  type: SearchActionTypes;
+};
 
 /* MapBox */
 
@@ -41,6 +49,12 @@ export interface MapBoxRoute {
   geometry: string;
   legs: Array<any>;
   voiceLocale: string | null;
+}
+
+export interface CachedGeometryItem {
+  origin: Coordinate;
+  destination: Coordinate;
+  geometry: string;
 }
 
 /* TomTom */
@@ -187,3 +201,9 @@ export type YelpTransactionTypes =
   | "resaurant_reservation";
 export type YelpRating = 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;
 export type YelpPrice = "$" | "$$" | "$$$" | "$$$$";
+
+export interface CachedDestinationsItem {
+  query: string;
+  middlePoint: Coordinate;
+  result: Array<YelpBusiness>;
+}

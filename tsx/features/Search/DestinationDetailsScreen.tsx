@@ -25,9 +25,7 @@ const DestinationDetailsScreen = (props: Props) => {
   const destinationIndex = useSelector(
     (state: State) => state.searchReducer.destinationIndex
   );
-  const origins = useSelector(
-    (state: State) => state.searchReducer.origins
-  );
+  const origins = useSelector((state: State) => state.searchReducer.origins);
   const polylineArray = useSelector((state: State) =>
     currentPolyLineArray(state)
   );
@@ -76,8 +74,7 @@ const DestinationDetailsScreen = (props: Props) => {
           dispatch(
             getRouteGeometries(
               {
-                longitude:
-                  origins[selectedLocationIndex]?.position?.lon,
+                longitude: origins[selectedLocationIndex]?.position?.lon,
                 latitude: origins[selectedLocationIndex]?.position?.lat,
               },
               {
@@ -110,7 +107,7 @@ const DestinationDetailsScreen = (props: Props) => {
               <Icon
                 name="location-outline"
                 size={18}
-                color={theme.darkPurple}
+                color={theme.secondary}
                 style={{ paddingRight: 5 }}
               />
               <Text
@@ -127,11 +124,7 @@ const DestinationDetailsScreen = (props: Props) => {
             </View>
           </View>
           {isSelected ? (
-            <Icon
-              name={"checkmark-circle"}
-              size={30}
-              color={theme.darkPurple}
-            />
+            <Icon name={"checkmark-circle"} size={30} color={theme.secondary} />
           ) : null}
         </View>
       </TouchableOpacity>
@@ -228,10 +221,10 @@ const DestinationDetailsScreen = (props: Props) => {
         </View>
         <Text style={{ marginTop: 6 }}>{selectedDestination?.name}</Text>
         <Text style={{ fontWeight: "200" }}>
-          {selectedDestination?.location?.display_address[0]}
+          {selectedDestination?.location?.display_address[0] ?? ""}
         </Text>
         <Text style={{ fontWeight: "200" }}>
-          {selectedDestination?.location?.display_address[1]}
+          {selectedDestination?.location?.display_address[1] ?? ""}
         </Text>
 
         <Text style={{ fontWeight: "200" }}>
