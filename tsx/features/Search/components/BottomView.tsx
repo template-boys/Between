@@ -14,11 +14,18 @@ interface Props {
 const BottomView = (props: React.PropsWithChildren<Props>) => {
   const { bottom: BOTTOM_INSETS } = useSafeAreaInsets();
   const [animatedBottom, setAnimatedBottom] = React.useState(
-    new Animated.Value(0)
+    new Animated.Value(CONTENT_HEIGHT)
   );
 
   useEffect(() => {
-    props.setMapHeight(SCREEN_HEIGHT - CONTENT_HEIGHT);
+    Animated.timing(animatedBottom, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => {
+      props.setMapHeight(SCREEN_HEIGHT - CONTENT_HEIGHT);
+    });
+
     Keyboard.addListener("keyboardWillShow", keyboardWillShow);
     Keyboard.addListener("keyboardWillHide", keyboardWillHide);
 
