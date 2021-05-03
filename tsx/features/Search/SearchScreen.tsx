@@ -14,10 +14,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
 
 import FullMapView from "./components/FullMapView";
-import DestinationList from "./components/DestinationList";
+import DestinationBottomView from "./components/DestinationBottomView";
 import {
   addOrigin as addOriginLocationAction,
-  setDestinationType as setDestinationTypeAction,
   removeOriginLocation as removeOriginLocationAction,
   getDestinationSearch as getDestinationSearchAction,
   getRouteGeometries,
@@ -158,7 +157,7 @@ export default function SearchScreen({ navigation }): ReactElement {
           }}
         />
         {origins.length > 1 && !isAutoCompleteFocus && (
-          <DestinationList
+          <DestinationBottomView
             destinations={destinations}
             destinationSearchLoading={destinationSearchLoading}
             navigation={navigation}
