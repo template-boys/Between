@@ -58,7 +58,7 @@ function App() {
         inactiveTintColor: theme.purple,
         style: {
           backgroundColor: "white",
-          // height: 90,
+          // height: 80,
         },
       }}
     >
@@ -118,7 +118,7 @@ function Navigator() {
     if (user !== null && user !== undefined) {
       dispatch(loginUser(user));
     } else {
-      dispatch(logoutUser());
+      dispatch(logoutUser);
     }
   });
 

@@ -9,14 +9,14 @@ import {
   Keyboard,
 } from "react-native";
 import Button from "../../components/Button";
-import Logo from "../../components/Logo.svg";
-import GoogleLogo from "../../components/GoogleLogo.svg";
-import AppleLogo from "../../components/AppleLogo.svg";
+import Logo from "../../../assets/svg/Logo.svg";
+import GoogleLogo from "../../../assets/svg/GoogleLogo.svg";
+import AppleLogo from "../../../assets/svg/AppleLogo.svg";
 import { StyleSheet } from "react-native";
 import style from "../../themes/style";
 import CustomInput from "../../components/CustomInput";
 import theme from "../../themes/theme";
-import { appleLogin, googleLogin, emailLogin } from "./loginUtils";
+import { appleLogin, googleLogin, emailLogin } from "../../utils/loginUtils";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CONTAINER_WIDTH = SCREEN_WIDTH - 50;

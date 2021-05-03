@@ -14,5 +14,5 @@ export default {
   bold: "700",
   errorRed: "#ff0033",
   yellow: "#FFFD82",
-  secondary: "#FC440F",
+  secondary: "#FF0054",
 };

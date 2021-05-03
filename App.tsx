@@ -2,7 +2,6 @@ import "react-native-gesture-handler";
 import * as React from "react";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
-import FlashMessage from "react-native-flash-message";
 
 import rootReducer from "./rootReducer";
 import Navigator from "./tsx/navigation/Navigator";
@@ -11,12 +10,12 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import thunk from "redux-thunk";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
-GoogleSignin.configure({
-  webClientId:
-    "501057678471-7avl7nsmkrd0h4d2g1q477r0faoh2gu4.apps.googleusercontent.com",
-});
-
 import { Component } from "react";
+import { GOOGLE_SIGN_IN_WEB_KEY } from "./tsx/utils/googleKeyUtil";
+
+GoogleSignin.configure({
+  webClientId: GOOGLE_SIGN_IN_WEB_KEY,
+});
 
 interface Props {}
 interface State {

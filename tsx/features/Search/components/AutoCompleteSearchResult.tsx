@@ -3,57 +3,56 @@ import { View, Text, StyleSheet, ViewStyle } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import style from "../../../themes/style";
 import theme from "../../../themes/theme";
+import { TomTomOriginResult } from "../redux/searchReducerTypes";
 
-interface DestinationSearchResultProps {
+interface AutoCompleteSearchResultProps {
   containerStyle?: ViewStyle;
-  searchResult: any;
+  origin: TomTomOriginResult;
 }
 
 const AutoCompleteSearchResult = ({
-  searchResult,
+  origin,
   containerStyle,
-}: DestinationSearchResultProps) => {
-  const getGeographyTypeHeader = (searchResult) => {
-    switch (searchResult.entityType) {
+}: AutoCompleteSearchResultProps) => {
+  const getGeographyTypeHeader = () => {
+    switch (origin.entityType) {
       case "Country":
-        return (
-          searchResult.address?.country ?? searchResult.address?.freeformAddress
-        );
+        return origin.address?.country ?? origin.address?.freeformAddress;
       case "PostalCodeArea":
-        return searchResult.address?.postalCode;
+        return origin.address?.postalCode;
       case "Municipality":
-        return searchResult.address?.municipality;
+        return origin.address?.municipality;
       default:
-        return searchResult.address?.freeformAddress;
+        return origin.address?.freeformAddress;
     }
   };
 
   const getHeader = () => {
-    switch (searchResult.type) {
+    switch (origin.type) {
       case "POI":
-        return searchResult.poi?.name;
+        return origin.poi?.name;
       case "Street":
       case "Cross Street":
-        return !!searchResult.address?.streetName
-          ? searchResult.address?.streetName
-          : searchResult.address?.freeformAddress;
+        return !!origin.address?.streetName
+          ? origin.address?.streetName
+          : origin.address?.freeformAddress;
       case "Geography":
-        return getGeographyTypeHeader(searchResult);
+        return getGeographyTypeHeader();
       case "Point Address":
       case "Address Range":
-        return `${searchResult.address?.streetNumber} ${searchResult.address?.streetName}`;
+        return `${origin.address?.streetNumber} ${origin.address?.streetName}`;
       default:
         break;
     }
   };
 
   const getSubText = () => {
-    return searchResult.address?.freeformAddress;
+    return origin.address?.freeformAddress;
   };
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Icon name={"location-outline"} size={30} color={theme.darkPurple} />
+      <Icon name={"location-outline"} size={30} color={theme.secondary} />
       <View style={{ marginLeft: 10, marginRight: 25 }}>
         <Text style={[style.medium, styles.header]}>{getHeader()}</Text>
         <Text style={style.regular}>{getSubText()}</Text>

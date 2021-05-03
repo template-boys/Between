@@ -1,104 +1,111 @@
+import { Dispatch } from "react";
+import { State } from "../../../../rootReducer";
 import {
   mapBoxDirectionsSearch,
   reverseGeocode,
   yelpSearch,
 } from "../../../api/thirdPartyApis";
-import actionTypes from "./searchActionTypes";
+import { SearchActionTypes } from "./searchActionTypes";
+import {
+  CachedDestinationsItem,
+  CachedGeometryItem,
+  Coordinate,
+  SearchAction,
+  YelpBusiness,
+} from "./searchReducerTypes";
 
-export const setSessionID = () => ({
-  type: actionTypes.SET_AUTO_COMPLETE_SESSION_ID,
-});
-
-export const setSearchType = (type) => ({
-  type: actionTypes.SET_SEARCH_TYPE,
+export const setDestinationType = (type: string) => ({
+  type: SearchActionTypes.SET_DESTINATION_TYPE,
   payload: type,
 });
 
-export const setSearchLoading = (isLoading) => ({
-  type: actionTypes.SET_SEARCH_LOADING,
+export const setDestinationSearchLoading = (isLoading: boolean) => ({
+  type: SearchActionTypes.SET_DESTINATION_SEARCH_LOADING,
   payload: isLoading,
 });
 
-export const addSearchLocation = (newLocation) => {
-  let returnLocation;
-  if (typeof newLocation?.position === "string") {
-    const splitPosition = newLocation?.position.split(",");
+export const addOrigin = (origin) => {
+  let returnOrigin;
+  if (typeof origin?.position === "string") {
+    const splitPosition = origin?.position.split(",");
     const locationObject = {
-      address: newLocation?.address ?? {},
+      address: origin?.address ?? {},
       position: {
         lat: parseFloat(splitPosition[0]),
         lon: parseFloat(splitPosition[1]),
       },
     };
-    returnLocation = locationObject;
+    returnOrigin = locationObject;
   } else {
-    returnLocation = newLocation;
+    returnOrigin = origin;
   }
   return {
-    type: actionTypes.ADD_LOCATION,
-    newLocation: returnLocation,
+    type: SearchActionTypes.ADD_ORIGIN,
+    payload: returnOrigin,
   };
 };
 
-export const setSearchResult = (searchResult) => ({
-  type: actionTypes.SET_SEARCH_RESULT,
-  searchResult,
+export const setDestinations = (destinations: Array<YelpBusiness>) => ({
+  type: SearchActionTypes.SET_DESTINATIONS,
+  payload: destinations,
 });
 
-export const removeSearchLocation = (index) => {
-  return {
-    type: actionTypes.REMOVE_LOCATION_INDEX,
-    index,
+export const removeOriginLocation = (index: number) => {
+  return (dispatch: Dispatch<SearchAction>, getState: () => State) => {
+    const state = getState();
+    const tempArray = [...state.searchReducer.origins];
+    tempArray.splice(index, 1);
+    dispatch({
+      type: SearchActionTypes.REMOVE_ORIGIN_INDEX,
+      payload: tempArray,
+    });
   };
 };
 
-export const setPlaceIndex = (index: number) => {
+export const setDestinationIndex = (index: number) => {
   return {
-    type: actionTypes.SET_PLACE_INDEX,
-    index,
+    type: SearchActionTypes.SET_DESTINATION_INDEX,
+    payload: index,
   };
 };
 
-export const addCacheSearchResult = (input) => {
+export const addCachedDestination = (payload: CachedDestinationsItem) => {
   return {
-    type: actionTypes.ADD_CACHED_SEARCH_RESULT,
-    input,
+    type: SearchActionTypes.ADD_CACHED_DESTINATION,
+    payload,
   };
 };
 
-export const removeFirstCachedResult = () => {
-  return {
-    type: actionTypes.REMOVE_FIRST_CACHED_SEARCH_RESULT,
-  };
+export const removeFirstCachedDestination = {
+  type: SearchActionTypes.REMOVE_FIRST_CACHED_DESTINATION,
 };
 
-export const setDirectionsLoading = (isLoading) => {
+export const setRouteLoading = (isLoading: boolean) => {
   return {
-    type: actionTypes.SET_DIRECTIONS_LOADING,
-    isLoading,
+    type: SearchActionTypes.SET_ROUTES_LOADING,
+    payload: isLoading,
   };
 };
 
 export const setUserLocation = (location) => {
-  return async (dispatch, getState) => {
+  return async (dispatch: Dispatch<SearchAction | any>) => {
     dispatch(setUserGeocodeLocation(location));
-    dispatch({ type: actionTypes.SET_USER_LOCATION, location });
+    dispatch({ type: SearchActionTypes.SET_USER_LOCATION, payload: location });
   };
 };
 
 export const setUserGeocodeLocation = (location) => {
-  return async (dispatch, getState) => {
+  return async (dispatch: Dispatch<SearchAction>) => {
     const res = await reverseGeocode(location);
-    res?.data?.addresses[0] &&
-      dispatch(addSearchLocation(res?.data?.addresses[0]));
+    res?.data?.addresses[0] && dispatch(addOrigin(res?.data?.addresses[0]));
   };
 };
 
-//Sets the current directions (whatever place is selected)
-export const setDirections = (directions) => {
+//Sets the current geometry (whatever place is selected)
+export const setRouteGeometry = (routeGeometry: string) => {
   return {
-    type: actionTypes.SET_DIRECTIONS,
-    directions,
+    type: SearchActionTypes.SET_ROUTE_GEOMETRY,
+    payload: routeGeometry,
   };
 };
 
@@ -110,36 +117,40 @@ export const setDirections = (directions) => {
 // Checks cache before hitting API.
 // If we already searched for those locations
 // use that instead
-export const getDirections = (origin, destination) => {
-  return async (dispatch, getState) => {
-    dispatch(setDirectionsLoading(true));
+export const getRouteGeometries = (
+  origin: Coordinate,
+  destination: Coordinate
+) => {
+  return async (dispatch: Dispatch<SearchAction>, getState: () => State) => {
+    dispatch(setRouteLoading(true));
     const state = getState();
-    const cachedDirections = state.searchReducer.cachedDirections;
-    let directions;
+    const cachedRouteGeometries = state.searchReducer.cachedRouteGeometries;
+    let res;
+    let geometry;
 
-    cachedDirections.forEach((cacheItem: any) => {
+    cachedRouteGeometries.forEach((cachedRouteGeometry: any) => {
       if (
-        cacheItem?.origin?.latitude === origin?.latitude &&
-        cacheItem?.origin?.longitude === origin?.longitude &&
-        cacheItem?.destination?.latitude === destination?.latitude &&
-        cacheItem?.destination?.longitude === destination?.longitude
+        cachedRouteGeometry?.origin?.latitude === origin?.latitude &&
+        cachedRouteGeometry?.origin?.longitude === origin?.longitude &&
+        cachedRouteGeometry?.destination?.latitude === destination?.latitude &&
+        cachedRouteGeometry?.destination?.longitude === destination?.longitude
       ) {
         console.log("we have those directions cached");
-        directions = cacheItem.directions;
+        geometry = cachedRouteGeometry.geometry;
       }
     });
 
-    if (!directions) {
-      directions = await mapBoxDirectionsSearch(origin, destination);
-      directions = directions?.data?.routes[0]?.geometry;
-      if (state.searchReducer.cachedDirections?.length >= 25) {
-        dispatch(removeFirstCachedDirection());
+    if (!geometry) {
+      res = await mapBoxDirectionsSearch(origin, destination);
+      geometry = res?.data?.routes[0]?.geometry;
+      if (state.searchReducer.cachedRouteGeometries?.length >= 25) {
+        dispatch(removeFirstCachedDirection);
       }
-      dispatch(addCacheDirections({ origin, destination, directions }));
+      dispatch(addCachedRouteGeometry({ origin, destination, geometry }));
     }
 
-    dispatch(setDirections(directions));
-    dispatch(setDirectionsLoading(false));
+    dispatch(setRouteGeometry(geometry));
+    dispatch(setRouteLoading(false));
   };
 };
 
@@ -154,12 +165,15 @@ export const getDirections = (origin, destination) => {
 //
 // We are also allowed to cache it serverside for up to 24 hours
 // So that might be worth it in the future
-export const getPlaceSearch = (query: string, middlePoint) => {
-  return async (dispatch, getState) => {
-    dispatch(setSearchLoading(true));
+export const getDestinationSearch = (
+  query: string,
+  middlePoint: Coordinate
+) => {
+  return async (dispatch: Dispatch<SearchAction>, getState: () => State) => {
+    dispatch(setDestinationSearchLoading(true));
     let result;
-    const state = getState();
-    state.searchReducer.cacheSearchResults.forEach((cacheItem) => {
+    const state: State = getState();
+    state.searchReducer.cachedDestinations.forEach((cacheItem) => {
       if (
         cacheItem?.middlePoint?.latitude === middlePoint?.latitude &&
         cacheItem?.middlePoint?.longitude === middlePoint?.longitude &&
@@ -171,28 +185,28 @@ export const getPlaceSearch = (query: string, middlePoint) => {
     });
     if (!result) {
       result = await yelpSearch(query, middlePoint);
-      result = result?.data;
-      if (state.searchReducer.cacheSearchResults.length >= 8) {
-        dispatch(removeFirstCachedResult());
+      result = result?.data?.businesses ?? [];
+      if (state.searchReducer.cachedDestinations.length >= 8) {
+        dispatch(removeFirstCachedDestination);
       }
-      dispatch(addCacheSearchResult({ query, middlePoint, result }));
+      dispatch(addCachedDestination({ query, middlePoint, result }));
     }
-    dispatch(setSearchResult(result));
-    dispatch(setSearchLoading(false));
+    dispatch(setDestinations(result));
+    dispatch(setDestinationSearchLoading(false));
   };
 };
 
 //Adds an encoded directions call to list of cached directions.
-export const addCacheDirections = (direction) => {
+export const addCachedRouteGeometry = (
+  geometryCacheItem: CachedGeometryItem
+) => {
   return {
-    type: actionTypes.ADD_CACHED_DIRECTION,
-    direction,
+    type: SearchActionTypes.ADD_CACHED_ROUTE_GEOMETRY,
+    payload: geometryCacheItem,
   };
 };
 
 //Removes first direction in cache array. Used to keep RAM smaller
-export const removeFirstCachedDirection = () => {
-  return {
-    type: actionTypes.REMOVE_FIRST_CACHED_DIRECTION,
-  };
+export const removeFirstCachedDirection = {
+  type: SearchActionTypes.REMOVE_FIRST_CACHED_ROUTE_GEOMETRY,
 };

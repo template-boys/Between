@@ -5,7 +5,7 @@ import {
   getRhumbLineBearing,
   getPathLength,
 } from "geolib";
-import { mapBoxDirectionsSearch } from "../../../api/thirdPartyApis";
+import { mapBoxDirectionsSearch } from "../api/thirdPartyApis";
 
 /*
  * Convert a polyline string (returned from mapbox API) into
@@ -52,14 +52,6 @@ export const getMiddlePoint = async (origin, destination) => {
     }
     routeDistance += legDistance;
   }
-  console.log("Route Distance: ", fullDistance);
-  console.log("Point Before: ", indexBefore, polylineArray[indexBefore]);
-  console.log("Point After: ", indexAfter, polylineArray[indexAfter]);
-
-  console.log(
-    "Calculated Bearing: ",
-    getRhumbLineBearing(polylineArray[indexBefore], polylineArray[indexAfter])
-  );
 
   const middlePoint = computeDestinationPoint(
     polylineArray[indexBefore],
@@ -67,37 +59,5 @@ export const getMiddlePoint = async (origin, destination) => {
     getRhumbLineBearing(polylineArray[indexBefore], polylineArray[indexAfter])
   );
 
-  console.log("Calculated MiddlePoint: ", middlePoint);
-
   return middlePoint;
 };
-
-// export const getOriginCombinations = (
-//   originsArray: Array<any>
-// ): Array<Array<any>> => {
-//   if (originsArray.length === 2) {
-//     return [originsArray];
-//   }
-//   let combinations: Array<Array<any>> = [[]];
-//   let count = 0;
-//   for (let i = 0; i < originsArray.length; i++) {
-//     for (let j = i + 1; i < originsArray.length; j++) {
-//       combinations[count] = [originsArray[i], originsArray[j]];
-//       count++;
-//     }
-//   }
-//   return combinations;
-// };
-
-// export const getPolylinesArrayFromCombinations = async (combinations: any[][]): Promise<any[][]> => {
-//   let directionsArray: any[][] = [[]];
-//   let direction;
-//   const combinationsMap = async (combinations) => {
-//     return combinations.map(async (origins) => {
-//       direction = await mapBoxDirectionsSearch(origins[0], origins[1]);
-//       return getPolylineArray(direction?.data?.routes[0]?.geometry);
-//     });
-//   }
-//   directionsArray = await combinationsMap(combinations);
-//   return directionsArray;
-// };

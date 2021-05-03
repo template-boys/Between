@@ -1,51 +1,42 @@
-import React, { useRef, useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  Linking,
-  Dimensions,
-  FlatList,
-  StyleSheet,
-} from "react-native";
+import React, { useState } from "react";
+import { View, Text, Image, Linking, FlatList, StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import style from "../../themes/style";
 import DestinationMapView from "./components/DestinationMapView";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { getDirections } from "./redux/searchActions";
-import { getPolylineArray } from "./utils/directionsUtils";
-import { getRatingImage } from "./utils/searchUtils";
-import Carousel from "react-native-snap-carousel";
+import { getRouteGeometries } from "./redux/searchActions";
+import { getRatingImage } from "../../utils/searchUtils";
 import theme from "../../themes/theme";
 import Icon from "react-native-vector-icons/Ionicons";
 import FAIcon from "react-native-vector-icons/FontAwesome";
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
+import { currentPolyLineArray } from "./redux/searchSelector";
+import { State } from "../../../rootReducer";
 
 interface Props {
   navigation: any;
 }
 
 const DestinationDetailsScreen = (props: Props) => {
-  const carouselRef = useRef<any | null>(null);
   const dispatch = useDispatch();
   const [selectedLocationIndex, setSelectedLocationIndex] = useState(0);
-  const searchResult = useSelector((state) => state.searchReducer.searchResult);
-  const placeIndex = useSelector((state) => state.searchReducer.placeIndex);
-  const currentRouteDirections = useSelector(
-    (state) => state.searchReducer.currentRouteDirections
+  const destinations = useSelector(
+    (state: State) => state.searchReducer.destinations ?? []
   );
-  const searchLocations = useSelector(
-    (state) => state.searchReducer.searchLocations
+  const destinationIndex = useSelector(
+    (state: State) => state.searchReducer.destinationIndex
   );
-  const place = searchResult?.businesses[placeIndex] ?? null;
-  const latitude = place?.coordinates?.latitude;
-  const longitude = place?.coordinates?.longitude;
+  const origins = useSelector((state: State) => state.searchReducer.origins);
+  const polylineArray = useSelector((state: State) =>
+    currentPolyLineArray(state)
+  );
+  const selectedDestination = destinations[destinationIndex];
+  const latitude = selectedDestination?.coordinates?.latitude;
+  const longitude = selectedDestination?.coordinates?.longitude;
 
   //dynamic in the future (whatever location user wants to see from)
   const pickup = {
-    latitude: searchLocations[selectedLocationIndex]?.position?.lat,
-    longitude: searchLocations[selectedLocationIndex]?.position?.lon,
+    latitude: origins[selectedLocationIndex]?.position?.lat,
+    longitude: origins[selectedLocationIndex]?.position?.lon,
   };
 
   const lyftURL = `https://lyft.com/ride?id=lyft&pickup[latitude]=${pickup.latitude}&pickup[longitude]=${pickup.longitude}&destination[latitude]=${latitude}&destination[longitude]=${longitude}&partner=lL5keX91WP4D`;
@@ -55,34 +46,46 @@ const DestinationDetailsScreen = (props: Props) => {
   //And allow user to change where they want to see location from
   React.useEffect(() => {
     props.navigation.setOptions({
-      title: place?.name || "Details",
+      title: selectedDestination?.name || "Details",
     });
 
     dispatch(
-      getDirections(
+      getRouteGeometries(
         {
-          longitude: searchLocations[selectedLocationIndex]?.position?.lon,
-          latitude: searchLocations[selectedLocationIndex]?.position?.lat,
+          longitude: origins[selectedLocationIndex]?.position?.lon,
+          latitude: origins[selectedLocationIndex]?.position?.lat,
         },
         {
-          longitude: place?.coordinates?.longitude,
-          latitude: place?.coordinates?.latitude,
+          longitude: selectedDestination?.coordinates?.longitude,
+          latitude: selectedDestination?.coordinates?.latitude,
         }
       )
     );
   }, []);
 
-  const imageSource = getRatingImage(place?.rating);
-
-  let polylineArray: any[] = [];
-
-  if (!!currentRouteDirections) {
-    polylineArray = getPolylineArray(currentRouteDirections);
-  }
+  const imageSource = getRatingImage(selectedDestination?.rating);
 
   const _renderOriginLocation = ({ item, index }) => {
+    const isSelected = selectedLocationIndex === index;
     return (
-      <View style={styles.originLocationContainer}>
+      <TouchableOpacity
+        style={styles.originLocationContainer}
+        onPress={() => {
+          dispatch(
+            getRouteGeometries(
+              {
+                longitude: origins[selectedLocationIndex]?.position?.lon,
+                latitude: origins[selectedLocationIndex]?.position?.lat,
+              },
+              {
+                longitude: selectedDestination?.coordinates?.longitude,
+                latitude: selectedDestination?.coordinates?.latitude,
+              }
+            )
+          );
+          setSelectedLocationIndex(index);
+        }}
+      >
         <View
           style={{
             flexDirection: "row",
@@ -104,7 +107,7 @@ const DestinationDetailsScreen = (props: Props) => {
               <Icon
                 name="location-outline"
                 size={18}
-                color={theme.darkPurple}
+                color={theme.secondary}
                 style={{ paddingRight: 5 }}
               />
               <Text
@@ -120,27 +123,32 @@ const DestinationDetailsScreen = (props: Props) => {
               </Text>
             </View>
           </View>
-          <Icon name={"checkmark-circle"} size={30} color={theme.darkPurple} />
+          {isSelected ? (
+            <Icon name={"checkmark-circle"} size={30} color={theme.secondary} />
+          ) : null}
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <DestinationMapView
-        location={{ latitude, longitude }}
-        polylineArray={polylineArray}
-      />
-
+      {!!latitude && !!longitude && (
+        <DestinationMapView
+          location={{ latitude, longitude }}
+          polylineArray={polylineArray}
+        />
+      )}
       {/* Origins */}
       <View style={styles.originDivider} />
       <FlatList
-        data={searchLocations}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyboardShouldPersistTaps="always"
+        data={origins}
         renderItem={_renderOriginLocation}
         style={{ maxHeight: 250, backgroundColor: "white" }}
       />
-      <View style={styles.originDivider} />
 
       {/* Reviews */}
       <View
@@ -174,7 +182,7 @@ const DestinationDetailsScreen = (props: Props) => {
                 },
               ]}
             >
-              {place?.rating.toFixed(1)}
+              {selectedDestination?.rating.toFixed(1)}
             </Text>
           </View>
 
@@ -183,13 +191,17 @@ const DestinationDetailsScreen = (props: Props) => {
               fontWeight: "200",
               fontSize: 14,
             }}
-          >{`(${place?.review_count} reviews)`}</Text>
+          >{`(${selectedDestination?.review_count} reviews)`}</Text>
           <TouchableOpacity
             style={{ marginHorizontal: 10 }}
             onPress={() => {
-              Linking.openURL(place?.url).catch((err) =>
-                console.error("Couldn't load page", err)
-              );
+              {
+                if (!!selectedDestination?.url) {
+                  Linking.openURL(selectedDestination.url).catch((err) =>
+                    console.error("Couldn't load page", err)
+                  );
+                }
+              }
             }}
           >
             <FAIcon name="yelp" size={35} color={"#d32323"} />
@@ -202,25 +214,22 @@ const DestinationDetailsScreen = (props: Props) => {
             }}
           >
             <Image
-              source={require("./static/lyft.png")}
+              source={require("../../../assets/static/lyft.png")}
               style={{ width: 45, height: 45 }}
             />
           </TouchableOpacity>
         </View>
-        <Text style={[style.title1, { marginTop: 6 }]}>{place?.name}</Text>
+        <Text style={{ marginTop: 6 }}>{selectedDestination?.name}</Text>
         <Text style={{ fontWeight: "200" }}>
-          {place?.location?.display_address[0]}
+          {selectedDestination?.location?.display_address[0] ?? ""}
         </Text>
         <Text style={{ fontWeight: "200" }}>
-          {place?.location?.display_address[1]}
+          {selectedDestination?.location?.display_address[1] ?? ""}
         </Text>
 
-        <Text style={{ fontWeight: "200" }}>{place?.display_phone}</Text>
-        {!place?.open_now && (
-          <Text style={[style.body4, { color: "green", marginTop: 4 }]}>
-            Open now
-          </Text>
-        )}
+        <Text style={{ fontWeight: "200" }}>
+          {selectedDestination?.display_phone}
+        </Text>
       </View>
     </View>
   );
@@ -240,6 +249,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: "#e3e3e3",
+    width: 300,
   },
   originDivider: {
     borderColor: "#e3e3e3",

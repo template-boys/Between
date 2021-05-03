@@ -32,18 +32,18 @@ export default [
       },
     ],
   },
-  // {
-  //   featureType: "poi",
-  //   elementType: "geometry",
-  //   stylers: [
-  //     {
-  //       visibility: "simplified",
-  //     },
-  //     {
-  //       color: "#fcfcfc",
-  //     },
-  //   ],
-  // },
+  {
+    featureType: "poi",
+    elementType: "geometry",
+    stylers: [
+      {
+        visibility: "simplified",
+      },
+      {
+        color: "#fcfcfc",
+      },
+    ],
+  },
   {
     featureType: "road.highway",
     elementType: "geometry",
@@ -89,6 +89,14 @@ export default [
       },
       {
         color: "#a2d1f5",
+      },
+    ],
+  },
+  {
+    elementType: "labels.icon",
+    stylers: [
+      {
+        visibility: "off",
       },
     ],
   },

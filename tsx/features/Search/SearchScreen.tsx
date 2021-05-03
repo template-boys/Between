@@ -1,108 +1,92 @@
-import { getCenter, getCenterOfBounds, getDistance } from "geolib";
+import { getCenterOfBounds, getDistance } from "geolib";
 import React, { ReactElement, useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
   Keyboard,
+  NativeSyntheticEvent,
   StyleSheet,
-  Text,
+  TextInputChangeEventData,
   TouchableOpacity,
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { showMessage } from "react-native-flash-message";
 import { debounce } from "lodash";
 
 import FullMapView from "./components/FullMapView";
-import PlaceList from "./components/PlaceList";
-import SearchBottomSheet from "./components/SearchBottomSheet";
-import SearchBottomSheetView from "./components/SearchBottomSheetView";
+import DestinationList from "./components/DestinationList";
 import {
-  addSearchLocation as addSearchLocationAction,
-  setSearchType as setSearchTypeAction,
-  removeSearchLocation as removeSearchLocationAction,
-  getPlaceSearch as getPlaceSearchActon,
-  getDirections,
+  addOrigin as addOriginLocationAction,
+  setDestinationType as setDestinationTypeAction,
+  removeOriginLocation as removeOriginLocationAction,
+  getDestinationSearch as getDestinationSearchAction,
+  getRouteGeometries,
 } from "./redux/searchActions";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AutoCompleteInputField from "../../components/AutoCompleteInputField";
-import theme from "../../themes/theme";
 import { tomTomAutoComplete } from "../../api/thirdPartyApis";
-import Icon from "react-native-vector-icons/Ionicons";
-import style from "../../themes/style";
 import AutoCompleteSearchResult from "./components/AutoCompleteSearchResult";
-import { getMiddlePoint } from "./utils/directionsUtils";
+import { getMiddlePoint } from "../../utils/directionsUtils";
+import { State } from "../../../rootReducer";
+import { Coordinate, TomTomOriginResult } from "./redux/searchReducerTypes";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function SearchScreen({ navigation }): ReactElement {
   const dispatch = useDispatch();
   const insets = useSafeAreaInsets();
-  const [autoCompleteValues, setAutoCompleteValues] = useState([]);
+  const [autoCompleteValues, setAutoCompleteValues] = useState<
+    Array<TomTomOriginResult>
+  >([]);
   const [isAutoCompleteFocus, setIsAutoCompleteFocus] = useState<boolean>(
     false
   );
   const searchBottomSheetRef = useRef<any | null>(null);
-  const autoCompleteRef = useRef<any | null>(null);
-  const openPagesheet = () => {
-    searchBottomSheetRef.current?.open();
-  };
-  const closePagesheet = () => {
-    searchBottomSheetRef.current?.close();
-  };
 
-  const searchLocations = useSelector(
-    (state) => state.searchReducer.searchLocations
+  const origins = useSelector((state: State) => state.searchReducer.origins);
+  const destinations = useSelector(
+    (state: State) => state.searchReducer.destinations
   );
-  const searchResult = useSelector(
-    (state) => state.searchReducer.searchResult?.businesses ?? []
+  const userLocation = useSelector(
+    (state: State) => state.searchReducer.userLocation
   );
-  const userLocation = useSelector((state) => state.searchReducer.userLocation);
-  const searchType = useSelector((state) => state.searchReducer.searchType);
-  const searchLoading = useSelector(
-    (state) => state.searchReducer.searchLoading
+  const destinationType = useSelector(
+    (state: State) => state.searchReducer.destinationType
   );
-  const directions = useSelector(
-    (state) => state.searchReducer.cachedDirections
+  const destinationSearchLoading = useSelector(
+    (state: State) => state.searchReducer.destinationSearchLoading
   );
 
   //Search Actions
-  const addSearchLocation = (location) => {
-    dispatch(addSearchLocationAction(location));
-  };
-  const setSearchType = (type) => {
-    dispatch(setSearchTypeAction(type));
+  const addOriginLocation = (location: TomTomOriginResult) => {
+    dispatch(addOriginLocationAction(location));
   };
   const setSearchLoading = (isLoading: boolean) => {
     dispatch(setSearchLoading(isLoading));
   };
-  const removeSearchLocation = (index: number) => {
-    dispatch(removeSearchLocationAction(index));
+  const removeOriginLocation = (index: number) => {
+    dispatch(removeOriginLocationAction(index));
   };
-  const setPlaceIndex = (index: number) => {
-    dispatch(setPlaceIndex(index));
+  const setDestinationIndex = (index: number) => {
+    dispatch(setDestinationIndex(index));
   };
-  const getPlaceSearch = async (query) => {
-    let locationCoords: any[] = [];
-    searchLocations.forEach((location) => {
+  const getPlaceSearch = async (query: string) => {
+    let locationCoords: Coordinate[] = [];
+    origins.forEach((location: TomTomOriginResult) => {
       locationCoords.push({
         latitude: location?.position?.lat,
         longitude: location?.position?.lon,
       });
     });
-    let middlePoint;
+    let middlePoint: Coordinate;
 
     if (locationCoords.length === 2) {
       const distance = getDistance(locationCoords[0], locationCoords[1]);
-      console.log(distance);
 
       if (distance < 15000) {
         middlePoint = getCenterOfBounds(locationCoords);
       } else {
-        dispatch(getDirections(locationCoords[0], locationCoords[1]));
+        dispatch(getRouteGeometries(locationCoords[0], locationCoords[1]));
         middlePoint = await getMiddlePoint(
           locationCoords[0],
           locationCoords[1]
@@ -111,33 +95,32 @@ export default function SearchScreen({ navigation }): ReactElement {
     } else {
       middlePoint = getCenterOfBounds(locationCoords);
     }
-    dispatch(getPlaceSearchActon(query, middlePoint));
+    dispatch(getDestinationSearchAction(query, middlePoint));
   };
 
   const autoInputRef = useRef<any | null>(null);
 
   useEffect(() => {
-    if (searchLocations.length > 1) {
-      getPlaceSearch(searchType);
+    if (origins.length > 1) {
+      getPlaceSearch(destinationType);
     }
-  }, [searchLocations, searchType]);
+  }, [origins, destinationType]);
 
-  useEffect(() => {
-    if (searchLocations.length >= 2) {
-      openPagesheet();
-    }
-  }, [searchLocations]);
+  const debouncedAutoCompleteCall = debounce(
+    async (query: NativeSyntheticEvent<TextInputChangeEventData>) => {
+      if (!query) {
+        setAutoCompleteValues([]);
+        return;
+      }
+      const result = await tomTomAutoComplete(query, userLocation);
+      setAutoCompleteValues(result?.data?.results ?? []);
+    },
+    1000
+  );
 
-  const debouncedAutoCompleteCall = debounce(async (query) => {
-    if (!query) {
-      setAutoCompleteValues([]);
-      return;
-    }
-    const result = await tomTomAutoComplete(query, userLocation);
-    setAutoCompleteValues(result?.data?.results ?? []);
-  }, 1000);
-
-  const getAutoCompleteResults = (query) => {
+  const getAutoCompleteResults = (
+    query: NativeSyntheticEvent<TextInputChangeEventData>
+  ) => {
     if (!query) {
       setAutoCompleteValues([]);
       return;
@@ -154,7 +137,7 @@ export default function SearchScreen({ navigation }): ReactElement {
         <AutoCompleteInputField
           inputRef={autoInputRef}
           leftIcon={
-            isAutoCompleteFocus ? "return-up-back-outline" : "search-outline"
+            isAutoCompleteFocus ? "chevron-back-outline" : "search-outline"
           }
           onLeftIconPress={() => {
             if (!isAutoCompleteFocus) {
@@ -174,10 +157,10 @@ export default function SearchScreen({ navigation }): ReactElement {
             },
           }}
         />
-        {searchLocations.length > 1 && !isAutoCompleteFocus && (
-          <PlaceList
-            searchResult={searchResult}
-            searchLoading={searchLoading}
+        {origins.length > 1 && !isAutoCompleteFocus && (
+          <DestinationList
+            destinations={destinations}
+            destinationSearchLoading={destinationSearchLoading}
             navigation={navigation}
             bottomSheetRef={searchBottomSheetRef}
             setMapHeight={setMapHeight}
@@ -193,26 +176,23 @@ export default function SearchScreen({ navigation }): ReactElement {
             renderItem={({ item, index }) => (
               <TouchableOpacity
                 onPress={() => {
-                  addSearchLocation(item);
+                  addOriginLocation(item);
                   setIsAutoCompleteFocus(false);
                   Keyboard.dismiss();
                   setAutoCompleteValues([]);
                   autoInputRef.current?.clear();
                 }}
               >
-                <AutoCompleteSearchResult searchResult={item} />
+                <AutoCompleteSearchResult origin={item} />
               </TouchableOpacity>
             )}
           />
         ) : null}
       </View>
       <FullMapView
-        onIconPress={() => {
-          openPagesheet();
-        }}
-        searchLocations={searchLocations}
-        onRemovePress={removeSearchLocation}
-        searchResult={searchResult}
+        originLocations={origins}
+        onRemovePress={removeOriginLocation}
+        yelpDestinations={destinations}
         mapHeight={mapHeight}
       />
     </>
@@ -222,7 +202,6 @@ export default function SearchScreen({ navigation }): ReactElement {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "coral",
   },
   searchBackground: {
     position: "absolute",

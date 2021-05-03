@@ -2,12 +2,14 @@ import React, { ReactElement } from "react";
 import { Dimensions, StyleSheet } from "react-native";
 import { View } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
+import Icon from "react-native-vector-icons/Ionicons";
 import theme from "../../../themes/theme";
-import mapTheme from "./mapTheme";
+import mapTheme from "../../../../assets/mapThemes/mapTheme";
+import { Coordinate } from "../redux/searchReducerTypes";
 
 interface Props {
   location: { longitude: number; latitude: number };
-  polylineArray?: any[];
+  polylineArray: Coordinate[];
 }
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -34,6 +36,8 @@ export default function MapLocationView({
     }, 250);
   }, [polylineArray]);
 
+  const shouldShowPolyLines = polylineArray.length > 0;
+
   return (
     <View
       style={{
@@ -58,14 +62,12 @@ export default function MapLocationView({
         zoomEnabled={false}
         scrollEnabled={false}
       >
-        {polylineArray && polylineArray?.length > 0 && (
+        {shouldShowPolyLines && (
           <>
             <Polyline
               coordinates={polylineArray}
               strokeWidth={5}
-              strokeColor="#02C39A"
-              // strokeColors={[theme.darkPurple, theme.secondary]}
-              fillColor="#02C39A"
+              strokeColors={[theme.secondary, theme.darkPurple]}
             />
             <Marker
               coordinate={{
@@ -73,16 +75,17 @@ export default function MapLocationView({
                 latitude: polylineArray[0]?.latitude,
               }}
               key={"origin"}
-              pinColor={theme.darkPurple}
-            ></Marker>
+              pinColor={theme.secondary}
+            />
+
             <Marker
               coordinate={{
                 longitude: polylineArray[polylineArray?.length - 1]?.longitude,
                 latitude: polylineArray[polylineArray?.length - 1]?.latitude,
               }}
               key={"destination"}
-              pinColor={theme.secondary}
-            ></Marker>
+              pinColor={theme.darkPurple}
+            />
           </>
         )}
       </MapView>

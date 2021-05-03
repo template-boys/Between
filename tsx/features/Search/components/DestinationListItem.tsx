@@ -13,7 +13,9 @@ export default function DestinationListItem({
   destinationItem,
 }: Props): ReactElement {
   const navigation = useNavigation();
-  const address = `${destinationItem?.location?.display_address[0]} ${destinationItem?.location?.display_address[1]}`;
+  const address = `${destinationItem?.location?.display_address[0] ?? ""} ${
+    destinationItem?.location?.display_address[1] ?? ""
+  }`;
   return (
     <TouchableOpacity
       style={styles.container}
@@ -53,7 +55,7 @@ export default function DestinationListItem({
         <Icon
           name="location-outline"
           size={18}
-          color={theme.secondary}
+          color={theme.darkPurple}
           style={{ paddingRight: 5 }}
         />
         <View style={{ justifyContent: "center", flex: 1 }}>
@@ -75,15 +77,18 @@ export default function DestinationListItem({
         onPress={() => {
           navigation.navigate("DestinationDetailsScreen");
         }}
-        style={{ flexDirection: "row", marginTop: 5 }}
+        style={{
+          flexDirection: "row",
+          marginTop: 5,
+        }}
       >
-        <Text style={[style.medium, { fontSize: 13 }]}>
+        <Text style={[style.medium, { fontSize: 13, marginTop: 2 }]}>
           View more information
         </Text>
         {
           <Icon
             style={{ alignSelf: "center", marginLeft: 5 }}
-            name="return-up-forward-outline"
+            name="arrow-forward-circle-outline"
             size={20}
             color={theme.darkPurple}
           />

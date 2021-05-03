@@ -1,95 +1,88 @@
-import { v4 as UUIDGenerate } from "uuid";
-import actionTypes from "./searchActionTypes";
+import { SearchActionTypes } from "./searchActionTypes";
+import { SearchReducer } from "./searchReducerTypes";
 
 const INITIAL_STATE = {
-  sessionID: UUIDGenerate(),
-  searchLocations: [],
-  searchResult: null,
-  searchType: "Coffee",
-  searchLoading: false,
-  placeIndex: 0,
-  typeIndex: 1,
-  cacheSearchResults: [],
-  directionsLoading: false,
-  cachedDirections: [],
-  userLocation: undefined,
+  origins: [],
+  destinationType: "Coffee",
+  destinations: [],
+  destinationSearchLoading: false,
+  destinationIndex: 0,
+  cachedDestinations: [],
+  routeLoading: false,
+  cachedRouteGeometries: [],
 };
 
-const searchReducer = (state = INITIAL_STATE, action) => {
+const searchReducer = (
+  state: SearchReducer = INITIAL_STATE,
+  action
+): SearchReducer => {
   switch (action.type) {
-    case actionTypes.SET_AUTO_COMPLETE_SESSION_ID:
+    case SearchActionTypes.SET_DESTINATION_TYPE:
       return {
         ...state,
-        sessionID: UUIDGenerate(),
+        destinationType: action.payload,
       };
-    case actionTypes.SET_SEARCH_TYPE:
+    case SearchActionTypes.SET_DESTINATION_SEARCH_LOADING:
       return {
         ...state,
-        searchType: action.payload,
+        destinationSearchLoading: action.payload,
       };
-    case actionTypes.SET_SEARCH_LOADING:
+    case SearchActionTypes.ADD_ORIGIN:
       return {
         ...state,
-        searchLoading: action.payload,
+        origins: [...state.origins, action.payload],
       };
-    case actionTypes.ADD_LOCATION:
+    case SearchActionTypes.SET_DESTINATIONS:
       return {
         ...state,
-        searchLocations: [...state.searchLocations, action.newLocation],
+        destinations: action.payload,
       };
-    case actionTypes.SET_SEARCH_RESULT:
+    case SearchActionTypes.SET_DESTINATION_INDEX:
       return {
         ...state,
-        searchResult: action.searchResult,
+        destinationIndex: action.payload,
       };
-    case actionTypes.SET_PLACE_INDEX:
+    case SearchActionTypes.REMOVE_ORIGIN_INDEX:
       return {
         ...state,
-        placeIndex: action.index,
+        origins: action.tempArray,
       };
-    case actionTypes.REMOVE_LOCATION_INDEX:
-      const tempArray = [...state.searchLocations];
-      tempArray.splice(action.index, 1);
+    case SearchActionTypes.ADD_CACHED_DESTINATION:
       return {
         ...state,
-        searchLocations: tempArray,
+        cachedDestinations: [...state.cachedDestinations, action.payload],
       };
-    case actionTypes.ADD_CACHED_SEARCH_RESULT:
+    case SearchActionTypes.REMOVE_FIRST_CACHED_DESTINATION:
       return {
         ...state,
-        cacheSearchResults: [...state.cacheSearchResults, action.input],
+        cachedDestinations: [...state.cachedDestinations.slice(1)],
       };
-    case actionTypes.REMOVE_FIRST_CACHED_SEARCH_RESULT:
+    case SearchActionTypes.REMOVE_FIRST_CACHED_ROUTE_GEOMETRY:
       return {
         ...state,
-        cacheSearchResults: [...state.cacheSearchResults.slice(1)],
+        cachedRouteGeometries: [...state.cachedRouteGeometries.slice(1)],
       };
-    case actionTypes.REMOVE_FIRST_CACHED_DIRECTION:
+    case SearchActionTypes.SET_USER_LOCATION:
       return {
         ...state,
-        cachedDirections: [...state.cachedDirections.slice(1)],
+        userLocation: action.payload,
       };
-    case actionTypes.SET_USER_LOCATION:
+    case SearchActionTypes.SET_ROUTES_LOADING:
       return {
         ...state,
-        userLocation: action.location,
+        routeLoading: action.payload,
       };
-    case actionTypes.SET_DIRECTIONS_LOADING:
+    case SearchActionTypes.SET_ROUTE_GEOMETRY:
       return {
         ...state,
-        directionsLoading: action.isLoading,
+        currentRouteGeometry: action.payload,
       };
-    case actionTypes.SET_DIRECTIONS:
+    case SearchActionTypes.ADD_CACHED_ROUTE_GEOMETRY:
       return {
         ...state,
-        currentRouteDirections: action.directions,
+        cachedRouteGeometries: [...state.cachedRouteGeometries, action.payload],
       };
-    case actionTypes.ADD_CACHED_DIRECTION:
-      return {
-        ...state,
-        cachedDirections: [...state.cachedDirections, action.direction],
-      };
-    case actionTypes.LOGOUT_USER:
+    case SearchActionTypes.LOGOUT_USER:
       return INITIAL_STATE;
     default:
       return state;

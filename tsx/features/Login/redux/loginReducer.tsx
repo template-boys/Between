@@ -1,19 +1,23 @@
-import actionTypes from "./loginActionTypes";
+import { LoginActionTypes } from "./loginActionTypes";
+import { LoginReducer, LoginAction } from "./loginReducerTypes";
 
-const INITIAL_STATE = {
+const INITIAL_STATE: LoginReducer = {
   loggedIn: false,
   user: null,
 };
 
-const loginReducer = (state = INITIAL_STATE, action) => {
+const loginReducer = (
+  state: LoginReducer = INITIAL_STATE,
+  action: LoginAction
+): LoginReducer => {
   switch (action.type) {
-    case actionTypes.LOGIN_USER:
+    case LoginActionTypes.LOGIN_USER:
       return {
         ...state,
         loggedIn: true,
         user: action.payload,
       };
-    case actionTypes.LOGOUT_USER:
+    case LoginActionTypes.LOGOUT_USER:
       return INITIAL_STATE;
     default:
       return state;

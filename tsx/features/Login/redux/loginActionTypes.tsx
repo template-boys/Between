@@ -1,6 +1,4 @@
-import keyMirror from "keymirror";
-
-export default keyMirror({
-  LOGIN_USER: null,
-  LOGOUT_USER: null,
-});
+export enum LoginActionTypes {
+  LOGIN_USER = "LOGIN_USER",
+  LOGOUT_USER = "LOGOUT_USER",
+}

@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  Dimensions,
-  StyleSheet,
-  TextInputProps,
-  View,
-  ViewStyle,
-} from "react-native";
+import { StyleSheet, TextInputProps, View } from "react-native";
+import theme from "../themes/theme";
 import CustomInput from "./CustomInput";
 
 interface AutoCompleteInputProps {
@@ -19,6 +14,7 @@ function AutoCompleteInputField(props: AutoCompleteInputProps) {
   return (
     <View style={styles.container}>
       <CustomInput
+        leftIconColor={theme.secondary}
         inputRef={props.inputRef}
         placeholder="Search city, address, or place"
         inputContainerStyle={styles.inputContainer}
