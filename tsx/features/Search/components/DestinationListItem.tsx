@@ -4,9 +4,10 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import style from "../../../themes/style";
 import theme from "../../../themes/theme";
+import { YelpBusiness } from "../redux/searchReducerTypes";
 
 interface Props {
-  destinationItem: any;
+  destinationItem: YelpBusiness;
 }
 
 export default function DestinationListItem({
@@ -53,7 +54,7 @@ export default function DestinationListItem({
         }}
       >
         <Icon
-          name="location-outline"
+          name="location-sharp"
           size={18}
           color={theme.darkPurple}
           style={{ paddingRight: 5 }}

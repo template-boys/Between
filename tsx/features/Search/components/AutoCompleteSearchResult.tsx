@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ViewStyle } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import style from "../../../themes/style";
 import theme from "../../../themes/theme";
+import { getHeader, getSubText } from "../../../utils/originUtil";
 import { TomTomOriginResult } from "../redux/searchReducerTypes";
 
 interface AutoCompleteSearchResultProps {
@@ -14,48 +15,12 @@ const AutoCompleteSearchResult = ({
   origin,
   containerStyle,
 }: AutoCompleteSearchResultProps) => {
-  const getGeographyTypeHeader = () => {
-    switch (origin.entityType) {
-      case "Country":
-        return origin.address?.country ?? origin.address?.freeformAddress;
-      case "PostalCodeArea":
-        return origin.address?.postalCode;
-      case "Municipality":
-        return origin.address?.municipality;
-      default:
-        return origin.address?.freeformAddress;
-    }
-  };
-
-  const getHeader = () => {
-    switch (origin.type) {
-      case "POI":
-        return origin.poi?.name;
-      case "Street":
-      case "Cross Street":
-        return !!origin.address?.streetName
-          ? origin.address?.streetName
-          : origin.address?.freeformAddress;
-      case "Geography":
-        return getGeographyTypeHeader();
-      case "Point Address":
-      case "Address Range":
-        return `${origin.address?.streetNumber} ${origin.address?.streetName}`;
-      default:
-        break;
-    }
-  };
-
-  const getSubText = () => {
-    return origin.address?.freeformAddress;
-  };
-
   return (
     <View style={[styles.container, containerStyle]}>
       <Icon name={"location-outline"} size={30} color={theme.secondary} />
       <View style={{ marginLeft: 10, marginRight: 25 }}>
-        <Text style={[style.medium, styles.header]}>{getHeader()}</Text>
-        <Text style={style.regular}>{getSubText()}</Text>
+        <Text style={[style.medium, styles.header]}>{getHeader(origin)}</Text>
+        <Text style={style.regular}>{getSubText(origin)}</Text>
       </View>
     </View>
   );

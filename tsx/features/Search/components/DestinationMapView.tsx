@@ -5,26 +5,43 @@ import MapView, { Marker, Polyline } from "react-native-maps";
 import Icon from "react-native-vector-icons/Ionicons";
 import theme from "../../../themes/theme";
 import mapTheme from "../../../../assets/mapThemes/mapTheme";
-import { Coordinate } from "../redux/searchReducerTypes";
+import { Coordinate, TomTomOriginResult } from "../redux/searchReducerTypes";
+import { useSelector } from "react-redux";
+import { State } from "../../../../rootReducer";
+import { getCurrentDestination } from "../redux/searchSelector";
 
 interface Props {
   location: { longitude: number; latitude: number };
-  polylineArray: Coordinate[];
+  polylineArrays: Array<Coordinate[]>;
 }
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function MapLocationView({
   location,
-  polylineArray,
+  polylineArrays,
 }: Props): ReactElement {
   const mapRef = React.useRef<any | null>(null);
+
+  const origins = useSelector(
+    (state: State): TomTomOriginResult[] => state.searchReducer.origins
+  );
+
+  const currentDestination = useSelector(getCurrentDestination);
 
   //Zoom map to show all coordinate of directions array when they change
   React.useEffect(() => {
     //This timeout is needed for the animation to actually occur
+    let originCoordinates = origins.map(
+      (origin: TomTomOriginResult): Coordinate => {
+        return {
+          longitude: origin.position.lon,
+          latitude: origin.position.lat,
+        };
+      }
+    );
     setTimeout(() => {
-      mapRef.current?.fitToCoordinates(polylineArray, {
+      mapRef.current?.fitToCoordinates([...originCoordinates], {
         animated: true,
         edgePadding: {
           top: 70,
@@ -34,9 +51,9 @@ export default function MapLocationView({
         },
       });
     }, 250);
-  }, [polylineArray]);
+  }, [origins]);
 
-  const shouldShowPolyLines = polylineArray.length > 0;
+  const shouldShowPolyLines = polylineArrays.length > 0;
 
   return (
     <View
@@ -64,24 +81,30 @@ export default function MapLocationView({
       >
         {shouldShowPolyLines && (
           <>
-            <Polyline
-              coordinates={polylineArray}
-              strokeWidth={5}
-              strokeColors={[theme.secondary, theme.darkPurple]}
-            />
-            <Marker
-              coordinate={{
-                longitude: polylineArray[0]?.longitude,
-                latitude: polylineArray[0]?.latitude,
-              }}
-              key={"origin"}
-              pinColor={theme.secondary}
-            />
+            {polylineArrays.map((polylineArray) => (
+              <Polyline
+                coordinates={polylineArray}
+                strokeWidth={5}
+                strokeColors={[theme.secondary, theme.darkPurple]}
+              />
+            ))}
+            {origins.map((origin, index) => {
+              return (
+                <Marker
+                  coordinate={{
+                    longitude: origin.position.lon,
+                    latitude: origin.position.lat,
+                  }}
+                  key={`${origin.position.lon}.${origin.position.lat}.${index}`}
+                  pinColor={theme.secondary}
+                />
+              );
+            })}
 
             <Marker
               coordinate={{
-                longitude: polylineArray[polylineArray?.length - 1]?.longitude,
-                latitude: polylineArray[polylineArray?.length - 1]?.latitude,
+                longitude: currentDestination.coordinates.longitude,
+                latitude: currentDestination.coordinates.latitude,
               }}
               key={"destination"}
               pinColor={theme.darkPurple}

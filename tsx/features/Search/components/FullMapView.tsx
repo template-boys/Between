@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import MapView, { Marker } from "react-native-maps";
 import theme from "../../../themes/theme";
 import mapTheme from "../../../../assets/mapThemes/mapTheme";
-import { getPolylineArray } from "../../../utils/directionsUtils";
+import { getPolylineArray } from "../../../utils/routeUtils";
 import { State } from "../../../../rootReducer";
 import { setDestinationIndex, setUserLocation } from "../redux/searchActions";
 

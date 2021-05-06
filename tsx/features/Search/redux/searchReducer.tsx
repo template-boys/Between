@@ -10,6 +10,7 @@ const INITIAL_STATE = {
   cachedDestinations: [],
   routeLoading: false,
   cachedRouteGeometries: [],
+  currentRouteGeometries: [],
 };
 
 const searchReducer = (
@@ -36,16 +37,19 @@ const searchReducer = (
       return {
         ...state,
         destinations: action.payload,
+        currentRouteGeometries: [],
       };
     case SearchActionTypes.SET_DESTINATION_INDEX:
       return {
         ...state,
         destinationIndex: action.payload,
+        currentRouteGeometries: [],
       };
     case SearchActionTypes.REMOVE_ORIGIN_INDEX:
       return {
         ...state,
         origins: action.tempArray,
+        currentRouteGeometries: [],
       };
     case SearchActionTypes.ADD_CACHED_DESTINATION:
       return {
@@ -72,10 +76,18 @@ const searchReducer = (
         ...state,
         routeLoading: action.payload,
       };
-    case SearchActionTypes.SET_ROUTE_GEOMETRY:
+    case SearchActionTypes.ADD_ROUTE_GEOMETRY:
       return {
         ...state,
-        currentRouteGeometry: action.payload,
+        currentRouteGeometries: [
+          ...state.currentRouteGeometries,
+          action.payload,
+        ],
+      };
+    case SearchActionTypes.CLEAR_ROUTE_GEOMETRIES:
+      return {
+        ...state,
+        currentRouteGeometries: [],
       };
     case SearchActionTypes.ADD_CACHED_ROUTE_GEOMETRY:
       return {

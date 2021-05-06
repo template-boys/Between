@@ -102,12 +102,18 @@ export const setUserGeocodeLocation = (location) => {
 };
 
 //Sets the current geometry (whatever place is selected)
-export const setRouteGeometry = (routeGeometry: string) => {
+export const addRouteGeometry = (routeGeometry: string) => {
   return {
-    type: SearchActionTypes.SET_ROUTE_GEOMETRY,
+    type: SearchActionTypes.ADD_ROUTE_GEOMETRY,
     payload: routeGeometry,
   };
 };
+
+export const clearRouteGeometries = () => {
+  return {
+    type: SearchActionTypes.CLEAR_ROUTE_GEOMETRIES,
+  }
+}
 
 // Main action for using Google's place directions API
 // Parameters:
@@ -149,7 +155,7 @@ export const getRouteGeometries = (
       dispatch(addCachedRouteGeometry({ origin, destination, geometry }));
     }
 
-    dispatch(setRouteGeometry(geometry));
+    dispatch(addRouteGeometry(geometry));
     dispatch(setRouteLoading(false));
   };
 };
