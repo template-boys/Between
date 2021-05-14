@@ -15,11 +15,13 @@ import { debounce } from "lodash";
 
 import FullMapView from "./components/FullMapView";
 import DestinationBottomView from "./components/DestinationBottomView";
+import OriginBottomView from "./components/OriginBottomView";
 import {
   addOrigin as addOriginLocationAction,
   removeOriginLocation as removeOriginLocationAction,
   getDestinationSearch as getDestinationSearchAction,
   getRouteGeometries,
+  setDestinations,
 } from "./redux/searchActions";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AutoCompleteInputField from "../../components/AutoCompleteInputField";
@@ -28,6 +30,7 @@ import AutoCompleteSearchResult from "./components/AutoCompleteSearchResult";
 import { getMiddlePoint } from "../../utils/routeUtils";
 import { State } from "../../../rootReducer";
 import { Coordinate, TomTomOriginResult } from "./redux/searchReducerTypes";
+import { Text } from "react-native-elements";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -54,6 +57,9 @@ export default function SearchScreen({ navigation }): ReactElement {
   );
   const destinationSearchLoading = useSelector(
     (state: State) => state.searchReducer.destinationSearchLoading
+  );
+  const selectedOriginIndex = useSelector(
+    (state: State) => state.searchReducer.selectedOriginIndex
   );
 
   //Search Actions
@@ -128,72 +134,87 @@ export default function SearchScreen({ navigation }): ReactElement {
 
   const [mapHeight, setMapHeight] = useState(SCREEN_HEIGHT);
 
-  return (
-    <>
-      {isAutoCompleteFocus ? <View style={styles.searchBackground} /> : null}
-      <View style={[styles.container, { marginTop: insets.top }]}>
-        <AutoCompleteInputField
-          inputRef={autoInputRef}
-          leftIcon={
-            isAutoCompleteFocus ? "chevron-back-outline" : "search-outline"
-          }
-          onLeftIconPress={() => {
-            if (!isAutoCompleteFocus) {
-              autoInputRef?.current?.focus();
-            } else {
-              Keyboard.dismiss();
-              setAutoCompleteValues([]);
-              setIsAutoCompleteFocus(false);
-            }
-          }}
-          inputProps={{
-            onChange: (value) => {
-              getAutoCompleteResults(value);
-            },
-            onFocus: () => {
-              setIsAutoCompleteFocus(true);
-            },
-          }}
+  const _renderBottomView = () => {
+    if (selectedOriginIndex !== -1 && !isAutoCompleteFocus) {
+      return <OriginBottomView setMapHeight={setMapHeight} />;
+    } else if (origins.length > 1 && !isAutoCompleteFocus) {
+      return (
+        <DestinationBottomView
+          destinations={destinations}
+          destinationSearchLoading={destinationSearchLoading}
+          navigation={navigation}
+          bottomSheetRef={searchBottomSheetRef}
+          setMapHeight={setMapHeight}
         />
-        {origins.length > 1 && !isAutoCompleteFocus && (
-          <DestinationBottomView
-            destinations={destinations}
-            destinationSearchLoading={destinationSearchLoading}
-            navigation={navigation}
-            bottomSheetRef={searchBottomSheetRef}
-            setMapHeight={setMapHeight}
-          />
-        )}
-        {isAutoCompleteFocus ? (
-          <FlatList
-            data={autoCompleteValues}
-            style={styles.flatListContainer}
-            contentContainerStyle={styles.listContainer}
-            keyboardDismissMode="on-drag"
-            keyboardShouldPersistTaps="always"
-            renderItem={({ item, index }) => (
-              <TouchableOpacity
-                onPress={() => {
-                  addOriginLocation(item);
-                  setIsAutoCompleteFocus(false);
-                  Keyboard.dismiss();
-                  setAutoCompleteValues([]);
-                  autoInputRef.current?.clear();
-                }}
-              >
-                <AutoCompleteSearchResult origin={item} />
-              </TouchableOpacity>
-            )}
-          />
-        ) : null}
-      </View>
+      );
+    }
+  };
+
+  //Set map height back to 100% if we removed an origin
+  useEffect(() => {
+    if (origins.length === 0 || origins.length === 1) {
+      setMapHeight(SCREEN_HEIGHT);
+      dispatch(setDestinations([]));
+    }
+  }, [origins]);
+
+  return (
+    <View style={styles.container}>
+      {isAutoCompleteFocus ? <View style={styles.searchBackground} /> : null}
+      <AutoCompleteInputField
+        inputRef={autoInputRef}
+        leftIcon={
+          isAutoCompleteFocus ? "chevron-back-outline" : "search-outline"
+        }
+        onLeftIconPress={() => {
+          if (!isAutoCompleteFocus) {
+            autoInputRef?.current?.focus();
+          } else {
+            Keyboard.dismiss();
+            setAutoCompleteValues([]);
+            setIsAutoCompleteFocus(false);
+          }
+        }}
+        inputProps={{
+          onChange: (value) => {
+            getAutoCompleteResults(value);
+          },
+          onFocus: () => {
+            setIsAutoCompleteFocus(true);
+          },
+        }}
+        isAutoCompleteFocus={isAutoCompleteFocus}
+      />
+      {_renderBottomView()}
+      {isAutoCompleteFocus ? (
+        <FlatList
+          data={autoCompleteValues}
+          style={styles.flatListContainer}
+          contentContainerStyle={styles.listContainer}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="always"
+          renderItem={({ item, index }) => (
+            <TouchableOpacity
+              onPress={() => {
+                addOriginLocation(item);
+                setIsAutoCompleteFocus(false);
+                Keyboard.dismiss();
+                setAutoCompleteValues([]);
+                autoInputRef.current?.clear();
+              }}
+            >
+              <AutoCompleteSearchResult origin={item} />
+            </TouchableOpacity>
+          )}
+        />
+      ) : null}
       <FullMapView
         originLocations={origins}
         onRemovePress={removeOriginLocation}
         yelpDestinations={destinations}
         mapHeight={mapHeight}
       />
-    </>
+    </View>
   );
 }
 
@@ -207,16 +228,10 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     backgroundColor: "white",
   },
-  autoCompleteStyle: {
-    marginTop: 10,
-    marginLeft: 15,
-    marginRight: 15,
-  },
   flatListContainer: {
-    zIndex: -5,
     width: SCREEN_WIDTH,
     flex: 1,
-    marginTop: 10,
+    marginTop: 15,
     backgroundColor: "white",
   },
   listContainer: {

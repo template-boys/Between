@@ -166,6 +166,7 @@ export default function DestinationBottomView({
         </View>
       ) : (
         <Carousel
+          removeClippedSubviews={false}
           ref={carouselRef}
           data={destinations}
           renderItem={({ item }) => (

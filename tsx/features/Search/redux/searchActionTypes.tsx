@@ -11,6 +11,7 @@ export enum SearchActionTypes {
   //Adds origin from auto complete input
   ADD_ORIGIN = "ADD_ORIGIN",
   REMOVE_ORIGIN_INDEX = "REMOVE_ORIGIN_INDEX",
+  SET_ORIGIN_INDEX = "SET_ORIGIN_INDEX",
 
   //Currently selected destination index
   SET_DESTINATION_INDEX = "SET_DESTINATION_INDEX",

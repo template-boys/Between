@@ -12,7 +12,7 @@ interface Props {
 }
 
 const BottomView = (props: React.PropsWithChildren<Props>) => {
-  const { bottom: BOTTOM_INSETS } = useSafeAreaInsets();
+  const { bottom: BOTTOM_INSETS, top: TOP_INSETS } = useSafeAreaInsets();
   const [animatedBottom, setAnimatedBottom] = React.useState(
     new Animated.Value(CONTENT_HEIGHT)
   );
@@ -23,7 +23,7 @@ const BottomView = (props: React.PropsWithChildren<Props>) => {
       duration: 200,
       useNativeDriver: true,
     }).start(() => {
-      props.setMapHeight(SCREEN_HEIGHT - CONTENT_HEIGHT);
+      props.setMapHeight(SCREEN_HEIGHT - CONTENT_HEIGHT - 80);
     });
 
     Keyboard.addListener("keyboardWillShow", keyboardWillShow);
@@ -46,7 +46,7 @@ const BottomView = (props: React.PropsWithChildren<Props>) => {
         SCREEN_HEIGHT / 3
       ) {
         props.setMapHeight(
-          SCREEN_HEIGHT - CONTENT_HEIGHT - e.endCoordinates.height + 40
+          SCREEN_HEIGHT - CONTENT_HEIGHT - e.endCoordinates.height + 5
         );
       }
     });
@@ -54,7 +54,7 @@ const BottomView = (props: React.PropsWithChildren<Props>) => {
 
   const keyboardWillHide = () => {
     setTimeout(() => {
-      props.setMapHeight(SCREEN_HEIGHT - CONTENT_HEIGHT);
+      props.setMapHeight(SCREEN_HEIGHT - CONTENT_HEIGHT - 80);
     }, 100);
 
     Animated.timing(animatedBottom, {
@@ -86,12 +86,11 @@ const styles = StyleSheet.create({
   container: {
     bottom: 0,
     flex: 1,
+    zIndex: -3,
   },
   animatedContainer: {
     justifyContent: "center",
     alignItems: "center",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
     shadowColor: "black",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,

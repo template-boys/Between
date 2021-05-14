@@ -4,7 +4,6 @@ import {
   Text,
   Image,
   Linking,
-  FlatList,
   StyleSheet,
   Dimensions,
 } from "react-native";
@@ -19,8 +18,6 @@ import { getPolylineArrays } from "./redux/searchSelector";
 import { State } from "../../../rootReducer";
 import OriginListItem from "./components/OriginListItem";
 import { TomTomOriginResult } from "./redux/searchReducerTypes";
-import Carousel from "react-native-snap-carousel";
-
 interface Props {
   navigation: any;
 }

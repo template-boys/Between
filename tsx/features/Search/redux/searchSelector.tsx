@@ -1,7 +1,11 @@
 import { createSelector } from "reselect";
 import { State } from "../../../../rootReducer";
 import { getPolylineArray } from "../../../utils/routeUtils";
-import { Coordinate, YelpBusiness } from "./searchReducerTypes";
+import {
+  Coordinate,
+  YelpBusiness,
+  TomTomOriginResult,
+} from "./searchReducerTypes";
 
 const getCurrentRouteGeometries = (state: State) =>
   state.searchReducer?.currentRouteGeometries;
@@ -11,18 +15,10 @@ const getDestinations = (state: State) => state.searchReducer.destinations;
 const getCurrentDestinationIndex = (state: State): number =>
   state.searchReducer?.destinationIndex;
 
-// export const currentPolyLineArray: (
-//   state: State
-// ) => Array<Coordinate> = createSelector(
-//   [getCurrentRouteGeometry],
-//   (currentRouteGeometry) => {
-//     if (!!currentRouteGeometry) {
-//       return getPolylineArray(currentRouteGeometry);
-//     } else {
-//       return [];
-//     }
-//   }
-// );
+const getSelectedOriginIndex = (state: State) =>
+  state.searchReducer.selectedOriginIndex;
+
+const getOrigins = (state: State) => state.searchReducer.origins;
 
 export const getPolylineArrays: (
   state: State
@@ -45,5 +41,14 @@ export const getCurrentDestination: (
   [getCurrentDestinationIndex, getDestinations],
   (currentDestinationIndex, destinations) => {
     return destinations[currentDestinationIndex];
+  }
+);
+
+export const selectedOrigin: (
+  state: State
+) => TomTomOriginResult | null = createSelector(
+  [getSelectedOriginIndex, getOrigins],
+  (selectedOriginIndex, origins) => {
+    return origins[selectedOriginIndex] ?? null;
   }
 );
