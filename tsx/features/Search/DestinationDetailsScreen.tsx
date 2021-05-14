@@ -1,24 +1,33 @@
-import React, { useState } from "react";
-import { View, Text, Image, Linking, FlatList, StyleSheet } from "react-native";
+import React, { useRef, useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  Linking,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import style from "../../themes/style";
 import DestinationMapView from "./components/DestinationMapView";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { getRouteGeometries } from "./redux/searchActions";
 import { getRatingImage } from "../../utils/searchUtils";
-import theme from "../../themes/theme";
-import Icon from "react-native-vector-icons/Ionicons";
 import FAIcon from "react-native-vector-icons/FontAwesome";
-import { currentPolyLineArray } from "./redux/searchSelector";
+import { getPolylineArrays } from "./redux/searchSelector";
 import { State } from "../../../rootReducer";
-
+import OriginListItem from "./components/OriginListItem";
+import { TomTomOriginResult } from "./redux/searchReducerTypes";
 interface Props {
   navigation: any;
 }
 
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
 const DestinationDetailsScreen = (props: Props) => {
   const dispatch = useDispatch();
-  const [selectedLocationIndex, setSelectedLocationIndex] = useState(0);
+  const carouselRef = useRef<any | null>(null);
+  const [selectedOriginIndex, setSelectedOriginIndex] = useState(0);
   const destinations = useSelector(
     (state: State) => state.searchReducer.destinations ?? []
   );
@@ -26,17 +35,15 @@ const DestinationDetailsScreen = (props: Props) => {
     (state: State) => state.searchReducer.destinationIndex
   );
   const origins = useSelector((state: State) => state.searchReducer.origins);
-  const polylineArray = useSelector((state: State) =>
-    currentPolyLineArray(state)
-  );
+  const polylineArrays = useSelector(getPolylineArrays);
   const selectedDestination = destinations[destinationIndex];
   const latitude = selectedDestination?.coordinates?.latitude;
   const longitude = selectedDestination?.coordinates?.longitude;
 
   //dynamic in the future (whatever location user wants to see from)
   const pickup = {
-    latitude: origins[selectedLocationIndex]?.position?.lat,
-    longitude: origins[selectedLocationIndex]?.position?.lon,
+    latitude: origins[selectedOriginIndex]?.position?.lat,
+    longitude: origins[selectedOriginIndex]?.position?.lon,
   };
 
   const lyftURL = `https://lyft.com/ride?id=lyft&pickup[latitude]=${pickup.latitude}&pickup[longitude]=${pickup.longitude}&destination[latitude]=${latitude}&destination[longitude]=${longitude}&partner=lL5keX91WP4D`;
@@ -49,86 +56,30 @@ const DestinationDetailsScreen = (props: Props) => {
       title: selectedDestination?.name || "Details",
     });
 
-    dispatch(
-      getRouteGeometries(
-        {
-          longitude: origins[selectedLocationIndex]?.position?.lon,
-          latitude: origins[selectedLocationIndex]?.position?.lat,
-        },
-        {
-          longitude: selectedDestination?.coordinates?.longitude,
-          latitude: selectedDestination?.coordinates?.latitude,
-        }
-      )
-    );
+    origins.forEach((origin) => {
+      dispatch(
+        getRouteGeometries(
+          {
+            longitude: origin?.position?.lon,
+            latitude: origin?.position?.lat,
+          },
+          {
+            longitude: selectedDestination?.coordinates?.longitude,
+            latitude: selectedDestination?.coordinates?.latitude,
+          }
+        )
+      );
+    });
   }, []);
 
   const imageSource = getRatingImage(selectedDestination?.rating);
 
-  const _renderOriginLocation = ({ item, index }) => {
-    const isSelected = selectedLocationIndex === index;
-    return (
-      <TouchableOpacity
-        style={styles.originLocationContainer}
-        onPress={() => {
-          dispatch(
-            getRouteGeometries(
-              {
-                longitude: origins[selectedLocationIndex]?.position?.lon,
-                latitude: origins[selectedLocationIndex]?.position?.lat,
-              },
-              {
-                longitude: selectedDestination?.coordinates?.longitude,
-                latitude: selectedDestination?.coordinates?.latitude,
-              }
-            )
-          );
-          setSelectedLocationIndex(index);
-        }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            flex: 1,
-            alignItems: "center",
-          }}
-        >
-          <View
-            style={{
-              alignItems: "flex-start",
-              justifyContent: "center",
-              flex: 1,
-            }}
-          >
-            <Text style={[style.semiBold, { marginBottom: 10 }]}>
-              Origin {index + 1}
-            </Text>
-            <View style={{ justifyContent: "center", flexDirection: "row" }}>
-              <Icon
-                name="location-outline"
-                size={18}
-                color={theme.secondary}
-                style={{ paddingRight: 5 }}
-              />
-              <Text
-                numberOfLines={2}
-                style={[
-                  style.light,
-                  {
-                    fontSize: 13,
-                  },
-                ]}
-              >
-                {item?.poi?.name ?? item?.address?.freeformAddress}
-              </Text>
-            </View>
-          </View>
-          {isSelected ? (
-            <Icon name={"checkmark-circle"} size={30} color={theme.secondary} />
-          ) : null}
-        </View>
-      </TouchableOpacity>
-    );
+  const _renderOriginLocation: React.FC<{
+    item: TomTomOriginResult;
+    index: number;
+  }> = ({ item, index }) => {
+    const isSelected = selectedOriginIndex === index;
+    return <OriginListItem origin={item} />;
   };
 
   return (
@@ -136,19 +87,39 @@ const DestinationDetailsScreen = (props: Props) => {
       {!!latitude && !!longitude && (
         <DestinationMapView
           location={{ latitude, longitude }}
-          polylineArray={polylineArray}
+          polylineArrays={polylineArrays}
         />
       )}
       {/* Origins */}
-      <View style={styles.originDivider} />
-      <FlatList
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyboardShouldPersistTaps="always"
-        data={origins}
-        renderItem={_renderOriginLocation}
-        style={{ maxHeight: 250, backgroundColor: "white" }}
-      />
+      {/* <View style={{ marginTop: 15 }}>
+        <Carousel
+          ref={carouselRef}
+          data={origins}
+          renderItem={_renderOriginLocation}
+          sliderWidth={SCREEN_WIDTH}
+          itemWidth={300}
+          removeClippedSubviews={false}
+          containerCustomStyle={{
+            height: 120,
+          }}
+          contentContainerStyle={{ justifyContent: "center" }}
+          onBeforeSnapToItem={(i) => {
+            dispatch(
+              getRouteGeometries(
+                {
+                  longitude: origins[i]?.position?.lon,
+                  latitude: origins[i]?.position?.lat,
+                },
+                {
+                  longitude: selectedDestination?.coordinates?.longitude,
+                  latitude: selectedDestination?.coordinates?.latitude,
+                }
+              )
+            );
+            setSelectedOriginIndex(i);
+          }}
+        />
+      </View> */}
 
       {/* Reviews */}
       <View
@@ -235,22 +206,6 @@ const DestinationDetailsScreen = (props: Props) => {
   );
 };
 const styles = StyleSheet.create({
-  originLocationContainer: {
-    padding: 10,
-    marginHorizontal: 20,
-    marginVertical: 10,
-    height: 100,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 5,
-    elevation: 1,
-    backgroundColor: "white",
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#e3e3e3",
-    width: 300,
-  },
   originDivider: {
     borderColor: "#e3e3e3",
     borderWidth: 1,

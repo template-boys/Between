@@ -173,7 +173,8 @@ export default function DestinationBottomView({
             <DestinationListItem destinationItem={item} />
           )}
           sliderWidth={SCREEN_WIDTH}
-          itemWidth={300}
+          itemWidth={320}
+          removeClippedSubviews={false}
           onBeforeSnapToItem={(i) => {
             dispatch(setDestinationIndex(i));
           }}

@@ -1,26 +1,46 @@
 import { createSelector } from "reselect";
 import { State } from "../../../../rootReducer";
-import { getPolylineArray } from "../../../utils/directionsUtils";
-import { Coordinate, TomTomOriginResult } from "./searchReducerTypes";
+import { getPolylineArray } from "../../../utils/routeUtils";
+import {
+  Coordinate,
+  YelpBusiness,
+  TomTomOriginResult,
+} from "./searchReducerTypes";
 
-const getCurrentRouteGeometry = (state: State) =>
-  state.searchReducer?.currentRouteGeometry;
+const getCurrentRouteGeometries = (state: State) =>
+  state.searchReducer?.currentRouteGeometries;
+
+const getDestinations = (state: State) => state.searchReducer.destinations;
+
+const getCurrentDestinationIndex = (state: State): number =>
+  state.searchReducer?.destinationIndex;
 
 const getSelectedOriginIndex = (state: State) =>
   state.searchReducer.selectedOriginIndex;
 
 const getOrigins = (state: State) => state.searchReducer.origins;
 
-export const currentPolyLineArray: (
+export const getPolylineArrays: (
   state: State
-) => Array<Coordinate> = createSelector(
-  [getCurrentRouteGeometry],
-  (currentRouteGeometry) => {
-    if (!!currentRouteGeometry) {
-      return getPolylineArray(currentRouteGeometry);
+) => Array<Array<Coordinate>> = createSelector(
+  [getCurrentRouteGeometries],
+  (currentRouteGeometries: Array<string>) => {
+    if (!!currentRouteGeometries) {
+      return currentRouteGeometries.map((geometry: string) =>
+        getPolylineArray(geometry)
+      );
     } else {
       return [];
     }
+  }
+);
+
+export const getCurrentDestination: (
+  state: State
+) => YelpBusiness = createSelector(
+  [getCurrentDestinationIndex, getDestinations],
+  (currentDestinationIndex, destinations) => {
+    return destinations[currentDestinationIndex];
   }
 );
 

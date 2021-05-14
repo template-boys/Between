@@ -19,7 +19,7 @@ export interface SearchReducer {
     | Array<{ origin: Coordinate; destination: Coordinate; geometry: string }>
     | [];
   userLocation?: any;
-  currentRouteGeometry?: string;
+  currentRouteGeometries: Array<string> | [];
   selectedOriginIndex: number;
 }
 

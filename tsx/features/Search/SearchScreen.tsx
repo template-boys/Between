@@ -27,7 +27,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AutoCompleteInputField from "../../components/AutoCompleteInputField";
 import { tomTomAutoComplete } from "../../api/thirdPartyApis";
 import AutoCompleteSearchResult from "./components/AutoCompleteSearchResult";
-import { getMiddlePoint } from "../../utils/directionsUtils";
+import { getMiddlePoint } from "../../utils/routeUtils";
 import { State } from "../../../rootReducer";
 import { Coordinate, TomTomOriginResult } from "./redux/searchReducerTypes";
 import { Text } from "react-native-elements";
@@ -91,7 +91,6 @@ export default function SearchScreen({ navigation }): ReactElement {
       if (distance < 15000) {
         middlePoint = getCenterOfBounds(locationCoords);
       } else {
-        dispatch(getRouteGeometries(locationCoords[0], locationCoords[1]));
         middlePoint = await getMiddlePoint(
           locationCoords[0],
           locationCoords[1]
