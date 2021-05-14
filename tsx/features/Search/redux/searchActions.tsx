@@ -210,3 +210,10 @@ export const addCachedRouteGeometry = (
 export const removeFirstCachedDirection = {
   type: SearchActionTypes.REMOVE_FIRST_CACHED_ROUTE_GEOMETRY,
 };
+
+export const setOriginIndex = (index: number) => {
+  return {
+    type: SearchActionTypes.SET_ORIGIN_INDEX,
+    payload: index,
+  };
+};

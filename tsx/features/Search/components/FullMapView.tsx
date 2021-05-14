@@ -8,7 +8,7 @@ import theme from "../../../themes/theme";
 import mapTheme from "../../../../assets/mapThemes/mapTheme";
 import { getPolylineArray } from "../../../utils/directionsUtils";
 import { State } from "../../../../rootReducer";
-import { setDestinationIndex, setUserLocation } from "../redux/searchActions";
+import { setOriginIndex, setUserLocation } from "../redux/searchActions";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -28,7 +28,6 @@ export default function FullMapView({
   mapHeight,
 }: Props): ReactElement {
   const dispatch = useDispatch();
-  const [pressedMarker, setPressedMarker] = React.useState(-1);
   const mapRef = React.useRef<any | null>(null);
 
   const destinationIndex = useSelector(
@@ -47,6 +46,10 @@ export default function FullMapView({
 
   const currentRouteGeometry = useSelector(
     (state: State) => state.searchReducer.currentRouteGeometry
+  );
+
+  const selectedOriginIndex = useSelector(
+    (state: State) => state.searchReducer.selectedOriginIndex
   );
   const region = {
     latitude: userLocation?.latitude || 39.8283,
@@ -162,7 +165,7 @@ export default function FullMapView({
     <MapView
       ref={mapRef}
       onPress={() => {
-        setPressedMarker(-1);
+        dispatch(setOriginIndex(-1));
       }}
       style={[
         styles.mapStyles,
@@ -184,10 +187,9 @@ export default function FullMapView({
           style={{ zIndex: 5 }}
           onPress={(e) => {
             e.stopPropagation();
-            setPressedMarker(i);
-            dispatch(setDestinationIndex(i));
+            dispatch(setOriginIndex(i));
           }}
-        ></Marker>
+        />
       ))}
       {destinationMarkers.map((marker, i) => {
         const markerStyle =
@@ -205,7 +207,7 @@ export default function FullMapView({
               destinationIndex === i ? marker.pinColor : theme.lightGrey
             }
             style={markerStyle}
-          ></Marker>
+          />
         );
       })}
     </MapView>

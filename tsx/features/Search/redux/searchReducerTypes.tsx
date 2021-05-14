@@ -20,6 +20,7 @@ export interface SearchReducer {
     | [];
   userLocation?: any;
   currentRouteGeometry?: string;
+  selectedOriginIndex: number;
 }
 
 export type SearchAction = {
