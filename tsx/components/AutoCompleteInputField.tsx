@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, TextInputProps, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import theme from "../themes/theme";
 import CustomInput from "./CustomInput";
 
@@ -8,15 +9,21 @@ interface AutoCompleteInputProps {
   inputProps?: TextInputProps;
   leftIcon?: string;
   inputRef?: any;
+  isAutoCompleteFocus: boolean;
 }
 
 function AutoCompleteInputField(props: AutoCompleteInputProps) {
+  const insets = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { marginTop: insets.top + 10 }]}>
       <CustomInput
         leftIconColor={theme.secondary}
         inputRef={props.inputRef}
-        placeholder="Search city, address, or place"
+        placeholder={
+          props.isAutoCompleteFocus
+            ? "Search city, address, or place"
+            : "Add origin locations"
+        }
         inputContainerStyle={styles.inputContainer}
         iconName={props.leftIcon}
         clearButtonMode="always"
