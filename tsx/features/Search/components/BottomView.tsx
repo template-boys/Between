@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, Dimensions, Animated, Keyboard } from "react-native";
+import { StyleSheet, Dimensions, Animated, Keyboard } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -7,9 +7,7 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 const CONTENT_HEIGHT = 310;
 const NAVBAR_HEIGHT = 49;
 
-interface Props {
-  setMapHeight: (number: number) => void;
-}
+interface Props {}
 
 const BottomView = (props: React.PropsWithChildren<Props>) => {
   const { bottom: BOTTOM_INSETS, top: TOP_INSETS } = useSafeAreaInsets();
@@ -22,9 +20,7 @@ const BottomView = (props: React.PropsWithChildren<Props>) => {
       toValue: 0,
       duration: 200,
       useNativeDriver: true,
-    }).start(() => {
-      props.setMapHeight(SCREEN_HEIGHT - CONTENT_HEIGHT - 80);
-    });
+    }).start();
 
     Keyboard.addListener("keyboardWillShow", keyboardWillShow);
     Keyboard.addListener("keyboardWillHide", keyboardWillHide);
@@ -40,23 +36,10 @@ const BottomView = (props: React.PropsWithChildren<Props>) => {
       toValue: BOTTOM_INSETS - e.endCoordinates.height + NAVBAR_HEIGHT,
       duration: 200,
       useNativeDriver: true,
-    }).start(() => {
-      if (
-        SCREEN_HEIGHT - CONTENT_HEIGHT - e.endCoordinates.height + 40 >
-        SCREEN_HEIGHT / 3
-      ) {
-        props.setMapHeight(
-          SCREEN_HEIGHT - CONTENT_HEIGHT - e.endCoordinates.height + 5
-        );
-      }
-    });
+    }).start(() => {});
   };
 
   const keyboardWillHide = () => {
-    setTimeout(() => {
-      props.setMapHeight(SCREEN_HEIGHT - CONTENT_HEIGHT - 80);
-    }, 100);
-
     Animated.timing(animatedBottom, {
       toValue: 0,
       duration: 200,
@@ -72,11 +55,9 @@ const BottomView = (props: React.PropsWithChildren<Props>) => {
     ],
   };
   return (
-    <View style={styles.container}>
-      <Animated.View style={[styles.animatedContainer, transformStyle]}>
-        {props.children}
-      </Animated.View>
-    </View>
+    <Animated.View style={[styles.animatedContainer, transformStyle]}>
+      {props.children}
+    </Animated.View>
   );
 };
 
@@ -86,7 +67,8 @@ const styles = StyleSheet.create({
   container: {
     bottom: 0,
     flex: 1,
-    zIndex: -3,
+    zIndex: 2,
+    backgroundColor: "red",
   },
   animatedContainer: {
     justifyContent: "center",
@@ -97,9 +79,9 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 1,
     position: "absolute",
-    backgroundColor: "white",
-    height: CONTENT_HEIGHT,
     width: SCREEN_WIDTH,
     bottom: 0,
+    zIndex: 2,
+    paddingBottom: 25,
   },
 });

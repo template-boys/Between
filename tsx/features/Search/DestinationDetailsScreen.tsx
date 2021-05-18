@@ -18,11 +18,13 @@ import { getPolylineArrays } from "./redux/searchSelector";
 import { State } from "../../../rootReducer";
 import OriginListItem from "./components/OriginListItem";
 import { TomTomOriginResult } from "./redux/searchReducerTypes";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/Ionicons";
+import theme from "../../themes/theme";
+import { useNavigation } from "@react-navigation/core";
 interface Props {
   navigation: any;
 }
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const DestinationDetailsScreen = (props: Props) => {
   const dispatch = useDispatch();
@@ -82,8 +84,31 @@ const DestinationDetailsScreen = (props: Props) => {
     return <OriginListItem origin={item} />;
   };
 
+  const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
+      <View
+        style={{
+          position: "absolute",
+          marginTop: insets.top,
+          marginLeft: 15,
+          zIndex: 100,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Icon
+            name="chevron-back-outline"
+            size={40}
+            color={theme.darkPurple}
+          />
+        </TouchableOpacity>
+      </View>
       {!!latitude && !!longitude && (
         <DestinationMapView
           location={{ latitude, longitude }}

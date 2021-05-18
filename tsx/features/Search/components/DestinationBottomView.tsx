@@ -26,7 +26,6 @@ interface Props {
   destinationSearchLoading: boolean;
   navigation: any;
   bottomSheetRef: any;
-  setMapHeight: any;
 }
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
@@ -34,7 +33,6 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 export default function DestinationBottomView({
   destinations,
   destinationSearchLoading,
-  setMapHeight,
 }: Props): ReactElement {
   const dispatch = useDispatch();
 
@@ -92,26 +90,18 @@ export default function DestinationBottomView({
   }, [typeIndex]);
 
   useEffect(() => {
+    carouselRef.current?.snapToItem(destinationIndex);
+  }, [destinationIndex]);
+
+  useEffect(() => {
     if (!hideInput && types.indexOf(destinationType) === -1) {
       searchTypeInputRef?.current?.focus();
       searchTypeInputRef?.current?.setNativeProps({ text: destinationType });
     }
   }, [hideInput]);
 
-  const getPaginationDotStyle = (placeIndex: number, index: number) => {
-    const isCurrentIndex = placeIndex === index;
-    return [
-      styles.paginationDot,
-      {
-        backgroundColor: isCurrentIndex ? theme.darkPurple : theme.lightGrey,
-        opacity: isCurrentIndex ? 1 : 0.4,
-        width: isCurrentIndex ? 10 : 5,
-      },
-    ];
-  };
-
   return (
-    <BottomView setMapHeight={setMapHeight}>
+    <BottomView>
       {typeIndex === 0 && !hideInput ? (
         <CustomInput
           inputRef={searchTypeInputRef}
@@ -174,17 +164,11 @@ export default function DestinationBottomView({
           )}
           sliderWidth={SCREEN_WIDTH}
           itemWidth={320}
-          removeClippedSubviews={false}
           onBeforeSnapToItem={(i) => {
             dispatch(setDestinationIndex(i));
           }}
         />
       )}
-      <View style={styles.paginationContainer}>
-        {destinations.map((_, index: number) => (
-          <View style={getPaginationDotStyle(destinationIndex, index)} />
-        ))}
-      </View>
     </BottomView>
   );
 }
@@ -213,9 +197,10 @@ const styles = StyleSheet.create({
   },
   typeContainerStyle: {
     alignItems: "center",
-    height: 80,
+    height: 45,
     paddingHorizontal: 20,
     justifyContent: "center",
+    marginBottom: 20,
   },
   inputContainer: {
     paddingVertical: 10,

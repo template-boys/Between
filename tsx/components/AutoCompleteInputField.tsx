@@ -22,7 +22,7 @@ function AutoCompleteInputField(props: AutoCompleteInputProps) {
         placeholder={
           props.isAutoCompleteFocus
             ? "Search city, address, or place"
-            : "Add origin locations"
+            : "Add places to search between"
         }
         inputContainerStyle={styles.inputContainer}
         iconName={props.leftIcon}
@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 15,
     marginRight: 15,
+    zIndex: 10,
   },
   inputContainer: {
     borderRadius: 35,

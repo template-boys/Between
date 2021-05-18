@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
     borderColor: "#e3e3e3",
     justifyContent: "space-between",
     height: 180,
+    backgroundColor: "white",
   },
   image: {
     width: 60,

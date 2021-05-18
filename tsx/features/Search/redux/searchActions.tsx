@@ -95,9 +95,13 @@ export const setUserLocation = (location) => {
 };
 
 export const setUserGeocodeLocation = (location) => {
-  return async (dispatch: Dispatch<SearchAction>) => {
+  return async (dispatch: Dispatch<SearchAction>, getState: () => State) => {
     const res = await reverseGeocode(location);
-    res?.data?.addresses[0] && dispatch(addOrigin(res?.data?.addresses[0]));
+    const state = getState();
+    const numOrigins = state.searchReducer.origins.length;
+    if (res?.data?.addresses[0] && numOrigins === 0) {
+      dispatch(addOrigin(res?.data?.addresses[0]));
+    }
   };
 };
 
@@ -112,8 +116,8 @@ export const addRouteGeometry = (routeGeometry: string) => {
 export const clearRouteGeometries = () => {
   return {
     type: SearchActionTypes.CLEAR_ROUTE_GEOMETRIES,
-  }
-}
+  };
+};
 
 // Main action for using Google's place directions API
 // Parameters:
