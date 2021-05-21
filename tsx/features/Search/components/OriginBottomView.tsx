@@ -3,30 +3,23 @@ import {
   Dimensions,
   StyleSheet,
   View,
-  FlatList,
   Text,
   TouchableOpacity,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { State } from "../../../../rootReducer";
-import Button from "../../../components/Button";
 import style from "../../../themes/style";
 import theme from "../../../themes/theme";
 import { removeOriginLocation, setOriginIndex } from "../redux/searchActions";
-import { YelpBusiness } from "../redux/searchReducerTypes";
 import { selectedOrigin } from "../redux/searchSelector";
 import BottomView from "./BottomView";
 
-interface Props {
-  setMapHeight: any;
-}
+interface Props {}
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-export default function DestinationBottomView({
-  setMapHeight,
-}: Props): ReactElement {
+export default function DestinationBottomView({}: Props): ReactElement {
   const dispatch = useDispatch();
   const selectedOriginIndex = useSelector(
     (state: State) => state.searchReducer.selectedOriginIndex
@@ -35,7 +28,7 @@ export default function DestinationBottomView({
   const origin = useSelector((state: State) => selectedOrigin(state));
 
   return (
-    <BottomView setMapHeight={setMapHeight}>
+    <BottomView>
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.backIcon}
@@ -103,6 +96,14 @@ const styles = StyleSheet.create({
     flex: 1,
     width: SCREEN_WIDTH - 25,
     marginVertical: 5,
+    borderRadius: 25,
+    padding: 10,
+    borderColor: theme.lightGrey,
+    backgroundColor: "white",
+    shadowColor: "black",
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 0 },
   },
   contentContainer: {
     alignItems: "center",

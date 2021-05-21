@@ -1,16 +1,16 @@
 import React, { ReactElement, useState } from "react";
 import RNLocation from "react-native-location";
 import { PixelRatio, Platform, StyleSheet } from "react-native";
-import { Dimensions } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import MapView, { Marker } from "react-native-maps";
 import theme from "../../../themes/theme";
 import mapTheme from "../../../../assets/mapThemes/mapTheme";
-import { getPolylineArray } from "../../../utils/routeUtils";
 import { State } from "../../../../rootReducer";
-import { setOriginIndex, setUserLocation } from "../redux/searchActions";
-
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+import {
+  setDestinationIndex,
+  setOriginIndex,
+  setUserLocation,
+} from "../redux/searchActions";
 
 interface Props {
   showShadow?: boolean;
@@ -19,13 +19,11 @@ interface Props {
   onRemovePress: (index: number) => void;
   originLocations: any;
   yelpDestinations: any;
-  mapHeight: number;
 }
 
 export default function FullMapView({
   originLocations,
   yelpDestinations,
-  mapHeight,
 }: Props): ReactElement {
   const dispatch = useDispatch();
   const mapRef = React.useRef<any | null>(null);
@@ -40,17 +38,6 @@ export default function FullMapView({
     (state: State) => state.searchReducer.destinationType
   );
 
-  const destinationSearchLoading = useSelector(
-    (state: State) => state.searchReducer.destinationSearchLoading
-  );
-
-  const currentRouteGeometry = useSelector(
-    (state: State) => state.searchReducer.currentRouteGeometry
-  );
-
-  const selectedOriginIndex = useSelector(
-    (state: State) => state.searchReducer.selectedOriginIndex
-  );
   const region = {
     latitude: userLocation?.latitude || 39.8283,
     longitude: userLocation?.longitude || -98.5795,
@@ -138,28 +125,22 @@ export default function FullMapView({
         {
           animated: true,
           edgePadding: {
-            top: Platform.OS === "ios" ? 150 : PixelRatio.get() * 100 - 50,
+            top:
+              Platform.OS === "ios"
+                ? 150
+                : PixelRatio.getPixelSizeForLayoutSize(150),
             right: 100,
             left: 100,
-            bottom: Platform.OS === "ios" ? 100 : PixelRatio.get() * 350 - 50,
+            bottom:
+              Platform.OS === "ios"
+                ? 35
+                : PixelRatio.getPixelSizeForLayoutSize(35),
           },
         }
       );
     }, 250);
     return () => {};
-  }, [
-    originMarkers,
-    destinationMarkers,
-    destinationType,
-    destinationIndex,
-    mapHeight,
-  ]);
-
-  let polylineArray;
-
-  if (!!currentRouteGeometry) {
-    polylineArray = getPolylineArray(currentRouteGeometry);
-  }
+  }, [originMarkers, destinationMarkers, destinationType, destinationIndex]);
 
   return (
     <MapView
@@ -167,15 +148,18 @@ export default function FullMapView({
       onPress={() => {
         dispatch(setOriginIndex(-1));
       }}
-      style={[
-        styles.mapStyles,
-        {
-          height: mapHeight,
-        },
-      ]}
+      style={styles.mapStyles}
       initialRegion={region}
       provider={"google"}
       customMapStyle={mapTheme}
+      showsUserLocation
+      showsMyLocationButton
+      mapPadding={{
+        top: 0,
+        right: 0,
+        bottom: destinationMarkers.length > 2 ? 275 : 0,
+        left: 0,
+      }}
     >
       {originMarkers.map((marker, i) => (
         <Marker
@@ -206,6 +190,9 @@ export default function FullMapView({
             pinColor={
               destinationIndex === i ? marker.pinColor : theme.lightGrey
             }
+            onPress={() => {
+              dispatch(setDestinationIndex(i));
+            }}
             style={markerStyle}
           />
         );
@@ -216,10 +203,7 @@ export default function FullMapView({
 
 const styles = StyleSheet.create({
   mapStyles: {
-    position: "absolute",
-    zIndex: -2,
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT / 1.5,
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 1,
   },
 });

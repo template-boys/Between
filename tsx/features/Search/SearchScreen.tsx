@@ -20,29 +20,24 @@ import {
   addOrigin as addOriginLocationAction,
   removeOriginLocation as removeOriginLocationAction,
   getDestinationSearch as getDestinationSearchAction,
-  getRouteGeometries,
   setDestinations,
 } from "./redux/searchActions";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AutoCompleteInputField from "../../components/AutoCompleteInputField";
 import { tomTomAutoComplete } from "../../api/thirdPartyApis";
 import AutoCompleteSearchResult from "./components/AutoCompleteSearchResult";
 import { getMiddlePoint } from "../../utils/routeUtils";
 import { State } from "../../../rootReducer";
 import { Coordinate, TomTomOriginResult } from "./redux/searchReducerTypes";
-import { Text } from "react-native-elements";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function SearchScreen({ navigation }): ReactElement {
   const dispatch = useDispatch();
-  const insets = useSafeAreaInsets();
   const [autoCompleteValues, setAutoCompleteValues] = useState<
     Array<TomTomOriginResult>
   >([]);
-  const [isAutoCompleteFocus, setIsAutoCompleteFocus] = useState<boolean>(
-    false
-  );
+  const [isAutoCompleteFocus, setIsAutoCompleteFocus] =
+    useState<boolean>(false);
   const searchBottomSheetRef = useRef<any | null>(null);
 
   const origins = useSelector((state: State) => state.searchReducer.origins);
@@ -132,11 +127,9 @@ export default function SearchScreen({ navigation }): ReactElement {
     debouncedAutoCompleteCall(query);
   };
 
-  const [mapHeight, setMapHeight] = useState(SCREEN_HEIGHT);
-
   const _renderBottomView = () => {
     if (selectedOriginIndex !== -1 && !isAutoCompleteFocus) {
-      return <OriginBottomView setMapHeight={setMapHeight} />;
+      return <OriginBottomView />;
     } else if (origins.length > 1 && !isAutoCompleteFocus) {
       return (
         <DestinationBottomView
@@ -144,27 +137,29 @@ export default function SearchScreen({ navigation }): ReactElement {
           destinationSearchLoading={destinationSearchLoading}
           navigation={navigation}
           bottomSheetRef={searchBottomSheetRef}
-          setMapHeight={setMapHeight}
         />
       );
     }
   };
 
-  //Set map height back to 100% if we removed an origin
   useEffect(() => {
     if (origins.length === 0 || origins.length === 1) {
-      setMapHeight(SCREEN_HEIGHT);
       dispatch(setDestinations([]));
     }
   }, [origins]);
 
   return (
     <View style={styles.container}>
+      <FullMapView
+        originLocations={origins}
+        onRemovePress={removeOriginLocation}
+        yelpDestinations={destinations}
+      />
       {isAutoCompleteFocus ? <View style={styles.searchBackground} /> : null}
       <AutoCompleteInputField
         inputRef={autoInputRef}
         leftIcon={
-          isAutoCompleteFocus ? "chevron-back-outline" : "search-outline"
+          isAutoCompleteFocus ? "chevron-back-outline" : "add-circle-outline"
         }
         onLeftIconPress={() => {
           if (!isAutoCompleteFocus) {
@@ -208,12 +203,6 @@ export default function SearchScreen({ navigation }): ReactElement {
           )}
         />
       ) : null}
-      <FullMapView
-        originLocations={origins}
-        onRemovePress={removeOriginLocation}
-        yelpDestinations={destinations}
-        mapHeight={mapHeight}
-      />
     </View>
   );
 }
@@ -227,11 +216,13 @@ const styles = StyleSheet.create({
     height: SCREEN_HEIGHT,
     width: SCREEN_WIDTH,
     backgroundColor: "white",
+    zIndex: 1,
   },
   flatListContainer: {
     width: SCREEN_WIDTH,
     flex: 1,
     marginTop: 15,
+    zIndex: 1,
     backgroundColor: "white",
   },
   listContainer: {

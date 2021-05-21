@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons";
-import { NavigationContainer, ThemeProvider } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import SearchNavigator from "./SearchNavigator";
-import ActivityNavigator from "./ActivityNavigator";
 import FavoritesNavigator from "./FavoritesNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -13,6 +12,7 @@ import theme from "../themes/theme";
 import FirebaseAuth from "@react-native-firebase/auth";
 import { loginUser, logoutUser } from "../features/Login/redux/loginActions";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { State } from "../../rootReducer";
 
 const BottomTab = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
@@ -34,7 +34,6 @@ function bottomIcon(iconName, color, focused) {
   return (
     <TouchableOpacity
       style={{
-        backgroundColor: focused ? theme.darkPurple : "transparent",
         borderRadius: 12,
         height: 38,
         width: 38,
@@ -54,11 +53,10 @@ function App() {
         showLabel: false,
         inactiveBackgroundColor: "white",
         activeBackgroundColor: "white",
-        activeTintColor: "white",
-        inactiveTintColor: theme.purple,
+        activeTintColor: theme.darkPurple,
+        inactiveTintColor: theme.lightGrey,
         style: {
           backgroundColor: "white",
-          // height: 80,
         },
       }}
     >
@@ -73,7 +71,7 @@ function App() {
         }}
         component={SearchNavigator}
       />
-      <BottomTab.Screen
+      {/* <BottomTab.Screen
         name="Activity"
         options={{
           tabBarLabel: "",
@@ -83,7 +81,7 @@ function App() {
           },
         }}
         component={ActivityNavigator}
-      />
+      /> */}
       <BottomTab.Screen
         name="Favorites"
         options={{
@@ -112,7 +110,7 @@ function App() {
 
 function Navigator() {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.loginReducer.loggedIn);
+  const isLoggedIn = useSelector((state: State) => state.loginReducer.loggedIn);
 
   FirebaseAuth().onAuthStateChanged((user) => {
     if (user !== null && user !== undefined) {
