@@ -5,30 +5,32 @@ import {
   Image,
   Linking,
   StyleSheet,
-  Dimensions,
+  ScrollView,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import style from "../../themes/style";
 import DestinationMapView from "./components/DestinationMapView";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { getRouteGeometries } from "./redux/searchActions";
+import {
+  getDestinationDetails,
+  getRouteGeometries,
+} from "./redux/searchActions";
 import { getRatingImage } from "../../utils/searchUtils";
 import FAIcon from "react-native-vector-icons/FontAwesome";
 import { getPolylineArrays } from "./redux/searchSelector";
 import { State } from "../../../rootReducer";
-import OriginListItem from "./components/OriginListItem";
-import { TomTomOriginResult } from "./redux/searchReducerTypes";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import theme from "../../themes/theme";
 import { useNavigation } from "@react-navigation/core";
+import Button from "../../components/Button";
+import { ScreenWidth } from "react-native-elements/dist/helpers";
 interface Props {
   navigation: any;
 }
 
 const DestinationDetailsScreen = (props: Props) => {
   const dispatch = useDispatch();
-  const carouselRef = useRef<any | null>(null);
   const [selectedOriginIndex, setSelectedOriginIndex] = useState(0);
   const destinations = useSelector(
     (state: State) => state.searchReducer.destinations ?? []
@@ -37,6 +39,11 @@ const DestinationDetailsScreen = (props: Props) => {
     (state: State) => state.searchReducer.destinationIndex
   );
   const origins = useSelector((state: State) => state.searchReducer.origins);
+  const selectedDestinationDetails = useSelector(
+    (state: State) => state.searchReducer.selectedDestinationDetails
+  );
+
+  selectedDestinationDetails;
   const polylineArrays = useSelector(getPolylineArrays);
   const selectedDestination = destinations[destinationIndex];
   const latitude = selectedDestination?.coordinates?.latitude;
@@ -54,6 +61,7 @@ const DestinationDetailsScreen = (props: Props) => {
   //In the future I want this to be the users location if they used their location
   //And allow user to change where they want to see location from
   React.useEffect(() => {
+    dispatch(getDestinationDetails(selectedDestination.id));
     props.navigation.setOptions({
       title: selectedDestination?.name || "Details",
     });
@@ -76,158 +84,240 @@ const DestinationDetailsScreen = (props: Props) => {
 
   const imageSource = getRatingImage(selectedDestination?.rating);
 
-  const _renderOriginLocation: React.FC<{
-    item: TomTomOriginResult;
-    index: number;
-  }> = ({ item, index }) => {
-    const isSelected = selectedOriginIndex === index;
-    return <OriginListItem origin={item} />;
+  const dayArr = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  const offsetDayArr = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const tConv24 = (time24) => {
+    var ts = time24;
+    var H = +ts.substr(0, 2);
+    var h = H % 12 || 12;
+    h = h < 10 ? "0" + h : h; // leading 0 at the left for 1 digit hours
+    var ampm = H < 12 ? " AM" : " PM";
+    ts = h + ts.substr(2, 3) + ampm;
+    return ts;
+  };
+
+  const _renderOpeningHours = () => {
+    if (
+      selectedDestinationDetails?.hours &&
+      selectedDestinationDetails?.hours[0]?.open
+    ) {
+      return selectedDestinationDetails.hours[0].open.map((day) => {
+        const isCurrentDayOfWeek =
+          offsetDayArr[new Date().getDay()] === dayArr[day.day];
+        return (
+          <Text
+            style={[
+              style.regular,
+              { fontWeight: isCurrentDayOfWeek ? "800" : "500" },
+            ]}
+          >
+            {dayArr[day.day]} {tConv24(day.start)} - {tConv24(day.end)}
+          </Text>
+        );
+      });
+    } else {
+      return null;
+    }
   };
 
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <View
-        style={{
-          position: "absolute",
-          marginTop: insets.top,
-          marginLeft: 15,
-          zIndex: 100,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Icon
-            name="chevron-back-outline"
-            size={40}
-            color={theme.darkPurple}
-          />
-        </TouchableOpacity>
-      </View>
-      {!!latitude && !!longitude && (
-        <DestinationMapView
-          location={{ latitude, longitude }}
-          polylineArrays={polylineArrays}
-        />
-      )}
-      {/* Origins */}
-      {/* <View style={{ marginTop: 15 }}>
-        <Carousel
-          ref={carouselRef}
-          data={origins}
-          renderItem={_renderOriginLocation}
-          sliderWidth={SCREEN_WIDTH}
-          itemWidth={300}
-          removeClippedSubviews={false}
-          containerCustomStyle={{
-            height: 120,
-          }}
-          contentContainerStyle={{ justifyContent: "center" }}
-          onBeforeSnapToItem={(i) => {
-            dispatch(
-              getRouteGeometries(
-                {
-                  longitude: origins[i]?.position?.lon,
-                  latitude: origins[i]?.position?.lat,
-                },
-                {
-                  longitude: selectedDestination?.coordinates?.longitude,
-                  latitude: selectedDestination?.coordinates?.latitude,
-                }
-              )
-            );
-            setSelectedOriginIndex(i);
-          }}
-        />
-      </View> */}
-
-      {/* Reviews */}
-      <View
-        style={{
-          alignItems: "flex-start",
-          marginHorizontal: 20,
-          justifyContent: "flex-start",
-        }}
-      >
-        <View
-          style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}
-        >
-          <Text style={[style.semiBold, { paddingRight: 20 }]}>Reviews</Text>
-          <View style={styles.divider} />
-        </View>
+    <>
+      <View style={{ flex: 1, backgroundColor: "white" }}>
         <View
           style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "flex-start",
+            position: "absolute",
+            marginTop: insets.top,
+            marginLeft: 15,
+            zIndex: 100,
           }}
         >
-          <Image source={imageSource} />
-          <View style={{ justifyContent: "center" }}>
-            <Text
-              style={[
-                style.semiBold,
-                {
-                  paddingHorizontal: 10,
-                  lineHeight: 30,
-                },
-              ]}
-            >
-              {selectedDestination?.rating.toFixed(1)}
-            </Text>
-          </View>
-
-          <Text
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
             style={{
-              fontWeight: "200",
-              fontSize: 14,
-            }}
-          >{`(${selectedDestination?.review_count} reviews)`}</Text>
-          <TouchableOpacity
-            style={{ marginHorizontal: 10 }}
-            onPress={() => {
-              {
-                if (!!selectedDestination?.url) {
-                  Linking.openURL(selectedDestination.url).catch((err) =>
-                    console.error("Couldn't load page", err)
-                  );
-                }
-              }
+              width: 40,
+              height: 40,
+              borderRadius: 25,
+              backgroundColor: "white",
+              shadowColor: "black",
+              shadowOpacity: 0.3,
+              shadowRadius: 10,
+              shadowOffset: { width: 0, height: 0 },
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <FAIcon name="yelp" size={35} color={"#d32323"} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              Linking.openURL(lyftURL).catch((err) =>
-                console.error("Couldn't load page", err)
-              );
-            }}
-          >
-            <Image
-              source={require("../../../assets/static/lyft.png")}
-              style={{ width: 45, height: 45 }}
+            <Icon
+              name="chevron-back-outline"
+              size={25}
+              color={theme.darkPurple}
             />
           </TouchableOpacity>
         </View>
-        <Text style={{ marginTop: 6 }}>{selectedDestination?.name}</Text>
-        <Text style={{ fontWeight: "200" }}>
-          {selectedDestination?.location?.display_address[0] ?? ""}
-        </Text>
-        <Text style={{ fontWeight: "200" }}>
-          {selectedDestination?.location?.display_address[1] ?? ""}
-        </Text>
+        {!!latitude && !!longitude && (
+          <DestinationMapView
+            location={{ latitude, longitude }}
+            polylineArrays={polylineArrays}
+          />
+        )}
+        <ScrollView
+          contentContainerStyle={{
+            alignItems: "flex-start",
+            marginHorizontal: 20,
+            marginTop: 15,
+            justifyContent: "flex-start",
+          }}
+        >
+          <Text
+            style={[
+              style.semiBold,
+              { paddingRight: 10, fontSize: 25, lineHeight: 30 },
+            ]}
+          >
+            {selectedDestination?.name ?? ""}{" "}
+          </Text>
+          {selectedDestinationDetails?.hours && (
+            <Text
+              style={[
+                style.regular,
+                {
+                  color: selectedDestinationDetails?.hours[0]?.is_open_now
+                    ? "green"
+                    : "red",
+                },
+              ]}
+            >
+              {selectedDestinationDetails?.hours[0]?.is_open_now
+                ? "Open Now"
+                : "Closed Now"}
+            </Text>
+          )}
+          {_renderOpeningHours()}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: 5,
+            }}
+          >
+            <View style={styles.divider} />
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              marginTop: 7,
+            }}
+          >
+            <Image source={imageSource} />
+            <View style={{ justifyContent: "center" }}>
+              <Text
+                style={[
+                  style.semiBold,
+                  {
+                    paddingHorizontal: 10,
+                    lineHeight: 30,
+                  },
+                ]}
+              >
+                {selectedDestination?.rating.toFixed(1)}
+              </Text>
+            </View>
 
-        <Text style={{ fontWeight: "200" }}>
-          {selectedDestination?.display_phone}
-        </Text>
+            <Text
+              style={[
+                style.regular,
+                {
+                  fontSize: 14,
+                },
+              ]}
+            >{`(${selectedDestination?.review_count ?? ""} reviews)`}</Text>
+
+            {/* <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(lyftURL).catch((err) =>
+                  console.error("Couldn't load page", err)
+                );
+              }}
+            >
+              <Image
+                source={require("../../../assets/static/lyft.png")}
+                style={{ width: 45, height: 45 }}
+              />
+            </TouchableOpacity> */}
+            <TouchableOpacity
+              style={{ marginLeft: 10 }}
+              onPress={() => {
+                {
+                  if (!!selectedDestination?.url) {
+                    Linking.openURL(selectedDestination.url).catch((err) =>
+                      console.error("Couldn't load page", err)
+                    );
+                  }
+                }
+              }}
+            >
+              <FAIcon name="yelp" size={35} color={"#d32323"} />
+            </TouchableOpacity>
+          </View>
+          <Text style={[style.regular]}>
+            {selectedDestination?.location?.display_address[0] ?? ""}
+          </Text>
+          <Text style={style.regular}>
+            {selectedDestination?.location?.display_address[1] ?? ""}
+          </Text>
+
+          <Text style={style.regular}>
+            {selectedDestination?.display_phone}
+          </Text>
+        </ScrollView>
       </View>
-    </View>
+      <View
+        style={{
+          paddingLeft: 30,
+          paddingRight: 30,
+          position: "absolute",
+          zIndex: 100,
+          bottom: 7,
+          width: ScreenWidth,
+        }}
+      >
+        <Button
+          title="See Route Details"
+          onPress={() => {}}
+          buttonStyle={{
+            margin: 30,
+            shadowColor: "black",
+            shadowOpacity: 0.15,
+            shadowRadius: 10,
+            shadowOffset: { width: 0, height: 0 },
+          }}
+          type="primary"
+        />
+      </View>
+    </>
   );
 };
 const styles = StyleSheet.create({

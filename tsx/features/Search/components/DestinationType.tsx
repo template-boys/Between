@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.darkPurple,
     shadowColor: "#7A48FF",
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.3,
     shadowRadius: 10,
     elevation: 1,
     borderWidth: 0,

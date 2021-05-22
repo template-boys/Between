@@ -6,6 +6,7 @@ export interface SearchReducer {
   destinations: Array<YelpBusiness> | [];
   destinationType: string;
   destinationSearchLoading: boolean;
+  selectedDestinationDetails: any;
   destinationIndex: number;
   cachedDestinations:
     | Array<{

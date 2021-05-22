@@ -133,8 +133,8 @@ export default function FullMapView({
             left: 100,
             bottom:
               Platform.OS === "ios"
-                ? 35
-                : PixelRatio.getPixelSizeForLayoutSize(35),
+                ? 325
+                : PixelRatio.getPixelSizeForLayoutSize(325),
           },
         }
       );
@@ -153,13 +153,13 @@ export default function FullMapView({
       provider={"google"}
       customMapStyle={mapTheme}
       showsUserLocation
-      showsMyLocationButton
-      mapPadding={{
-        top: 0,
-        right: 0,
-        bottom: destinationMarkers.length > 2 ? 275 : 0,
-        left: 0,
-      }}
+      // showsMyLocationButton
+      // mapPadding={{
+      //   top: 0,
+      //   right: 0,
+      //   bottom: destinationMarkers.length > 2 ? 275 : 0,
+      //   left: 0,
+      // }}
     >
       {originMarkers.map((marker, i) => (
         <Marker

@@ -1,6 +1,14 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Dimensions, Animated, Keyboard } from "react-native";
+import {
+  StyleSheet,
+  Dimensions,
+  Animated,
+  Keyboard,
+  TouchableOpacity,
+} from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import theme from "../../../themes/theme";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -56,6 +64,25 @@ const BottomView = (props: React.PropsWithChildren<Props>) => {
   };
   return (
     <Animated.View style={[styles.animatedContainer, transformStyle]}>
+      <TouchableOpacity
+        style={{
+          width: 50,
+          height: 50,
+          borderRadius: 25,
+          backgroundColor: "white",
+          shadowColor: "black",
+          shadowOpacity: 0.3,
+          shadowRadius: 10,
+          shadowOffset: { width: 0, height: 0 },
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 15,
+          alignSelf: "flex-end",
+          marginRight: 15,
+        }}
+      >
+        <Icon name="navigate" size={25} color={theme.darkPurple} />
+      </TouchableOpacity>
       {props.children}
     </Animated.View>
   );

@@ -39,6 +39,15 @@ export const yelpSearch = async (
   return await axios.get(BASE_YELP_SEARCH, config);
 };
 
+export const yelpBusinessDetails = async (id: string) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${YELP_API_KEY}`,
+    },
+  };
+  return await axios.get(`https://api.yelp.com/v3/businesses/${id}`, config);
+};
+
 export const tomTomAutoComplete = async (
   query,
   userLocation

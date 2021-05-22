@@ -12,6 +12,7 @@ const INITIAL_STATE = {
   cachedRouteGeometries: [],
   currentRouteGeometries: [],
   selectedOriginIndex: -1,
+  selectedDestinationDetails: undefined,
 };
 
 const searchReducer = (
@@ -99,6 +100,11 @@ const searchReducer = (
       return {
         ...state,
         selectedOriginIndex: action.payload,
+      };
+    case SearchActionTypes.SET_DESTINATION_DETAILS:
+      return {
+        ...state,
+        selectedDestinationDetails: action.payload,
       };
     case SearchActionTypes.LOGOUT_USER:
       return INITIAL_STATE;

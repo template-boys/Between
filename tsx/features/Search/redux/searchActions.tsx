@@ -3,6 +3,7 @@ import { State } from "../../../../rootReducer";
 import {
   mapBoxDirectionsSearch,
   reverseGeocode,
+  yelpBusinessDetails,
   yelpSearch,
 } from "../../../api/thirdPartyApis";
 import { SearchActionTypes } from "./searchActionTypes";
@@ -225,5 +226,40 @@ export const setOriginIndex = (index: number) => {
   return {
     type: SearchActionTypes.SET_ORIGIN_INDEX,
     payload: index,
+  };
+};
+
+export const setDestinationDetails = (details: any) => {
+  return {
+    type: SearchActionTypes.SET_DESTINATION_DETAILS,
+    payload: details,
+  };
+};
+
+export const getDestinationDetails = (id: string) => {
+  return async (dispatch: Dispatch<SearchAction>) => {
+    const res = await yelpBusinessDetails(id);
+    dispatch(setDestinationDetails(res?.data));
+
+    // state.searchReducer.cachedDestinations.forEach((cacheItem) => {
+    //   if (
+    //     cacheItem?.middlePoint?.latitude === middlePoint?.latitude &&
+    //     cacheItem?.middlePoint?.longitude === middlePoint?.longitude &&
+    //     cacheItem.query === query
+    //   ) {
+    //     console.log("We have that place search cached, not hitting api", query);
+    //     result = cacheItem?.result;
+    //   }
+    // });
+    // if (!result) {
+    //   result = await yelpSearch(query, middlePoint);
+    //   result = result?.data?.businesses ?? [];
+    //   if (state.searchReducer.cachedDestinations.length >= 8) {
+    //     dispatch(removeFirstCachedDestination);
+    //   }
+    //   dispatch(addCachedDestination({ query, middlePoint, result }));
+    // }
+    // dispatch(setDestinations(result));
+    // dispatch(setDestinationSearchLoading(false));
   };
 };
