@@ -24,6 +24,6 @@ jobs:
       - name: Setup Fastlane
         run: bundle install
       - name: install Node dependencies
-        run: yarn install
+        run: npm install
       - name: Build with Fastlane
         run: bundle exec fastlane app_distribution 
