@@ -21,8 +21,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7'
-      - name: Install Firebase CLI
-        uses: w9jds/firebase-action@master
       - name: install Node dependencies
         run: yarn install
       - name: Build with Fastlane
