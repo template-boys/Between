@@ -1,6 +1,6 @@
 desc "Build a Release build & upload to Firebase App Distribution"
 lane :app_distribution do
-match(type: 'adhoc', app_identifier: ['com.inBetween'])
+match(type: 'adhoc', app_identifier: ['com.inBetween'], git_basic_authorization: 'YmV0d2VlbkJvdDpnaHBfNG1meEdKT2hnRFY0M0ptS2JYaVowR2ZCU3JHamZpMlhXZ0hl')
 gym(
    workspace: './ios/Between.xcworkspace',
    scheme: 'Between',
