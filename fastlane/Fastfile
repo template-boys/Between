@@ -8,7 +8,11 @@ app_store_connect_api_key(
 )
 # Automatically loads Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
 # pilot
-match(type: 'adhoc', app_identifier: ['com.inBetween'])
+unlock_keychain( # If the keychain file is located in the standard location `~/Library/Keychains`, then it is sufficient to provide the keychain file name, or file name with its suffix.
+  path: "KeychainName",
+  password: "mysecret"
+)
+match(type: 'adhoc', app_identifier: ['com.inBetween'], keychain_password: 'snowboard')
 gym(
    workspace: './ios/Between.xcworkspace',
    scheme: 'Between',
