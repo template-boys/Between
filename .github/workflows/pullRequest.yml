@@ -3,7 +3,7 @@ name: Pipeline
 on:
   push:
     branches:
-    - actions
+    - prettierAction
 
 env:
   FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
