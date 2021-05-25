@@ -30,8 +30,8 @@ jobs:
           ruby-version: '2.7'
       - name: Setup Fastlane
         run: | 
-        fastlane spaceauth -u justindupre98@gmail.com --copy_to_clipboard
-        echo 'FASTLANE_SESSION=${{pbpaste}}' >> $GITHUB_ENV
+        mySession = fastlane spaceauth -u justindupre98@gmail.com
+        echo ${{ mySession }}
         bundle install
       - name: install Node dependencies
         run: npm install
