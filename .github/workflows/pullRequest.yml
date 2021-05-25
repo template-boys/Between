@@ -29,7 +29,10 @@ jobs:
         with:
           ruby-version: '2.7'
       - name: Setup Fastlane
-        run: bundle install
+        run: | 
+        fastlane spaceauth -u user@example.org --copy_to_clipboard
+        echo "FASTLANE_SESSION=$(pbpaste)" >> $GITHUB_ENV
+        bundle install
       - name: install Node dependencies
         run: npm install
       - name: Build with Fastlane
