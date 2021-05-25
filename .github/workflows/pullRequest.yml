@@ -30,6 +30,4 @@ jobs:
       - name: install Node dependencies
         run: npm install
       - name: Build with Fastlane
-        env:
-            SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: bundle exec fastlane app_distribution 
