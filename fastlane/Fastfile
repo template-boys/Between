@@ -6,9 +6,17 @@ app_store_connect_api_key(
     issuer_id: "7221ae1d-9214-4a31-8150-4a10d427907a",
     key_content: ENV['APP_STORE_CONNECT_KEY'],
 )
+create_keychain(
+    name: "CI",
+    password: ENV["MATCH_PASSWORD"],
+    default_keychain: true,
+    unlock: true,
+    timeout: 3600,
+    lock_when_sleeps: false
+)
 # Automatically loads Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
 # pilot
-match(type: 'adhoc', app_identifier: ['com.inBetween'], keychain_password: 'between')
+match(type: 'adhoc', app_identifier: ['com.inBetween'], keychain_name: "CI", keychain_password: ENV["MATCH_PASSWORD"])
 gym(
    workspace: './ios/Between.xcworkspace',
    scheme: 'Between',
