@@ -1,5 +1,13 @@
 desc "Build a Release build & upload to Firebase App Distribution"
 lane :app_distribution do
+
+app_store_connect_api_key(
+    key_id: "78WD9684HN",
+    issuer_id: "7221ae1d-9214-4a31-8150-4a10d427907a",
+    key_filepath: "../AuthKey_D383SF739.p8",
+)
+# Automatically loads Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
+pilot
 match(type: 'adhoc', app_identifier: ['com.inBetween'])
 gym(
    workspace: './ios/Between.xcworkspace',
