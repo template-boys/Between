@@ -21,8 +21,9 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7'
+      - name: Setup Fastlane
+        run: bundle install
       - name: install Node dependencies
         run: yarn install
       - name: Build with Fastlane
-        run: fastlane app_distribution 
-        working-directory: ios
+        run: bundle exec fastlane app_distribution 
