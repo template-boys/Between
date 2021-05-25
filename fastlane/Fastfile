@@ -1,0 +1,21 @@
+desc "Build a Release build & upload to Firebase App Distribution"
+lane :app_distribution do
+match(type: 'adhoc', app_identifier: ['com.inBetween'])
+gym(
+   workspace: './ios/Between.xcworkspace',
+   scheme: 'Between',
+   configuration: 'Release',
+   clean: true,
+   output_directory: 'archives',
+   output_name: 'Between.ipa',
+   export_method: 'ad-hoc'
+)
+firebase_app_distribution(
+     app: ENV['FIREBASE_APP_ID'],
+     firebase_cli_token: ENV["FIREBASE_TOKEN"],
+     groups: 'devs',
+     release_notes: 'new release, check it out!',
+     firebase_cli_path: '/usr/local/bin/firebase',
+     ipa_path: 'archives/Between.ipa'
+)
+end

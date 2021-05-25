@@ -1,0 +1,30 @@
+name: Pipeline
+
+on:
+  push:
+    branches:
+    - actions
+
+env:
+  FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+ 
+
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
+      - name: Install Firebase CLI
+        uses: w9jds/firebase-action@master
+      - name: install Node dependencies
+        run: yarn install
+      - name: Build with Fastlane
+        run: fastlane app_distribution 
+        working-directory: ios
