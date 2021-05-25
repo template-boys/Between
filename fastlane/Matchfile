@@ -1,8 +1,7 @@
 
 git_url("https://github.com/template-boys/certs.git")
-git_basic_authorization Base64.encode64("justin-dupre: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")
 storage_mode("git")
-
+git_basic_authorization Base64.encode64("justindupre98@gmail.com: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")
 type("adhoc") # The default type, can be: appstore, adhoc, enterprise or development
 
 # app_identifier(["tools.fastlane.app", "tools.fastlane.app2"])

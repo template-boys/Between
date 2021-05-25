@@ -15,11 +15,6 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-
-      - name: Setup SSH Keys and known_hosts
-        run: |
-            ssh-agent -a /tmp/ssh_agent.sock > /dev/null
-            ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install Ruby
