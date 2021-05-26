@@ -26,6 +26,10 @@ sync_code_signing(
 # Automatically loads Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
 # pilot
 match(type: 'adhoc', app_identifier: ['com.inBetween'], keychain_name: "fastlane_tmp_keychain", keychain_password: ENV["MATCH_PASSWORD"])
+cocoapods(
+  clean_install: true,
+  podfile: "./Podfile"
+)
 gym(
    workspace: './Between.xcworkspace',
    scheme: 'Between',
