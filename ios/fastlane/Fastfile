@@ -27,7 +27,7 @@ sync_code_signing(
 # pilot
 match(type: 'adhoc', app_identifier: ['com.inBetween'], keychain_name: "fastlane_tmp_keychain", keychain_password: ENV["MATCH_PASSWORD"])
 gym(
-   workspace: './ios/Between.xcworkspace',
+   workspace: './Between.xcworkspace',
    scheme: 'Between',
    configuration: 'Release',
    clean: true,
