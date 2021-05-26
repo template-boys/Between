@@ -22,7 +22,7 @@ sync_code_signing(
 # unlock_keychain( # If the keychain file is located in the standard location `~/Library/Keychains`, then it is sufficient to provide the keychain file name, or file name with its suffix.
 #   path: "CI",
 #   password: ENV["MATCH_PASSWORD"],
-)
+# )
 # Automatically loads Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
 # pilot
 match(type: 'adhoc', app_identifier: ['com.inBetween'], keychain_name: "CI", keychain_password: ENV["MATCH_PASSWORD"])
