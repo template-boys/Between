@@ -26,11 +26,11 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Install Ruby
-        working-directory: ./ios
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7'
       - name: Setup Fastlane
+        working-directory: ./ios
         run: bundle install
       - name: install Node dependencies
         run: npm install
