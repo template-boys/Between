@@ -28,10 +28,10 @@ sync_code_signing(
 match(type: 'adhoc', app_identifier: ['com.inBetween'], keychain_name: "fastlane_tmp_keychain", keychain_password: ENV["MATCH_PASSWORD"])
 cocoapods(
   clean_install: true,
-  podfile: "./Podfile"
+  podfile: "./ios/Podfile"
 )
 gym(
-   workspace: './Between.xcworkspace',
+   workspace: './ios/Between.xcworkspace',
    scheme: 'Between',
    configuration: 'Release',
    clean: true,

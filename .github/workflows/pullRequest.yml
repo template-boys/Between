@@ -30,10 +30,8 @@ jobs:
         with:
           ruby-version: '2.7'
       - name: Setup Fastlane
-        working-directory: ./ios
         run: bundle install
       - name: install Node dependencies
         run: npm install
       - name: Build with Fastlane
-        working-directory: ./ios
         run: bundle exec fastlane app_distribution 
