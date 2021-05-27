@@ -1,17 +1,17 @@
-name: Pipeline
+name: Release build and deploy
 
 on:
   push:
     branches:
-    - prettierAction
+    - master
 
 env:
   FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
   FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
   APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_KEY }}
+  APP_STORE_ISSUER_ID: ${{ secrets.APP_STORE_ISSUER_ID }}
+  APP_STORE_KEY_ID: $${{ secrets.APP_STORE_KEY_ID }}
  
-
-
 jobs:
   build:
     runs-on: macos-latest
@@ -31,7 +31,7 @@ jobs:
           ruby-version: '2.7'
       - name: Setup Fastlane
         run: bundle install
-      - name: install Node dependencies
+      - name: npm install
         run: npm install
       - name: Build with Fastlane
         run: bundle exec fastlane app_distribution 

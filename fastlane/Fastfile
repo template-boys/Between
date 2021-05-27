@@ -2,8 +2,8 @@ desc "Build a Release build & upload to Firebase App Distribution"
 lane :app_distribution do
 
 app_store_connect_api_key(
-    key_id: "78WD9684HN",
-    issuer_id: "7221ae1d-9214-4a31-8150-4a10d427907a",
+    key_id: ENV['APP_STORE_KEY_ID'],
+    issuer_id: ENV['APP_STORE_ISSUER_ID'],
     key_content: ENV['APP_STORE_CONNECT_KEY'],
 )
 setup_ci
@@ -11,20 +11,6 @@ sync_code_signing(
       type: "adhoc",
       readonly: is_ci
 )
-# create_keychain(
-#     name: "CI",
-#     password: ENV["MATCH_PASSWORD"],
-#     default_keychain: true,
-#     unlock: true,
-#     timeout: 3600,
-#     lock_when_sleeps: false
-# )
-# unlock_keychain( # If the keychain file is located in the standard location `~/Library/Keychains`, then it is sufficient to provide the keychain file name, or file name with its suffix.
-#   path: "CI",
-#   password: ENV["MATCH_PASSWORD"],
-# )
-# Automatically loads Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
-# pilot
 match(type: 'adhoc', app_identifier: ['com.inBetween'], keychain_name: "fastlane_tmp_keychain", keychain_password: ENV["MATCH_PASSWORD"])
 cocoapods(
   clean_install: true,
