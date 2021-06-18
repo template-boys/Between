@@ -1,0 +1,36 @@
+desc "Build a Release build & upload to Firebase App Distribution"
+lane :app_distribution do
+
+app_store_connect_api_key(
+    key_id: ENV['APP_STORE_KEY_ID'],
+    issuer_id: ENV['APP_STORE_ISSUER_ID'],
+    key_content: ENV['APP_STORE_CONNECT_KEY'],
+)
+setup_ci
+sync_code_signing(  
+      type: "adhoc",
+      readonly: is_ci
+)
+match(type: 'adhoc', app_identifier: ['com.inBetween'], keychain_name: "fastlane_tmp_keychain", keychain_password: ENV["MATCH_PASSWORD"])
+cocoapods(
+  clean_install: true,
+  podfile: "./ios/Podfile"
+)
+gym(
+   workspace: './ios/Between.xcworkspace',
+   scheme: 'Between',
+   configuration: 'Release',
+   clean: true,
+   output_directory: 'archives',
+   output_name: 'Between.ipa',
+   export_method: 'ad-hoc'
+)
+firebase_app_distribution(
+     app: ENV['FIREBASE_APP_ID'],
+     firebase_cli_token: ENV["FIREBASE_TOKEN"],
+     groups: 'devs',
+     release_notes: 'new release, check it out!',
+     firebase_cli_path: '/usr/local/bin/firebase',
+     ipa_path: 'archives/Between.ipa'
+)
+end
