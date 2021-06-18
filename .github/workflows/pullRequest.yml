@@ -21,15 +21,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Make envfile
-        uses: SpicyPizza/create-envfile@v1
-        with:
-          envkey_YELP_API_KEY: ${{ secrets.YELP_API_KEY }}
-          envkey_YELP_CLIENT_ID: ${{ secrets.YELP_CLIENT_ID }}
-          envkey_MAP_BOX_API_KEY: ${{ secrets.MAP_BOX_API_KEY }}
-          envkey_TOM_TOM_KEY: ${{ secrets.TOM_TOM_KEY }}
-          envkey_GOOGLE_SIGN_IN_WEB_KEY: ${{ secrets.GOOGLE_SIGN_IN_WEB_KEY }}
-          file_name: .env
+      - name: Make .env
+      - run: |
+          touch .env
+          echo "YELP_API_KEY=${{ secrets.YELP_API_KEY }}" >> .env
+          echo "YELP_CLIENT_ID=${{ secrets.YELP_CLIENT_ID }}" >> .env
+          echo "MAP_BOX_API_KEY=${{ secrets.MAP_BOX_API_KEY }}" >> .env
+          echo "TOM_TOM_KEY=${{ secrets.TOM_TOM_KEY }}" >> .env
+          echo "GOOGLE_SIGN_IN_WEB_KEY=${{ secrets.GOOGLE_SIGN_IN_WEB_KEY }}" >> .env
       - name: Setup SSH Keys and known_hosts
         uses: webfactory/ssh-agent@v0.5.2
         with:
