@@ -22,7 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Make .env
-      - run: |
+        run: |
           touch .env
           echo "YELP_API_KEY=${{ secrets.YELP_API_KEY }}" >> .env
           echo "YELP_CLIENT_ID=${{ secrets.YELP_CLIENT_ID }}" >> .env
