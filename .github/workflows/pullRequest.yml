@@ -1,0 +1,46 @@
+name: Release build and deploy
+
+on:
+  push:
+    branches:
+    - master
+
+env:
+  FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+  APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_KEY }}
+  APP_STORE_ISSUER_ID: ${{ secrets.APP_STORE_ISSUER_ID }}
+  APP_STORE_KEY_ID: $${{ secrets.APP_STORE_KEY_ID }}
+ 
+jobs:
+  build:
+    runs-on: macos-latest
+    env:
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_YELP_API_KEY: ${{ secrets.YELP_API_KEY }}
+          envkey_YELP_CLIENT_ID: ${{ secrets.YELP_CLIENT_ID }}
+          envkey_MAP_BOX_API_KEY: ${{ secrets.MAP_BOX_API_KEY }}
+          envkey_TOM_TOM_KEY: ${{ secrets.TOM_TOM_KEY }}
+          envkey_GOOGLE_SIGN_IN_WEB_KEY: ${{ secrets.GOOGLE_SIGN_IN_WEB_KEY }}
+          file_name: .env
+      - name: Setup SSH Keys and known_hosts
+        uses: webfactory/ssh-agent@v0.5.2
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
+      - name: Setup Fastlane
+        run: bundle install
+      - name: npm install
+        run: npm install
+      - name: Build with Fastlane
+        run: bundle exec fastlane app_distribution 
