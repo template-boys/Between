@@ -30,13 +30,12 @@ export default class App extends Component<Props, State> {
   }
   componentDidCatch(error, info) {
     console.log(error, "ERROR");
+    console.warn("ERROR: ", error);
 
     this.setState({ didCatch: true });
   }
 
   render() {
-    const test2 = "test2";
-    console.log(test2);
     return (
       <Provider store={store}>
         <SafeAreaProvider>
@@ -46,7 +45,7 @@ export default class App extends Component<Props, State> {
             translucent={true}
             networkActivityIndicatorVisible={true}
           />
-          {this.state.didCatch ? <Text>Error</Text> : <Navigator />}
+          {this.state.didCatch ? <Text>Testing Errors</Text> : <Navigator />}
         </SafeAreaProvider>
       </Provider>
     );
