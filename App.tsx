@@ -29,8 +29,8 @@ export default class App extends Component<Props, State> {
     this.state = { didCatch: false };
   }
   componentDidCatch(error, info) {
-    console.log(error, "ERROR");
-    console.warn("ERROR: ", error);
+    const test = "TEST";
+    console.warn("Test: ", test);
 
     this.setState({ didCatch: true });
   }
