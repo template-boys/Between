@@ -876,7 +876,7 @@
 				CODE_SIGN_ENTITLEMENTS = Between/Between.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = GF6S5B8S5F;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = "";
@@ -905,7 +905,7 @@
 				CODE_SIGN_ENTITLEMENTS = Between/Between.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = GF6S5B8S5F;
 				EXCLUDED_ARCHS = "";
 				INFOPLIST_FILE = Between/Info.plist;
