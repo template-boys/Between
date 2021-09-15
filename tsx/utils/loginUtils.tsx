@@ -41,6 +41,8 @@ export const googleLogin = async () => {
     // Sign-in the user with the credential
     return auth().signInWithCredential(googleCredential);
   } catch (error) {
+    const test = "test";
+    console.log(test);
     console.warn(error);
   }
 };
