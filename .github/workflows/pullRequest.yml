@@ -18,7 +18,6 @@ jobs:
     env:
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-      DEVELOPER_DIR: /Applications/Xcode_13.app/Contents/Developer
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -38,6 +37,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7'
+      - name: Switch XCode version
+          run: sudo xcode-select --switch /Applications/Xcode_13.0.app/Contents/Developer
       - name: Setup Fastlane
         run: bundle install
       - name: npm install
