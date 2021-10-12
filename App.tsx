@@ -36,6 +36,8 @@ export default class App extends Component<Props, State> {
   }
 
   render() {
+    const test = "TEST";
+    console.warn("Test: ", test);
     return (
       <Provider store={store}>
         <SafeAreaProvider>
