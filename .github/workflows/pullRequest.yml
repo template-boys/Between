@@ -37,6 +37,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7'
+      - name: Switch XCode version
+        run: sudo xcode-select --switch /Applications/Xcode_13.0.app/Contents/Developer
       - name: Setup Fastlane
         run: bundle install
       - name: npm install
