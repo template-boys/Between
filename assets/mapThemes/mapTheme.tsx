@@ -1,20 +1,32 @@
 export default [
   {
-    featureType: "poi.park",
-    elementType: "geometry",
+    featureType: "all",
+    elementType: "all",
     stylers: [
       {
-        hue: "#83cead",
+        invert_lightness: true,
       },
       {
-        visibility: "on",
+        saturation: 10,
+      },
+      {
+        lightness: 30,
+      },
+      {
+        gamma: 0.5,
+      },
+      {
+        hue: "#435158",
       },
     ],
   },
   {
-    featureType: "administrative",
+    featureType: "road",
     elementType: "all",
     stylers: [
+      {
+        color: "#425873",
+      },
       {
         visibility: "simplified",
       },
@@ -22,73 +34,19 @@ export default [
   },
   {
     featureType: "landscape",
-    elementType: "geometry",
+    elementType: "all",
     stylers: [
       {
-        visibility: "simplified",
-      },
-      {
-        color: "#fcfcfc",
-      },
-    ],
-  },
-  {
-    featureType: "poi",
-    elementType: "geometry",
-    stylers: [
-      {
-        visibility: "simplified",
-      },
-      {
-        color: "#fcfcfc",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "geometry",
-    stylers: [
-      {
-        visibility: "simplified",
-      },
-      {
-        color: "#dddddd",
-      },
-    ],
-  },
-  {
-    featureType: "road.arterial",
-    elementType: "geometry",
-    stylers: [
-      {
-        visibility: "simplified",
-      },
-      {
-        color: "#dddddd",
-      },
-    ],
-  },
-  {
-    featureType: "road.local",
-    elementType: "geometry",
-    stylers: [
-      {
-        visibility: "simplified",
-      },
-      {
-        color: "#eeeeee",
+        color: "#131b27",
       },
     ],
   },
   {
     featureType: "water",
-    elementType: "geometry",
+    elementType: "geometry.fill",
     stylers: [
       {
-        visibility: "simplified",
-      },
-      {
-        color: "#a2d1f5",
+        color: "#06080c",
       },
     ],
   },

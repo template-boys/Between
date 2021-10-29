@@ -15,8 +15,8 @@ import theme from "../themes/theme";
 export interface CustomInputProps extends TextInputProps {
   inputRef?: any;
   onChange?: (string) => void;
-  containerStyle?: ViewStyle;
-  inputContainerStyle?: ViewStyle;
+  containerStyle?: ViewStyle | ViewStyle[];
+  inputContainerStyle?: ViewStyle | ViewStyle[];
   inputStyle?: TextStyle;
   iconName?: string;
   rightIconName?: string;
@@ -68,8 +68,13 @@ const CustomInput = ({
               onChange(value);
             }
           }}
-          placeholderTextColor="#A8A8A8"
-          style={[style.regular, styles.inputStyle, props.inputStyle]}
+          placeholderTextColor={theme.lightGrey}
+          style={[
+            style.regular,
+            styles.inputStyle,
+            props.inputStyle,
+            { color: theme.lightGrey },
+          ]}
           autoCompleteType={props.autoCompleteType || "off"}
           autoCapitalize={props.autoCapitalize || "none"}
           autoCorrect={props.autoCorrect || false}
@@ -115,6 +120,7 @@ const styles = StyleSheet.create({
     color: "#313131",
     fontSize: 14,
     fontWeight: "400",
+    backgroundColor: theme.darkestGrey,
   },
 });
 

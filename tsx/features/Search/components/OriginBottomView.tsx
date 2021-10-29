@@ -31,14 +31,21 @@ export default function DestinationBottomView({}: Props): ReactElement {
     <BottomView>
       <View style={styles.container}>
         <TouchableOpacity
-          style={styles.backIcon}
+          style={[
+            styles.backIcon,
+            { flexDirection: "row", alignContent: "center" },
+          ]}
           onPress={() => {
             console.log("PRSSED");
 
             dispatch(setOriginIndex(-1));
           }}
         >
-          <Icon name="close-outline" color={theme.secondary} size={30} />
+          <Text
+            style={[style.light, { paddingTop: 5, color: theme.lightGrey }]}
+          >
+            Close
+          </Text>
         </TouchableOpacity>
         <View style={styles.contentContainer}>
           <Text
@@ -48,6 +55,8 @@ export default function DestinationBottomView({}: Props): ReactElement {
               {
                 alignSelf: "center",
                 textAlign: "center",
+                paddingTop: 30,
+                color: "white",
               },
             ]}
           >
@@ -62,9 +71,8 @@ export default function DestinationBottomView({}: Props): ReactElement {
               }}
             >
               <Text style={styles.buttonText}>Remove</Text>
-              <Icon name="close-outline" color={theme.secondary} size={20} />
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.button}
               onPress={() => {
                 dispatch(setOriginIndex(-1));
@@ -83,7 +91,7 @@ export default function DestinationBottomView({}: Props): ReactElement {
             >
               <Text style={styles.buttonText}>Favorite</Text>
               <Icon name="heart-outline" color={theme.secondary} size={20} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </View>
@@ -99,7 +107,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     padding: 10,
     borderColor: theme.lightGrey,
-    backgroundColor: "white",
+    backgroundColor: theme.darkestGrey,
     shadowColor: "black",
     shadowOpacity: 0.15,
     shadowRadius: 10,
@@ -128,7 +136,7 @@ const styles = StyleSheet.create({
     minWidth: 80,
     padding: 10,
     borderRadius: 20,
-    backgroundColor: "white",
+    backgroundColor: theme.darkestGrey,
     borderColor: "#F2F2F2",
     borderWidth: 2,
     marginHorizontal: 5,
@@ -136,7 +144,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonText: {
-    ...style.light,
+    ...style.regular,
     marginRight: 4,
+    color: theme.errorRed,
   },
 });

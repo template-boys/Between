@@ -6,7 +6,6 @@ import {
   getPathLength,
 } from "geolib";
 import { mapBoxDirectionsSearch } from "../api/thirdPartyApis";
-
 /*
  * Convert a polyline string (returned from mapbox API) into
  * an array [{latitude, longitude}, ...]
@@ -36,28 +35,39 @@ export const getMiddlePoint = async (origin, destination) => {
   let indexBefore, indexAfter;
   const polylineArray = getPolylineArray(route.geometry);
   const fullDistance = getPathLength(polylineArray, getDistance);
+  const halfwayDistance = fullDistance / 2;
 
   let routeDistance = 0;
-  let distanceToDestination;
-  let legDistance;
+  let overshotDistance = 0;
+  let legDistance = 0;
 
   for (let i = 0; i < polylineArray.length - 1; i++) {
     legDistance = getDistance(polylineArray[i], polylineArray[i + 1]);
-    // If we are on or past the middle distance
-    if (routeDistance + legDistance >= fullDistance / 2) {
+
+    if (routeDistance + legDistance >= halfwayDistance) {
       indexAfter = i;
       indexBefore = i - 1;
-      distanceToDestination = fullDistance / 2 - routeDistance;
+      overshotDistance = halfwayDistance - routeDistance;
       break;
     }
     routeDistance += legDistance;
   }
 
   const middlePoint = computeDestinationPoint(
-    polylineArray[indexBefore],
-    distanceToDestination,
-    getRhumbLineBearing(polylineArray[indexBefore], polylineArray[indexAfter])
+    polylineArray[indexAfter],
+    overshotDistance,
+    getRhumbLineBearing(polylineArray[indexAfter], polylineArray[indexBefore])
   );
 
   return middlePoint;
+};
+
+export const secondsToHms = (d: number) => {
+  d = Number(d);
+  var h = Math.floor(d / 3600);
+  var m = Math.floor((d % 3600) / 60);
+
+  var hDisplay = h > 0 ? h + (h == 1 ? " hr " : " hrs ") : "";
+  var mDisplay = m > 0 ? m + (m == 1 ? " min " : " mins") : "";
+  return hDisplay + mDisplay;
 };

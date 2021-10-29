@@ -23,7 +23,7 @@ export const yelpSearch = async (
   location
 ): Promise<AxiosResponse<YelpDestinationsResult>> => {
   const BASE_YELP_SEARCH = "https://api.yelp.com/v3/businesses/search";
-  console.log("Axios GET yelp/v3/businesses/search with term", term);
+  console.log("Axios GET yelp/v3/businesses/search with term", term, location);
   let config = {
     headers: {
       Authorization: `Bearer ${YELP_API_KEY}`,
@@ -34,6 +34,19 @@ export const yelpSearch = async (
       term,
       sort_by: "distance",
       limit: 15,
+    },
+  };
+  return await axios.get(BASE_YELP_SEARCH, config);
+};
+
+export const yelpBusinessDetails = async (
+  id: string
+): Promise<AxiosResponse<any>> => {
+  const BASE_YELP_SEARCH = `https://api.yelp.com/v3/businesses/${id}`;
+  console.log("Axios GET yelp business details", id);
+  let config = {
+    headers: {
+      Authorization: `Bearer ${YELP_API_KEY}`,
     },
   };
   return await axios.get(BASE_YELP_SEARCH, config);

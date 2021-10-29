@@ -1,20 +1,21 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   Image,
   Linking,
   StyleSheet,
-  Dimensions,
+  Platform,
+  Share,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import style from "../../themes/style";
 import DestinationMapView from "./components/DestinationMapView";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { getRouteGeometries } from "./redux/searchActions";
+import { getBusinessDetails, getRouteGeometries } from "./redux/searchActions";
 import { getRatingImage } from "../../utils/searchUtils";
 import FAIcon from "react-native-vector-icons/FontAwesome";
-import { getPolylineArrays } from "./redux/searchSelector";
+import { getPolylineArrays, getRouteDurations } from "./redux/searchSelector";
 import { State } from "../../../rootReducer";
 import OriginListItem from "./components/OriginListItem";
 import { TomTomOriginResult } from "./redux/searchReducerTypes";
@@ -22,13 +23,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import theme from "../../themes/theme";
 import { useNavigation } from "@react-navigation/core";
+const betweenIcon = require("../../../assets/static/betweenIcon.png");
+
 interface Props {
   navigation: any;
 }
 
 const DestinationDetailsScreen = (props: Props) => {
   const dispatch = useDispatch();
-  const carouselRef = useRef<any | null>(null);
   const [selectedOriginIndex, setSelectedOriginIndex] = useState(0);
   const destinations = useSelector(
     (state: State) => state.searchReducer.destinations ?? []
@@ -36,8 +38,14 @@ const DestinationDetailsScreen = (props: Props) => {
   const destinationIndex = useSelector(
     (state: State) => state.searchReducer.destinationIndex
   );
+  const businessDetails = useSelector(
+    (state: State) => state.searchReducer.businessDetails ?? {}
+  );
   const origins = useSelector((state: State) => state.searchReducer.origins);
   const polylineArrays = useSelector(getPolylineArrays);
+  const duration = useSelector(getRouteDurations);
+  console.log(duration);
+
   const selectedDestination = destinations[destinationIndex];
   const latitude = selectedDestination?.coordinates?.latitude;
   const longitude = selectedDestination?.coordinates?.longitude;
@@ -50,10 +58,12 @@ const DestinationDetailsScreen = (props: Props) => {
 
   const lyftURL = `https://lyft.com/ride?id=lyft&pickup[latitude]=${pickup.latitude}&pickup[longitude]=${pickup.longitude}&destination[latitude]=${latitude}&destination[longitude]=${longitude}&partner=lL5keX91WP4D`;
 
-  //Whenever component mounts, get directions from first location to our place
-  //In the future I want this to be the users location if they used their location
-  //And allow user to change where they want to see location from
+  /*
+    Iterate through all origins and get directions to destination
+  */
   React.useEffect(() => {
+    // Enable API call for yelp business details
+    // dispatch(getBusinessDetails(selectedDestination.id));
     props.navigation.setOptions({
       title: selectedDestination?.name || "Details",
     });
@@ -74,6 +84,13 @@ const DestinationDetailsScreen = (props: Props) => {
     });
   }, []);
 
+  // React.useEffect(() => {
+  //   console.log()
+  //   if (businessDetails.id !== selectedDestination.id) {
+  //     props.navigation.navigate("In Between");
+  //   }
+  // }, [businessDetails]);
+
   const imageSource = getRatingImage(selectedDestination?.rating);
 
   const _renderOriginLocation: React.FC<{
@@ -87,8 +104,16 @@ const DestinationDetailsScreen = (props: Props) => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
+  const scheme = Platform.select({ ios: "maps:0,0?q=", android: "geo:0,0?q=" });
+  const latLng = `${selectedDestination.coordinates.latitude},${selectedDestination.coordinates.longitude}`;
+  const label = selectedDestination.name;
+  const url = Platform.select({
+    ios: `${scheme}${label}@${latLng}`,
+    android: `${scheme}${latLng}(${label})`,
+  });
+
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <View style={{ flex: 1, backgroundColor: theme.backgroundDark }}>
       <View
         style={{
           position: "absolute",
@@ -102,11 +127,7 @@ const DestinationDetailsScreen = (props: Props) => {
             navigation.goBack();
           }}
         >
-          <Icon
-            name="chevron-back-outline"
-            size={40}
-            color={theme.darkPurple}
-          />
+          <Icon name="chevron-back-outline" size={40} color={"white"} />
         </TouchableOpacity>
       </View>
       {!!latitude && !!longitude && (
@@ -149,83 +170,218 @@ const DestinationDetailsScreen = (props: Props) => {
       {/* Reviews */}
       <View
         style={{
-          alignItems: "flex-start",
-          marginHorizontal: 20,
-          justifyContent: "flex-start",
+          flex: 1,
+          backgroundColor: theme.darkestGrey,
+          // borderTopRightRadius: 150,
         }}
       >
         <View
-          style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}
-        >
-          <Text style={[style.semiBold, { paddingRight: 20 }]}>Reviews</Text>
-          <View style={styles.divider} />
-        </View>
-        <View
           style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "flex-start",
+            alignItems: "flex-start",
+            marginHorizontal: 20,
           }}
         >
-          <Image source={imageSource} />
-          <View style={{ justifyContent: "center" }}>
-            <Text
-              style={[
-                style.semiBold,
-                {
-                  paddingHorizontal: 10,
-                  lineHeight: 30,
-                },
-              ]}
+          <View style={{ flexDirection: "row", marginTop: 25 }}>
+            <Image
+              source={
+                !!selectedDestination.image_url
+                  ? { uri: selectedDestination?.image_url }
+                  : betweenIcon
+              }
+              style={{ width: 125, height: 125, borderRadius: 20 }}
+            />
+            <View
+              style={{
+                marginHorizontal: 15,
+                alignContent: "center",
+                flexShrink: 1,
+              }}
             >
-              {selectedDestination?.rating.toFixed(1)}
-            </Text>
+              <Text style={[style.bold, { fontSize: 20, color: "white" }]}>
+                {selectedDestination?.name}
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL(url as string);
+                }}
+              >
+                <Text
+                  style={{
+                    fontWeight: "200",
+                    marginTop: 4,
+                    color: theme.lighterGrey,
+                  }}
+                >
+                  {selectedDestination?.location?.display_address[0] ?? ""}
+                </Text>
+                <Text style={{ fontWeight: "200", color: theme.lighterGrey }}>
+                  {selectedDestination?.location?.display_address[1] ?? ""}
+                </Text>
+              </TouchableOpacity>
+
+              <Text
+                style={{
+                  fontWeight: "200",
+                  color: theme.lighterGrey,
+                  marginTop: 5,
+                }}
+                onPress={() => {
+                  Linking.openURL(`tel:${selectedDestination.phone}`);
+                }}
+              >
+                {selectedDestination?.display_phone}
+              </Text>
+            </View>
           </View>
 
-          <Text
+          <View
             style={{
-              fontWeight: "200",
-              fontSize: 14,
-            }}
-          >{`(${selectedDestination?.review_count} reviews)`}</Text>
-          <TouchableOpacity
-            style={{ marginHorizontal: 10 }}
-            onPress={() => {
-              {
-                if (!!selectedDestination?.url) {
-                  Linking.openURL(selectedDestination.url).catch((err) =>
-                    console.error("Couldn't load page", err)
-                  );
-                }
-              }
+              width: "100%",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 15,
             }}
           >
-            <FAIcon name="yelp" size={35} color={"#d32323"} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              Linking.openURL(lyftURL).catch((err) =>
-                console.error("Couldn't load page", err)
-              );
-            }}
-          >
-            <Image
-              source={require("../../../assets/static/lyft.png")}
-              style={{ width: 45, height: 45 }}
-            />
-          </TouchableOpacity>
-        </View>
-        <Text style={{ marginTop: 6 }}>{selectedDestination?.name}</Text>
-        <Text style={{ fontWeight: "200" }}>
-          {selectedDestination?.location?.display_address[0] ?? ""}
-        </Text>
-        <Text style={{ fontWeight: "200" }}>
-          {selectedDestination?.location?.display_address[1] ?? ""}
-        </Text>
+            <Image source={imageSource} />
+            <View style={{ justifyContent: "center" }}>
+              <Text
+                style={[
+                  style.semiBold,
+                  {
+                    paddingHorizontal: 10,
+                    lineHeight: 30,
+                    color: theme.lightGrey,
+                  },
+                ]}
+              >
+                {selectedDestination?.rating.toFixed(1)}
+              </Text>
+            </View>
 
-        <Text style={{ fontWeight: "200" }}>
-          {selectedDestination?.display_phone}
-        </Text>
+            <Text
+              style={{
+                fontWeight: "200",
+                fontSize: 14,
+                color: theme.lightGrey,
+              }}
+            >{`(${selectedDestination?.review_count} reviews)`}</Text>
+          </View>
+
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 15,
+              width: "100%",
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "200",
+                textAlign: "center",
+                fontSize: 18,
+                color: theme.lighterGrey,
+              }}
+            >
+              <Text>{`Average time to ${selectedDestination?.name}\nis`}</Text>
+              <Text
+                style={{
+                  color: "white",
+                  fontStyle: "italic",
+                  fontWeight: "400",
+                }}
+              >{` ${duration} `}</Text>
+              <Text>{`from ${origins.length} locations.`}</Text>
+            </Text>
+          </View>
+        </View>
+
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "flex-end",
+            marginBottom: 35,
+          }}
+        >
+          <View
+            style={{
+              marginTop: 35,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                marginLeft: 25,
+              }}
+            >
+              <Text
+                style={[
+                  style.semiBold,
+                  { paddingRight: 20, color: "white", fontSize: 18 },
+                ]}
+              >
+                Connect
+              </Text>
+              <View style={styles.divider} />
+            </View>
+          </View>
+
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              marginTop: 15,
+              justifyContent: "space-evenly",
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(`tel:${selectedDestination.phone}`);
+              }}
+            >
+              <Icon name="call-outline" size={25} color={theme.lightestGrey} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ marginHorizontal: 10 }}
+              onPress={() => {
+                {
+                  if (!!selectedDestination?.url) {
+                    Linking.openURL(selectedDestination.url).catch((err) =>
+                      console.error("Couldn't load page", err)
+                    );
+                  }
+                }
+              }}
+            >
+              <FAIcon name="yelp" size={30} color={"#d32323"} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(lyftURL).catch((err) =>
+                  console.error("Couldn't load page", err)
+                );
+              }}
+            >
+              <Image
+                source={require("../../../assets/static/lyft.png")}
+                style={{ width: 40, height: 40 }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={async () => {
+                await Share.share({
+                  url: selectedDestination.url,
+                });
+              }}
+            >
+              <Icon name="share-outline" size={25} color={theme.lightestGrey} />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -237,7 +393,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     borderColor: "#e3e3e3",
-    borderWidth: 1,
+    borderWidth: 0.5,
     flex: 1,
   },
 });

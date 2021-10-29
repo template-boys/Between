@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { StyleSheet, Dimensions, Animated, Keyboard } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import theme from "../../../themes/theme";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const CONTENT_HEIGHT = 310;
-const NAVBAR_HEIGHT = 49;
+const NAVBAR_HEIGHT = -20;
 
 interface Props {}
 
@@ -68,7 +69,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     flex: 1,
     zIndex: 2,
-    backgroundColor: "red",
   },
   animatedContainer: {
     justifyContent: "center",

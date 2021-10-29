@@ -16,7 +16,12 @@ import { StyleSheet } from "react-native";
 import style from "../../themes/style";
 import CustomInput from "../../components/CustomInput";
 import theme from "../../themes/theme";
-import { appleLogin, googleLogin, emailLogin } from "../../utils/loginUtils";
+import {
+  appleLogin,
+  googleLogin,
+  emailLogin,
+  phoneLogin,
+} from "../../utils/loginUtils";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CONTAINER_WIDTH = SCREEN_WIDTH - 50;
@@ -24,6 +29,7 @@ const CONTAINER_WIDTH = SCREEN_WIDTH - 50;
 export function LoginScreen() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [phoneNumber, setPhoneNumber] = React.useState("");
   const [error, setError] = React.useState<string | null>("");
 
   const passwordInputRef = React.useRef<any | null>(null);
@@ -72,6 +78,24 @@ export function LoginScreen() {
             </TouchableOpacity>
           </View>
           <CustomInput
+            placeholder={"Phone Number"}
+            autoCompleteType={"off"}
+            iconName={"call-outline"}
+            hasError={!!error}
+            keyboardType="phone-pad"
+            inputContainerStyle={{ marginTop: 15 }}
+            onChangeText={(value) => {
+              console.log("value: ", value);
+              setError(null);
+              setPhoneNumber(value);
+            }}
+            onSubmitEditing={() => {
+              if (!!phoneNumber) {
+                phoneLogin(phoneNumber, setError);
+              }
+            }}
+          />
+          {/* <CustomInput
             placeholder={"Email Address"}
             autoCompleteType={"email"}
             iconName={"mail-outline"}
@@ -109,24 +133,27 @@ export function LoginScreen() {
                 emailLogin(email, password, setError);
               }
             }}
-          />
+          /> */}
           <Text style={[style.regular, styles.errorMessage]}>
             {!!error && error}
           </Text>
-        </View>
 
-        {/* Login Container */}
-        <View style={styles.loginContainer}>
+          {/* Login Container */}
+
           <Button
             type="primary"
             title="Log In"
-            disabled={!email || !password || !!error}
+            disabled={false}
             onPress={() => {
-              emailLogin(email, password, setError);
+              if (!!phoneNumber) {
+                phoneLogin(phoneNumber, setError);
+              } else {
+                emailLogin(email, password, setError);
+              }
             }}
             buttonStyle={styles.loginButton}
           />
-          <Text
+          {/* <Text
             style={[
               style.regular,
               {
@@ -151,7 +178,7 @@ export function LoginScreen() {
             >
               Reset Now
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* ThirdParty Container */}

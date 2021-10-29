@@ -5,6 +5,8 @@ import Icon from "react-native-vector-icons/Ionicons";
 import style from "../../../themes/style";
 import theme from "../../../themes/theme";
 import { YelpBusiness } from "../redux/searchReducerTypes";
+// import betweenIcon from "../../../../assets/static/betweenIcon.png";
+const betweenIcon = require("../../../../assets/static/betweenIcon.png");
 
 interface Props {
   destinationItem: YelpBusiness;
@@ -27,19 +29,25 @@ export default function DestinationListItem({
       activeOpacity={0.5}
     >
       <View style={{ flexDirection: "row" }}>
-        {!!destinationItem?.image_url && (
-          <Image
-            source={{ uri: destinationItem?.image_url }}
-            style={styles.image}
-          />
-        )}
+        <Image
+          source={
+            !!destinationItem?.image_url
+              ? { uri: destinationItem?.image_url }
+              : betweenIcon
+          }
+          style={styles.image}
+        />
+
         <View
           style={{
             flex: 1,
             justifyContent: "center",
           }}
         >
-          <Text style={[style.semiBold, { fontSize: 15 }]} numberOfLines={3}>
+          <Text
+            style={[style.semiBold, { fontSize: 15, color: "white" }]}
+            numberOfLines={3}
+          >
             {destinationItem.name}
           </Text>
         </View>
@@ -66,6 +74,7 @@ export default function DestinationListItem({
               style.light,
               {
                 fontSize: 13,
+                color: theme.lightGrey,
               },
             ]}
           >
@@ -104,11 +113,11 @@ const styles = StyleSheet.create({
     padding: 15,
     marginHorizontal: 10,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#e3e3e3",
+    // borderWidth: 1,
+    // borderColor: "#e3e3e3",
     justifyContent: "space-between",
     height: 180,
-    backgroundColor: "white",
+    backgroundColor: theme.darkestGrey,
   },
   image: {
     width: 60,

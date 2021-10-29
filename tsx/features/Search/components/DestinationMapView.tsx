@@ -2,7 +2,6 @@ import React, { ReactElement } from "react";
 import { Dimensions, StyleSheet } from "react-native";
 import { View } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
-import Icon from "react-native-vector-icons/Ionicons";
 import theme from "../../../themes/theme";
 import mapTheme from "../../../../assets/mapThemes/mapTheme";
 import { Coordinate, TomTomOriginResult } from "../redux/searchReducerTypes";
@@ -41,15 +40,18 @@ export default function MapLocationView({
       }
     );
     setTimeout(() => {
-      mapRef.current?.fitToCoordinates([...originCoordinates], {
-        animated: true,
-        edgePadding: {
-          top: 70,
-          right: 30,
-          left: 30,
-          bottom: 70,
-        },
-      });
+      mapRef.current?.fitToCoordinates(
+        [...originCoordinates, ...[currentDestination.coordinates]],
+        {
+          animated: true,
+          edgePadding: {
+            top: 70,
+            right: 30,
+            left: 30,
+            bottom: 70,
+          },
+        }
+      );
     }, 250);
   }, [origins]);
 
