@@ -63,3 +63,19 @@ export const emailLogin = async (email, password, setError) => {
       }
     });
 };
+
+export const phoneLogin = async (phoneNumber, setError) => {
+  const formattedPhoneNumber = "+1" + phoneNumber;
+  Keyboard.dismiss();
+  try {
+    const confirm = await auth().signInWithPhoneNumber(
+      formattedPhoneNumber,
+      true
+    );
+
+    console.log("Code: ", JSON.stringify(confirm));
+  } catch (error) {
+    console.log("login error: ", error);
+    setError("Error logging in with phone number");
+  }
+};

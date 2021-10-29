@@ -36,11 +36,7 @@ export default function DestinationType({
         onIconPress();
       }}
     >
-      <Icon
-        name={"search-outline"}
-        size={20}
-        color={isSelected ? "white" : theme.darkPurple}
-      />
+      <Icon name={"search-outline"} size={20} color="white" />
     </TouchableOpacity>
   ) : (
     <TouchableOpacity
@@ -58,7 +54,7 @@ export default function DestinationType({
     >
       <Text
         style={{
-          color: isSelected ? "white" : theme.darkPurple,
+          color: "white",
           fontWeight: "500",
           justifyContent: "center",
         }}
@@ -77,25 +73,25 @@ const styles = StyleSheet.create({
     minWidth: 80,
     padding: 10,
     borderRadius: 20,
-    backgroundColor: "white",
-    borderColor: "#F2F2F2",
-    borderWidth: 2,
+    backgroundColor: theme.backgroundDark,
+    // borderColor: "#F2F2F2",
+    borderWidth: 0,
     marginHorizontal: 5,
   },
   selectedTypeButton: {
-    backgroundColor: theme.darkPurple,
+    backgroundColor: theme.darkestGrey,
+    borderColor: theme.darkPurple,
     shadowColor: "#7A48FF",
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.15,
     shadowRadius: 10,
     elevation: 1,
-    borderWidth: 0,
+    borderWidth: 3,
   },
   searchButton: {
     flexDirection: "row",
-    backgroundColor: "white",
-    borderColor: "#F2F2F2",
-    borderWidth: 2,
+    backgroundColor: theme.backgroundDark,
+    // borderWidth: 2,
     height: 40,
     width: 40,
     borderRadius: 20,

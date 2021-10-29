@@ -3,6 +3,7 @@ import { State } from "../../../../rootReducer";
 import {
   mapBoxDirectionsSearch,
   reverseGeocode,
+  yelpBusinessDetails,
   yelpSearch,
 } from "../../../api/thirdPartyApis";
 import { SearchActionTypes } from "./searchActionTypes";
@@ -106,10 +107,10 @@ export const setUserGeocodeLocation = (location) => {
 };
 
 //Sets the current geometry (whatever place is selected)
-export const addRouteGeometry = (routeGeometry: string) => {
+export const addRouteGeometry = (route: any) => {
   return {
     type: SearchActionTypes.ADD_ROUTE_GEOMETRY,
-    payload: routeGeometry,
+    payload: route,
   };
 };
 
@@ -119,7 +120,7 @@ export const clearRouteGeometries = () => {
   };
 };
 
-// Main action for using Google's place directions API
+// Main action for using MapBox's place directions API
 // Parameters:
 // origin: string (formatted address)
 // destination: string (formatted address)
@@ -137,7 +138,9 @@ export const getRouteGeometries = (
     const cachedRouteGeometries = state.searchReducer.cachedRouteGeometries;
     let res;
     let geometry;
+    let duration;
 
+    // check if we have that geometry in the cached array
     cachedRouteGeometries.forEach((cachedRouteGeometry: any) => {
       if (
         cachedRouteGeometry?.origin?.latitude === origin?.latitude &&
@@ -147,19 +150,25 @@ export const getRouteGeometries = (
       ) {
         console.log("we have those directions cached");
         geometry = cachedRouteGeometry.geometry;
+        duration = cachedRouteGeometry.duration;
       }
     });
 
+    // if those directions were not cached
     if (!geometry) {
       res = await mapBoxDirectionsSearch(origin, destination);
+      console.log(res?.data);
       geometry = res?.data?.routes[0]?.geometry;
+      duration = res?.data?.routes[0]?.duration;
       if (state.searchReducer.cachedRouteGeometries?.length >= 25) {
         dispatch(removeFirstCachedDirection);
       }
-      dispatch(addCachedRouteGeometry({ origin, destination, geometry }));
+      dispatch(
+        addCachedRouteGeometry({ origin, destination, geometry, duration })
+      );
     }
 
-    dispatch(addRouteGeometry(geometry));
+    dispatch(addRouteGeometry({ geometry, duration }));
     dispatch(setRouteLoading(false));
   };
 };
@@ -225,5 +234,57 @@ export const setOriginIndex = (index: number) => {
   return {
     type: SearchActionTypes.SET_ORIGIN_INDEX,
     payload: index,
+  };
+};
+
+// Main action for using Yelp's place search API
+// Parameters:
+// query: string (keyword e.g. coffee, bar, pizza)
+// middlePoint: location to search around
+//
+// Checks cache before hitting API.
+// If we already searched for that query and middlepoint
+// use that instead
+//
+// We are also allowed to cache it serverside for up to 24 hours
+// So that might be worth it in the future
+export const getBusinessDetails = (id: string) => {
+  return async (dispatch: Dispatch<SearchAction>, getState: () => State) => {
+    dispatch(setDestinationSearchLoading(true));
+    // let result;
+    // const state: State = getState();
+    // state.searchReducer.cachedDestinations.forEach((cacheItem) => {
+    //   if (
+    //     cacheItem?.middlePoint?.latitude === middlePoint?.latitude &&
+    //     cacheItem?.middlePoint?.longitude === middlePoint?.longitude &&
+    //     cacheItem.query === query
+    //   ) {
+    //     console.log("We have that place search cached, not hitting api", query);
+    //     result = cacheItem?.result;
+    //   }
+    // });
+    // if (!result) {
+    //   result = await yelpSearch(query, middlePoint);
+    //   result = result?.data?.businesses ?? [];
+    //   if (state.searchReducer.cachedDestinations.length >= 8) {
+    //     dispatch(removeFirstCachedDestination);
+    //   }
+    //   dispatch(addCachedDestination({ query, middlePoint, result }));
+    // }
+    // dispatch(setDestinations(result));
+    // dispatch(setDestinationSearchLoading(false));
+
+    let result = await yelpBusinessDetails(id);
+    result = result?.data;
+    console.log("YELP: ", result);
+    dispatch(setBusinessDetails(result));
+    dispatch(setDestinationSearchLoading(false));
+  };
+};
+
+export const setBusinessDetails = (details) => {
+  return {
+    type: SearchActionTypes.SET_BUSINESS_DETAILS,
+    payload: details,
   };
 };

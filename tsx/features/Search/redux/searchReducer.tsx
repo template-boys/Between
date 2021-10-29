@@ -12,6 +12,7 @@ const INITIAL_STATE = {
   cachedRouteGeometries: [],
   currentRouteGeometries: [],
   selectedOriginIndex: -1,
+  businessDetails: {},
 };
 
 const searchReducer = (
@@ -39,6 +40,11 @@ const searchReducer = (
         ...state,
         destinations: action.payload,
         currentRouteGeometries: [],
+      };
+    case SearchActionTypes.SET_BUSINESS_DETAILS:
+      return {
+        ...state,
+        businessDetails: action.payload,
       };
     case SearchActionTypes.SET_DESTINATION_INDEX:
       return {

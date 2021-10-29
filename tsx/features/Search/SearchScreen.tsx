@@ -28,6 +28,7 @@ import AutoCompleteSearchResult from "./components/AutoCompleteSearchResult";
 import { getMiddlePoint } from "../../utils/routeUtils";
 import { State } from "../../../rootReducer";
 import { Coordinate, TomTomOriginResult } from "./redux/searchReducerTypes";
+import theme from "../../themes/theme";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -210,12 +211,13 @@ export default function SearchScreen({ navigation }): ReactElement {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: theme.backgroundDark,
   },
   searchBackground: {
     position: "absolute",
     height: SCREEN_HEIGHT,
     width: SCREEN_WIDTH,
-    backgroundColor: "white",
+    backgroundColor: theme.darkestGrey,
     zIndex: 1,
   },
   flatListContainer: {
@@ -223,9 +225,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 15,
     zIndex: 1,
-    backgroundColor: "white",
+    backgroundColor: theme.darkestGrey,
   },
   listContainer: {
-    backgroundColor: "white",
+    backgroundColor: theme.darkestGrey,
   },
 });

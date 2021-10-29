@@ -31,6 +31,7 @@
 		A528560A07940CAE6BD93614 /* libPods-Between-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3D12A7A5EDA7B9BE4383A53 /* libPods-Between-tvOS.a */; };
 		A71DA58E2606A00000C035D5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A71DA58D2606A00000C035D5 /* GoogleService-Info.plist */; };
 		A73776AE1DDD483ABA17D562 /* Poppins-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 937115BB08F945BDB45BE653 /* Poppins-SemiBoldItalic.ttf */; };
+		A7DA9EF727212C03002CACE2 /* CustomLaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7DA9EF627212C03002CACE2 /* CustomLaunchScreen.storyboard */; };
 		B67A8E0888FE4B8FAC77BBB4 /* Poppins-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F226E56855FF4AFD90442279 /* Poppins-ExtraBoldItalic.ttf */; };
 		B80EF7A4C75837FB29AEF2D7 /* libPods-Between-BetweenTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD24A94BF19BF5B0F1BD1E84 /* libPods-Between-BetweenTests.a */; };
 		BF8C1223D22D4D68AC493D58 /* Poppins-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7782859A6A1D4E7BAB0ADDFE /* Poppins-BoldItalic.ttf */; };
@@ -110,6 +111,8 @@
 		A7C9B78E26045AEE0025E367 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		A7C9B78F26045AEE0025E367 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		A7C9B79026045AEE0025E367 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+		A7DA9EF3271652FE002CACE2 /* BetweenRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = BetweenRelease.entitlements; path = Between/BetweenRelease.entitlements; sourceTree = "<group>"; };
+		A7DA9EF627212C03002CACE2 /* CustomLaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CustomLaunchScreen.storyboard; sourceTree = "<group>"; };
 		ADD3B04BEA7C41DE8C83CDE5 /* Poppins-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-LightItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-LightItalic.ttf"; sourceTree = "<group>"; };
 		B3D12A7A5EDA7B9BE4383A53 /* libPods-Between-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Between-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B61AFB01627C42F38FB9558B /* Poppins-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BlackItalic.ttf"; path = "../assets/fonts/Poppins/Poppins-BlackItalic.ttf"; sourceTree = "<group>"; };
@@ -180,6 +183,7 @@
 		13B07FAE1A68108700A75B9A /* Between */ = {
 			isa = PBXGroup;
 			children = (
+				A7DA9EF3271652FE002CACE2 /* BetweenRelease.entitlements */,
 				A715DEB02626B84B0054C9A8 /* Between.entitlements */,
 				A71DA58D2606A00000C035D5 /* GoogleService-Info.plist */,
 				A7C9B78026045AEE0025E367 /* Fonts */,
@@ -189,6 +193,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				A7DA9EF627212C03002CACE2 /* CustomLaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = Between;
@@ -404,7 +409,7 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = GF6S5B8S5F;
 						LastSwiftMigration = 1120;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -458,6 +463,7 @@
 				05401D62D8FB4927B794B3B6 /* Poppins-Bold.ttf in Resources */,
 				BF8C1223D22D4D68AC493D58 /* Poppins-BoldItalic.ttf in Resources */,
 				D91D17BA61324FB78EEEF07A /* Poppins-ExtraBold.ttf in Resources */,
+				A7DA9EF727212C03002CACE2 /* CustomLaunchScreen.storyboard in Resources */,
 				B67A8E0888FE4B8FAC77BBB4 /* Poppins-ExtraBoldItalic.ttf in Resources */,
 				33F11A65AD8D4829BBEEDBD1 /* Poppins-ExtraLight.ttf in Resources */,
 				184DA94D634942B7AE16CD48 /* Poppins-ExtraLightItalic.ttf in Resources */,
@@ -874,12 +880,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Between/Between.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_TEAM = GF6S5B8S5F;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
-				EXCLUDED_ARCHS = "";
 				INFOPLIST_FILE = Between/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -889,7 +894,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.inBetween;
 				PRODUCT_NAME = Between;
-				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.inBetween 1631689442";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -902,11 +907,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Between/Between.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_ENTITLEMENTS = Between/BetweenRelease.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_TEAM = GF6S5B8S5F;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Between/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -916,7 +921,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.inBetween;
 				PRODUCT_NAME = Between;
-				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.inBetween 1631689442";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1125,6 +1130,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

@@ -63,6 +63,7 @@ function App() {
       <BottomTab.Screen
         name="Search"
         options={{
+          tabBarVisible: false,
           tabBarLabel: "",
           tabBarIcon: ({ color, focused }) => {
             const iconName = focused ? "location" : "location-outline";
@@ -82,7 +83,7 @@ function App() {
         }}
         component={ActivityNavigator}
       /> */}
-      <BottomTab.Screen
+      {/* <BottomTab.Screen
         name="Favorites"
         options={{
           tabBarLabel: "",
@@ -103,7 +104,7 @@ function App() {
           },
         }}
         component={ProfileNavigator}
-      />
+      /> */}
     </BottomTab.Navigator>
   );
 }
@@ -123,7 +124,14 @@ function Navigator() {
   return (
     <NavigationContainer>
       <RootStack.Navigator>
-        {isLoggedIn ? (
+        <RootStack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="App"
+          component={App}
+        />
+        {/* {isLoggedIn ? (
           <RootStack.Screen
             options={{
               headerShown: false,
@@ -137,7 +145,7 @@ function Navigator() {
             component={Auth}
             options={{ headerShown: false }}
           />
-        )}
+        )} */}
       </RootStack.Navigator>
     </NavigationContainer>
   );

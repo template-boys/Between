@@ -104,6 +104,7 @@ export default function DestinationBottomView({
     <BottomView>
       {typeIndex === 0 && !hideInput ? (
         <CustomInput
+          inputStyle={{ backgroundColor: theme.backgroundDark }}
           inputRef={searchTypeInputRef}
           onSubmitEditing={(q) => {
             if (!!q.nativeEvent.text) {
@@ -206,9 +207,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     height: 45,
     borderRadius: 20,
-    backgroundColor: "white",
-    borderColor: "#F2F2F2",
-    borderWidth: 2,
+    backgroundColor: theme.backgroundDark,
+    // borderColor: theme.darkPurple,
+    borderWidth: 0,
   },
   indicatorContainer: {
     height: 180,

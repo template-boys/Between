@@ -19,7 +19,9 @@ const AutoCompleteSearchResult = ({
     <View style={[styles.container, containerStyle]}>
       <Icon name={"location-outline"} size={30} color={theme.secondary} />
       <View style={{ marginLeft: 10, marginRight: 25 }}>
-        <Text style={[style.medium, styles.header]}>{getHeader(origin)}</Text>
+        <Text style={[style.medium, styles.header, { color: "white" }]}>
+          {getHeader(origin)}
+        </Text>
         <Text style={style.regular}>{getSubText(origin)}</Text>
       </View>
     </View>
@@ -33,7 +35,6 @@ const styles = StyleSheet.create({
     padding: 25,
     paddingTop: 18,
     paddingBottom: 18,
-    backgroundColor: "white",
   },
   header: { color: theme.darkestGrey, fontSize: 16 },
 });

@@ -14,6 +14,7 @@ interface AutoCompleteInputProps {
 
 function AutoCompleteInputField(props: AutoCompleteInputProps) {
   const insets = useSafeAreaInsets();
+  let inputStyles = [styles.inputContainer];
   return (
     <View style={[styles.container, { marginTop: insets.top + 10 }]}>
       <CustomInput
@@ -24,7 +25,10 @@ function AutoCompleteInputField(props: AutoCompleteInputProps) {
             ? "Search city, address, or place"
             : "Add places to search between"
         }
-        inputContainerStyle={styles.inputContainer}
+        inputContainerStyle={[
+          styles.inputContainer,
+          props.isAutoCompleteFocus ? styles.inputContainerSelected : {},
+        ]}
         iconName={props.leftIcon}
         clearButtonMode="always"
         onLeftIconPress={
@@ -34,6 +38,11 @@ function AutoCompleteInputField(props: AutoCompleteInputProps) {
                 props.inputRef?.current?.clear();
               }
             : undefined
+        }
+        inputStyle={
+          props.isAutoCompleteFocus
+            ? { backgroundColor: theme.backgroundDark }
+            : {}
         }
         {...props.inputProps}
       />
@@ -50,13 +59,16 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     borderRadius: 35,
-    backgroundColor: "white",
     height: 50,
     borderWidth: 0,
     shadowColor: "black",
     shadowOpacity: 0.15,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 0 },
+    backgroundColor: theme.darkestGrey,
+  },
+  inputContainerSelected: {
+    backgroundColor: theme.backgroundDark,
   },
 });
 

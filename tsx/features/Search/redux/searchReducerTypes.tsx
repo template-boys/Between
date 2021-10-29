@@ -1,5 +1,4 @@
 import { SearchActionTypes } from "./searchActionTypes";
-import { Dispatch } from "react";
 
 export interface SearchReducer {
   origins: Array<TomTomOriginResult> | [];
@@ -16,11 +15,17 @@ export interface SearchReducer {
     | [];
   routeLoading: boolean;
   cachedRouteGeometries:
-    | Array<{ origin: Coordinate; destination: Coordinate; geometry: string }>
+    | Array<{
+        origin: Coordinate;
+        destination: Coordinate;
+        geometry: string;
+        duration: number;
+      }>
     | [];
   userLocation?: any;
-  currentRouteGeometries: Array<string> | [];
+  currentRouteGeometries: Array<any> | [];
   selectedOriginIndex: number;
+  businessDetails: any;
 }
 
 export type SearchAction = {
@@ -56,6 +61,7 @@ export interface CachedGeometryItem {
   origin: Coordinate;
   destination: Coordinate;
   geometry: string;
+  duration: number;
 }
 
 /* TomTom */

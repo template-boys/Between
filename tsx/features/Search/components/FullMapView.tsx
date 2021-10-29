@@ -1,6 +1,11 @@
 import React, { ReactElement, useState } from "react";
 import RNLocation from "react-native-location";
-import { PixelRatio, Platform, StyleSheet } from "react-native";
+import {
+  PixelRatio,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import MapView, { Marker } from "react-native-maps";
 import theme from "../../../themes/theme";
@@ -11,7 +16,6 @@ import {
   setOriginIndex,
   setUserLocation,
 } from "../redux/searchActions";
-
 interface Props {
   showShadow?: boolean;
   diameter?: number;
@@ -52,7 +56,6 @@ export default function FullMapView({
       return {
         latitude: location?.position?.lat,
         longitude: location?.position?.lon,
-        description: location?.poi?.name ?? location?.address?.freeformAddress,
         latitudeDelta: 5,
         longitudeDelta: 5,
         pinColor: theme.secondary,
@@ -153,11 +156,11 @@ export default function FullMapView({
       provider={"google"}
       customMapStyle={mapTheme}
       showsUserLocation
-      showsMyLocationButton
+      // showsMyLocationButton
       mapPadding={{
         top: 0,
         right: 0,
-        bottom: destinationMarkers.length > 2 ? 275 : 0,
+        bottom: destinationMarkers.length > 2 ? 260 : 0,
         left: 0,
       }}
     >
@@ -166,7 +169,6 @@ export default function FullMapView({
           key={`${marker?.latitude},${marker?.latitude},${i}`}
           identifier={`id${i}`}
           coordinate={marker}
-          description={marker.description}
           pinColor={marker.pinColor}
           style={{ zIndex: 5 }}
           onPress={(e) => {
@@ -182,10 +184,9 @@ export default function FullMapView({
             : { zIndex: 0 };
         return (
           <Marker
-            key={`${marker?.latitude},${marker?.longitude},${i} ${marker.description}`}
+            key={`${marker?.latitude},${marker?.longitude},${i}`}
             identifier={`id${i}`}
             coordinate={marker}
-            description={marker.description}
             opacity={destinationIndex === i ? 1 : 0.3}
             pinColor={
               destinationIndex === i ? marker.pinColor : theme.lightGrey

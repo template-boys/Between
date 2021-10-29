@@ -29,20 +29,15 @@ export default class App extends Component<Props, State> {
     this.state = { didCatch: false };
   }
   componentDidCatch(error, info) {
-    const test = "TEST";
-    console.warn("Test: ", test);
-
     this.setState({ didCatch: true });
   }
 
   render() {
-    const test2 = "TEST2";
-    console.warn("Test: ", test2);
     return (
       <Provider store={store}>
         <SafeAreaProvider>
           <StatusBar
-            barStyle="dark-content"
+            barStyle="light-content"
             hidden={false}
             translucent={true}
             networkActivityIndicatorVisible={true}
